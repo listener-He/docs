@@ -1,13 +1,13 @@
 ---
-#博客首页设置：https://theme-hope.vuejs.press/zh/guide/blog/home.html
+#博客首页设置：https://blog.hehouhui.cn
 home: true
 layout: BlogHome
 icon: home
-title: 互联网小白
+title: Honesty
 #heroImage: /logo.svg
-heroText: 互联网小白
-tagline: 盛年不重来，一日难再晨
-bgImage: https://img.newzone.top/home-bg-1.jpg
+heroText: Honesty
+tagline: 自是人生长恨水长东
+bgImage: https://blog-file.hehouhui.cn/202305111934350.jpeg
 heroFullScreen: false
 #projects:
 #  - icon: project
