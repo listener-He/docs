@@ -17,7 +17,7 @@ export default defineUserConfig({
     "记录能提升自己的开源工具、效率技巧和心理学，输出自我提升笔记",
 
   // 网站路径默认为主域名。如果网站部署在子路径下，比如 xxx.com/yyy，那么 base 应该被设置为 "/yyy/"
-  base: "/blog-cn/",
+  base: "/",
 
   theme,
   // 是否开启页面预拉取，如果服务器宽带足够，可改为 true，会提升其他页面加载速度
