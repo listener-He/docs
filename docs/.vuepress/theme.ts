@@ -5,11 +5,11 @@ import sidebar from "./sidebar";
 
 export default hopeTheme({
   // 主题选项：https://theme-hope.vuejs.press/zh/config/theme/layout.html
-  hostname: "https://newzone.top",
+  hostname: "https://docs.hehouhui.cn",
 
   author: {
-    name: "清顺",
-    url: "https://newzone.top",
+    name: "Honesty",
+    url: "https://www.hehouhui.cn",
   },
 
   iconAssets: "iconfont",
@@ -35,7 +35,7 @@ export default hopeTheme({
   fullscreen: true,
 
   // 默认为 GitHub. 同时也可以是一个完整的 URL
-  repo: "listener-He/pure-blog",
+  repo: "listener-He/docs",
   // 自定义仓库链接文字。默认从 `repo` 中自动推断为 "GitHub" / "GitLab" / "Gitee" / "Bitbucket" 其中之一，或是 "Source"。
   repoLabel: "GitHub",
   // 是否在导航栏内显示仓库链接，默认为 `true`
@@ -68,22 +68,22 @@ export default hopeTheme({
   // 主题功能选项：https://theme-hope.vuejs.press/zh/config/theme/feature.html
   blog: {
     articleInfo: ["Date", "PageView", "Category", "Tag", "ReadingTime"],
-    name: "清顺",
+    name: "Honesty",
     avatar: "/avatar_self.webp",
-    description: "迷信新工具，热衷于研究开源软件、心理学理论，定期分享探索成果",
+    description: "自是人生长恨水长东",
     intro: "/intro.html",
     roundAvatar: true,
     medias: {
-      GitHub: "https://github.com/rockbenben",
+      GitHub: "https://github.com/listener-He",
       Zhihu: "https://www.zhihu.com/people/qingwhat",
       '少数派': [
-        "https://sspai.com/u/zqj05i4v/posts",
+        "https://sspai.com/u/honesty/posts",
         path.resolve(__dirname, "icons/sspai.svg"),
       ],
-      Wechat: "https://img.newzone.top/wechat.svg",
-      Email: "mailto:learndata@newzone.top",
-      Discord: "https://discord.gg/PZTQfJ4GjX",
-      RSS: "https://newzone.top/rss.xml",
+      Wechat: "",
+      Email: "",
+      Discord: "",
+      RSS: "https://blog.hehouhui.cn/rss.xml",
     },
   },
   // 开发模式下是否启动热更新，显示所有更改并重新渲染
