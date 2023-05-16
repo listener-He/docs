@@ -1,0 +1,33 @@
+on: [repository_dispatch, watch]
+
+name: notion
+
+jobs:
+  notion:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+      with:
+        submodules: false
+
+    - uses: listener-He/docs@main
+      with:
+        notion_secret: ${{ secrets.NOTION_TOKEN }}
+        database_id: "e2aef2ebe7a14fc094f9a186b6be6efa"
+        output: "./docs/_posts/"
+        access_key_id: "${{ secrets.ALI_ID }}"
+        access_key_secret: "${{ secrets.ALI_SECRET }}"
+        bucket: "xxx"
+        area: "${{ inputs.oss_endpoint }}"
+        prefix: "image/"
+
+    - name: git setting
+      run: |
+        git config --global user.email "hehouhui@foxmail.com"
+        git config --global user.name "hehouhui"
+
+    - name: update blog
+      run: |
+        git add docs
+        git commit -m "feat: auto update by notion sync"
+        git push

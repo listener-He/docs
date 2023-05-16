@@ -14,7 +14,7 @@ inputs:
       - 那么 `database_id=0f3d856498ca4db3b457c5b4eeaxxxxx`
   status_name:
     description: notion database 状态字段的字段名，支持自定义
-    default: "status"
+    default: "同步状态"
   status_published:
     description: notion database 文章已发布状态的字段值
     default: "已发布"
