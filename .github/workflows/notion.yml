@@ -10,8 +10,9 @@ jobs:
       with:
         submodules: false
 
-    - uses: listener-He/docs@main
+    - uses: mohuishou/notion-blog-actions@main
       with:
+        status_name: "同步状态"
         notion_secret: ${{ secrets.NOTION_TOKEN }}
         database_id: "e2aef2ebe7a14fc094f9a186b6be6efa"
         output: "./docs/_posts/"
