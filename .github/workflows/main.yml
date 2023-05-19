@@ -1,10 +1,15 @@
-on: [repository_dispatch, watch]
 name: docs build
 on:
   push:
     branches:
       # 确保这是你正在使用的分支名称
       - main
+  repository_dispatch:
+    branches:
+      - main
+  watch:
+    branches:
+      - main    
 
 jobs:
   notion:
