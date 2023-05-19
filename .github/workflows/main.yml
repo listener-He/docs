@@ -1,5 +1,5 @@
+on: [repository_dispatch, watch]
 name: docs build
-
 on:
   push:
     branches:
@@ -7,8 +7,38 @@ on:
       - main
 
 jobs:
+  notion:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+      with:
+        submodules: false
+
+    - uses: mohuishou/notion-blog-actions@main
+      with:
+        status_name: "同步状态"
+        notion_secret: ${{ secrets.NOTION_TOKEN }}
+        database_id: ${{ secrets.NOTION_DATABASE_ID }}
+        output: "./docs/_posts/"
+        access_key_id: "${{ secrets.ALI_ID }}"
+        access_key_secret: "${{ secrets.ALI_SECRET }}"
+        bucket: "xxx"
+        area: "${{ inputs.oss_endpoint }}"
+        prefix: "image/"
+
+    - name: git setting
+      run: |
+        git config --global user.email "hehouhui@foxmail.com"
+        git config --global user.name "hehouhui"
+
+    - name: update blog
+      run: |
+        git add docs
+        git commit -m "feat: auto update by notion sync"
+        git push
   LearnData-build:
     runs-on: ubuntu-latest
+    needs: notion
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
