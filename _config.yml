@@ -4,11 +4,11 @@
 
 # Site
 title: Honesty wiki
-subtitle: ''
-description: '知识库,沉淀文档'
-keywords:
+subtitle: '知识库,沉淀文档'
+description: 'Honesty 知识库,Honesty Wiki, Honesty blog,hehouhui 知识库,hehouhui Wiki, hehouhui blog'
+keywords: 'Honesty 知识库,Honesty Wiki, Honesty blog,hehouhui 知识库,hehouhui Wiki, hehouhui blog'
 author: Honesty
-language: cn
+language: zh-CN
 timezone: ''
 
 # URL
@@ -27,6 +27,8 @@ tag_dir: tags
 archive_dir: archives
 category_dir: categories
 code_dir: downloads/code
+link_dir: links
+talk_dir: talks
 i18n_dir: :lang
 skip_render:
 
