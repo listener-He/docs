@@ -3,17 +3,17 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Hexo
+title: Honesty wiki
 subtitle: ''
-description: ''
+description: '知识库,沉淀文档'
 keywords:
-author: John Doe
-language: en
+author: Honesty
+language: cn
 timezone: ''
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
-url: http://example.com
+url: https://docs.hehouhui.cn
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 pretty_urls:
