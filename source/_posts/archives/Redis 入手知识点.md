@@ -1,3 +1,32 @@
+---
+password: ''
+icon: ''
+date: '2023-04-15'
+type: Post
+category: 技术分享
+urlname: redis-01
+catalog:
+  - archives
+tags:
+  - 开发
+  - 微服务
+  - 分布式
+  - Redis
+  - 缓存
+summary: |-
+  Redis是一种高性能的key-value存储系统，具有以下几个特点：
+  1. 内存存储：Redis将数据存储在内存中，因此读写速度非常快，通常比基于磁盘的存储系统快几个数量级。
+  2. 数据结构多样：Redis支持多种数据结构，包括字符串、哈希、列表、集合、有序集合等，丰富的数据结构使Redis可以支持更多的应用场景。
+  3. 持久化：Redis支持将数据持久化到磁盘上，以保证数据的可靠性。
+  4. 高并发性：Redis采用单线程模型，减少了多线程之间的竞争，从而使得Redis具有更高的并发性。
+  5. 分布式：Redis提供了集群模式，可以将数据分布到不同的节点上，从而实现水平扩展。
+sort: ''
+title: Redis 入手知识点
+status: Published
+updated: '2023-10-08 14:42:00'
+abbrlink: 33195
+---
+
 # Redis 面试宝典 🤪
 
 > 💡 Redis 是一种高性能的 key-value 存储系统，具有以下几个特点：
@@ -30,7 +59,7 @@
 
 一致性 Hash 算法也是使用取模的方法，只是，刚才描述的取模法是对服务器的数量进行取模，而一致性 Hash 算法是对 232 取模，什么意思呢？简单来说，一致性 Hash 算法将整个哈希值空间组织成一个虚拟的圆环，如假设某哈希函数 H 的值空间为 0-232-1（即哈希值是一个 32 位无符号整形），整个哈希环如下：
 
-![](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/8a35a23c-1341-49da-a621-55a436622c1d/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20231008%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20231008T072006Z&X-Amz-Expires=3600&X-Amz-Signature=5bafcb134e6a46cbf487930fb1082752acbcd92a490a974cf5f147261a8ce518&X-Amz-SignedHeaders=host&x-id=GetObject)
+![](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/8a35a23c-1341-49da-a621-55a436622c1d/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20231031%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20231031T090555Z&X-Amz-Expires=3600&X-Amz-Signature=56ed1dd1e3db26bc28cea11990eb4d5a3ca9a077d6ca90e9cb3f7ed5584d2329&X-Amz-SignedHeaders=host&x-id=GetObject)
 
 整个空间按顺时针方向组织，圆环的正上方的点代表 0，0 点右侧的第一个点代表 1，以此类推，2、3、4、5、6……直到 232-1，也就是说 0 点左侧的第一个点代表 232-1， 0 和 232-1 在零点中方向重合，我们把这个由 232 个点组成的圆环称为 Hash 环。
 
@@ -50,11 +79,11 @@ $$
 
 现假设 Node C 不幸宕机，可以看到此时对象 A、B、D 不会受到影响，只有 C 对象被重定位到 Node D。一般的，在一致性 Hash 算法中，如果一台服务器不可用，则受影响的数据仅仅是此服务器到其环空间中前一台服务器（即沿着逆时针方向行走遇到的第一台服务器）之间数据，其它不会受到影响，如下所示：
 
-![](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/d578620f-e4b5-41c5-990a-8c7bc1aa4fdc/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20231008%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20231008T072006Z&X-Amz-Expires=3600&X-Amz-Signature=9f12a7c41f58fae2e4b35a229c9806ed4faf1cfcd41db1c9b8afa27bbc8023c2&X-Amz-SignedHeaders=host&x-id=GetObject)
+![](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/d578620f-e4b5-41c5-990a-8c7bc1aa4fdc/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20231031%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20231031T090555Z&X-Amz-Expires=3600&X-Amz-Signature=b9eeb7b958cf50850f0215debb777ea9d3c0e5b688b1ee07234f11f29c91f3e3&X-Amz-SignedHeaders=host&x-id=GetObject)
 
 下面考虑另外一种情况，如果在系统中增加一台服务器 Node X，如下图所示：
 
-![](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/5dc25236-bddd-4d82-928a-30497f92890d/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20231008%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20231008T072006Z&X-Amz-Expires=3600&X-Amz-Signature=7ee1b9ac738e81778de8b88501d4012a51a977a30e3f33b1358ea02e8ded0afc&X-Amz-SignedHeaders=host&x-id=GetObject)
+![](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/5dc25236-bddd-4d82-928a-30497f92890d/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20231031%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20231031T090555Z&X-Amz-Expires=3600&X-Amz-Signature=d5e082ad528629fa7f4364bab377e59535918c2c896b565f10e189c47222ff05&X-Amz-SignedHeaders=host&x-id=GetObject)
 
 此时对象 Object A、B、D 不受影响，只有对象 C 需要重定位到新的 Node X ！一般的，在一致性 Hash 算法中，如果增加一台服务器，则受影响的数据仅仅是新服务器到其环空间中前一台服务器（即沿着逆时针方向行走遇到的第一台服务器）之间数据，其它数据也不会受到影响。
 
@@ -64,7 +93,7 @@ $$
 
 一致性 Hash 算法在服务节点太少时，容易因为节点分部不均匀而造成数据倾斜（被缓存的对象大部分集中缓存在某一台服务器上）问题，例如系统中只有两台服务器，其环分布如下：
 
-![](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/5d967984-598b-4263-b0e8-7d5d4d08cc3e/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20231008%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20231008T072006Z&X-Amz-Expires=3600&X-Amz-Signature=e44aba5981062298915988c4536753994215641f434edacef403cadd101d7460&X-Amz-SignedHeaders=host&x-id=GetObject)
+![](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/5d967984-598b-4263-b0e8-7d5d4d08cc3e/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20231031%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20231031T090555Z&X-Amz-Expires=3600&X-Amz-Signature=1458f39bff9625ff6a497e21a843a5badc34d56058b053fc89a9a5bf59c4c40e&X-Amz-SignedHeaders=host&x-id=GetObject)
 
 此时必然造成大量数据集中到 Node A 上，而只有极少量会定位到 Node B 上，从而出现 hash 环偏斜的情况，当 hash 环偏斜以后，缓存往往会极度不均衡的分布在各服务器上，如果想要均衡的将缓存分布到 2 台服务器上，最好能让这 2 台服务器尽量多的、均匀的出现在 hash 环上，但是，真实的服务器资源只有 2 台，我们怎样凭空的让它们多起来呢，没错，就是凭空的让服务器节点多起来，既然没有多余的真正的物理服务器节点，我们就只能将现有的物理节点通过虚拟的方法复制出来。
 
@@ -72,7 +101,7 @@ $$
 
 例如上面的情况，可以为每台服务器计算三个虚拟节点，于是可以分别计算 “Node A#1”、“Node A#2”、“Node A#3”、“Node B#1”、“Node B#2”、“Node B#3”的哈希值，于是形成六个虚拟节点：
 
-![](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/a0cf35dd-13c4-40da-9eb5-e219a514f3b5/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20231008%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20231008T072006Z&X-Amz-Expires=3600&X-Amz-Signature=52d6be9d4a191ab341088982fb85ee66d44463f218ec05f356cb6e4e6b68ea9a&X-Amz-SignedHeaders=host&x-id=GetObject)
+![](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/a0cf35dd-13c4-40da-9eb5-e219a514f3b5/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20231031%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20231031T090555Z&X-Amz-Expires=3600&X-Amz-Signature=364f7f5225eb453c08f298c29baf4f03c63bc2ab6cc06d43ddc8ffc4e3a4e911&X-Amz-SignedHeaders=host&x-id=GetObject)
 
 同时数据定位算法不变，只是多了一步虚拟节点到实际节点的映射，例如定位到“Node A#1”、“Node A#2”、“Node A#3”三个虚拟节点的数据均定位到 Node A 上。这样就解决了服务节点少时数据倾斜的问题。在实际应用中，通常将虚拟节点数设置为 32 甚至更大，因此即使很少的服务节点也能做到相对均匀的数据分布。
 

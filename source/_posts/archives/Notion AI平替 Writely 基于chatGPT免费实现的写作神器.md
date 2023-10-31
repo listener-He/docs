@@ -1,3 +1,26 @@
+---
+password: ''
+icon: ''
+date: '2023-04-24T00:00:00.000+08:00'
+type: Post
+category: 创作分享
+urlname: notion-ai-writely
+catalog:
+  - archives
+tags:
+  - 文字
+  - 工具
+  - chatgpt
+  - notion
+summary: >-
+  作为NiotionAi的重度依赖者，最近观察到一个比NotionAI更强大而且还免费的插件。一款基于chatGPT技术的写作神器Writely。借助自然语言处理技术，Writely可以自动生成、推荐内容，并进行语法纠错优化。同时提供多种模板和主题，让写作更加高效实用。该工具适合初学者和专业写作者使用
+sort: ''
+title: Notion AI平替 Writely 基于chatGPT免费实现的写作神器
+status: Published
+updated: '2023-10-08 14:42:00'
+abbrlink: 64940
+---
+
 AI 技术的迅速发展和普及，为人类的生活带来了很多便利。在写作领域，也出现了不少基于人工智能技术的写作工具。其中最近推出的一款基于 chatGPT 技术的写作神器 Writely，引起了广泛关注。
 
 Writely 可以说是一款非常优秀的写作工具，它可以自动生成文章内容，并进行语法纠错。而且，它提供的多种模板和主题，使得写作更加高效实用。

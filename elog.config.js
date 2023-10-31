@@ -14,7 +14,7 @@ module.exports = {
     local: {
       outputDir: './source/_posts',
       filename: 'title',
-      format: 'markdown',
+      format: 'matter-markdown',
       catalog: true,
       formatExt: '',
     },
@@ -28,7 +28,7 @@ module.exports = {
     }
   },
   image: {
-    enable: true,
+    enable: false,
     platform: 'github',
     github: {
       user: process.env.GITHUB_USER,

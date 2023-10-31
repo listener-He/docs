@@ -1,3 +1,26 @@
+---
+password: ''
+icon: ''
+date: '2021-12-18'
+type: Post
+category: 技术分享
+urlname: '23'
+catalog:
+  - archives
+tags:
+  - 微服务
+  - 分布式
+  - Redis
+summary: >-
+  一致性hash在Redis
+  集群模式Cluster中，Redis采用的是分片Sharding的方式，也就是将数据采用一定的分区策略，分发到相应的集群节点中。但是我们使用上述HASH算法进行缓存时，会出
+sort: ''
+title: Redis集群与特性
+status: Published
+updated: '2023-10-08 14:42:00'
+abbrlink: 20869
+---
+
 ## 一致性 hash
 
 > 在 Redis 集群模式 Cluster 中，Redis 采用的是分片 Sharding 的方式，也就是将数据采用一定的分区策略，分发到相应的集群节点中。但是我们使用上述 HASH 算法进行缓存时，会出现一些缺陷，主要体现在服务器数量变动的时候，所有缓存的位置都要发生改变！具体来讲就是说第一当缓存服务器数量发生变化时，会引起缓存的雪崩，可能会引起整体系统压力过大而崩溃（大量缓存同一时间失效）。第二当缓存服务器数量发生变化时，几乎所有缓存的位置都会发生改变。

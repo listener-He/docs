@@ -1,3 +1,26 @@
+---
+password: ''
+icon: ''
+date: '2022-03-15'
+type: Post
+category: 技术分享
+urlname: '40'
+catalog:
+  - archives
+tags:
+  - 图像处理
+summary: >-
+  “wkhtmltopdf"，是一个能够把网页/文件转换成PDF的工具。工具全名叫 "wkhtmltopdf" ; 是一个使用 Qt WebKit
+  引擎做渲染的，能够把html 文档转换成 pdf 文档 或 图片(image) 的**“命令行工具”**。
+
+  支持多个平台，可在win，linux，os x 等系统下运行。
+sort: ''
+title: wkhtmltopdf 安装
+status: Published
+updated: '2023-10-08 14:42:00'
+abbrlink: 53502
+---
+
 # wkhtmltopdf
 
 > “wkhtmltopdf"，是一个能够把网页/文件转换成 PDF 的工具。工具全名叫 "wkhtmltopdf" ; 是一个使用 Qt WebKit 引擎做渲染的，能够把 html 文档转换成 pdf 文档 或 图片(image) 的**“命令行工具”**。

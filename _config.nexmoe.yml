@@ -1,6 +1,6 @@
-avatar: https://cdn.jsdelivr.net/gh/nexmoe/nexmoe.github.io@latest/images/avatar.png # 网站 Logo
+avatar: https://cdn.jsdelivr.net/gh/listener-He/images@default/202309111525908.jpeg # 网站 Logo
 background: # 既是博客的背景，又是文章默认头图
-    path: https://i.dawnlab.me/b5a7e61560facdd5b8aa9683fce147d7.png
+    path: https://blog-file.hehouhui.cn/202305111934350.jpeg
     width: 1280
     height: 726
 favicon:
@@ -84,7 +84,7 @@ widgets:
       options: 
         maxTagcloud: 17  # 标签云组件显示的标签数量，0 表示不限制
     - name: hitokoto # 一言 widget
-      enable: false
+      enable: true
       options: 
         widgetHitokoto: # 一言组件
             loading_placeholder: '🚀 获取中...' # 正在一言时的占位符

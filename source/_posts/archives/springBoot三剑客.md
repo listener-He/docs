@@ -1,3 +1,25 @@
+---
+password: ''
+icon: ''
+date: '2021-12-27'
+type: Post
+category: 技术分享
+urlname: '24'
+catalog:
+  - archives
+tags:
+  - Spring
+  - Java
+summary: >-
+  springBoot 三板斧AOPaop是一种面向切面编程 能够将那些与业务无关，却为业务模块所共同调用的逻辑或责任（缓存，锁）
+  封装起来，便于减少系统的重复代码，降低模块间的耦合度，并有利于未来的可
+sort: ''
+title: springBoot三剑客
+status: Published
+updated: '2023-10-08 14:42:00'
+abbrlink: 49636
+---
+
 # springBoot 三板斧
 
 ## AOP

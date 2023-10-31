@@ -1,3 +1,27 @@
+---
+password: ''
+icon: ''
+date: '2020-06-02'
+type: Post
+category: 技术分享
+urlname: '18'
+catalog:
+  - archives
+tags:
+  - Spring
+  - 缓存
+summary: >-
+  Spring
+  Cache是Spring框架用于支持缓存的模块。它提供了一组缓存抽象，使得我们可以将不同的缓存技术集成到应用程序中，从而提高性能和可扩展性。Spring
+  Cache通过使用轻量级的注释来定义缓存的行为，从而减少了缓存操作的复杂性。此外，Spring
+  Cache还支持事务性缓存，这样可以保证缓存与数据库之间的一致性。总体来说，Spring Cache是一个强大的工具，可以极大地提高应用程序的性能和可用性。
+sort: ''
+title: spring cache
+status: Published
+updated: '2023-10-08 14:42:00'
+abbrlink: 2780
+---
+
 > 💡 Spring Cache 是一个强大的缓存框架，可用于提高应用程序的性能和可靠性。它是 Spring 框架的一部分，基于标准的缓存抽象，提供了一个统一的、可扩展的缓存解决方案。Spring Cache 支持多种缓存提供者，包括 Ehcache、Redis、Couchbase 等。它还提供了灵活的配置选项，使开发人员可以根据应用程序的需要选择最适合的缓存解决方案。
 >
 > 使用 Spring Cache 可以帮助应用程序减少对数据库和其他外部资源的访问次数，从而提高应用程序的响应速度和吞吐量。除了提高性能之外，Spring Cache 还可以用于添加应用程序级别的缓存逻辑，例如缓存用户会话、结果集等。

@@ -1,3 +1,24 @@
+---
+password: ''
+icon: ''
+date: '2022-03-15'
+type: Post
+category: 技术分享
+urlname: '39'
+catalog:
+  - archives
+tags:
+  - 图像处理
+summary: >-
+  wkhtmltopdf精讲(原文)
+  作者：JSON_NULL术语定义文档对象“文档对象”是指PDF文档中的文档对象，共有三种类型的“文档对象”，他们分别是“页面对象”，“封面对象”和“目录对象”。页面
+sort: ''
+title: wkhtmltopdf详细使用
+status: Published
+updated: '2023-10-08 14:42:00'
+abbrlink: 1869
+---
+
 # wkhtmltopdf 精讲
 
 ([原文](https://www.jianshu.com/p/4d65857ffe5e)) 作者：JSON_NULL

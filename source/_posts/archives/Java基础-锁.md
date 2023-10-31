@@ -1,3 +1,24 @@
+---
+password: ''
+icon: ''
+date: '2022-02-08'
+type: Post
+category: 技术分享
+urlname: '37'
+catalog:
+  - archives
+tags:
+  - Java
+summary: >-
+  synchronized
+  关键字解决的是多个线程之间访问资源的同步性，synchronized关键字可以保证被它修饰的方法或者代码块在任意时刻只能有一个线程执行。另外，在 Ja
+sort: ''
+title: Java基础-锁
+status: Published
+updated: '2023-10-08 14:42:00'
+abbrlink: 1008
+---
+
 ### synchronized
 
 **`synchronized`** **关键字解决的是多个线程之间访问资源的同步性，\*\***`synchronized`\***\*关键字可以保证被它修饰的方法或者代码块在任意时刻只能有一个线程执行。**

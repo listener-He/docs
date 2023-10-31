@@ -1,3 +1,24 @@
+---
+password: ''
+icon: ''
+date: '2020-01-22'
+type: Post
+category: 技术分享
+urlname: '45'
+catalog:
+  - archives
+tags:
+  - Java
+summary: >-
+  String对象常量池String 对象的两种创建方式：String str1 =
+  "abcd";//先检查字符串常量池中有没有"abcd"，如果字符串常量池中
+sort: ''
+title: Java基础-String
+status: Published
+updated: '2023-10-08 14:42:00'
+abbrlink: 23829
+---
+
 ## String 对象
 
 ### 常量池

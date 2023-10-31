@@ -1,3 +1,30 @@
+---
+password: ''
+icon: ''
+date: '2023-04-28T13:13:00.000+08:00'
+type: Post
+category: 技术分享
+urlname: authentication-and-authorization-using-the-keycloak-rest-api
+catalog:
+  - archives
+tags:
+  - 开发
+  - 建站
+  - Java
+  - oauth
+  - keycloak
+summary: >-
+  Keycloak REST API
+  可以被用来进行身份验证和授权。使用该API，开发人员可以轻松地在其应用程序中实现安全性验证和授权功能，同时使用Keycloak的内置功能进行管理和配置。Keycloak的REST
+  API还提供了许多不同的终端点来进行用户和角色管理、认证事件和SAML元数据的访问等。 作为一个基于开源的身份和访问管理解决方案，Keycloak的REST
+  API对于任何需要对应用程序进行认证和授权的开发人员都非常有帮助。
+sort: ''
+title: 使用 Keycloak REST API 进行身份验证和授权
+status: Published
+updated: '2023-10-08 14:42:00'
+abbrlink: 33923
+---
+
 启用身份验证和授权涉及复杂的功能，而不仅仅是简单的登录 API。[在之前的文章（使用 Keycloak 的 API 登录和 JWT 令牌生成）中](https://blog.hehouhui.cn/archives/api-login-and-jwt-token-generation-using-keycloak)，我描述了 Keycloak REST 登录 API 端点，它只处理一些身份验证任务。在本文中，我描述了如何使用开箱即用的 Keycloak REST API 功能启用身份验证和授权的其他方面。
 
 # 身份验证与授权

@@ -1,3 +1,23 @@
+---
+password: ''
+icon: ''
+date: '2022-03-17'
+type: Post
+category: 技术分享
+urlname: '41'
+catalog:
+  - archives
+tags:
+  - Python
+  - 健康
+summary: "之前一直使用ffmpeg来进行格式转换，但是将微信的amr转为mp3后语音质量不理想（也可能是我参数没有调正确\U0001F92A）。\n于是就继续想解决办法，后来在github瞎逛时看到可以使用silk-v3-decoder来做这件事情。虽然本质上还是使用的ffmpeg来转的，只是封装了一下。"
+sort: ''
+title: silk-v3-decoder 一款微信音频转码的工具
+status: Published
+updated: '2023-10-08 14:42:00'
+abbrlink: 31007
+---
+
 #
 
 SILK v3 编码是 Skype 向第三方开发人员和硬件制造商提供免版税认证(RF)的 Silk 宽带音频编码器，Skype 后来将其开源。具体可见 Wikipedia。

@@ -1,3 +1,27 @@
+---
+password: ''
+icon: ''
+date: '2022-03-05'
+type: Post
+category: 技术分享
+urlname: '46'
+catalog:
+  - archives
+tags:
+  - Spring
+  - 微服务
+  - 分布式
+summary: >-
+  API 网关是一个服务器，是系统对外的唯一入口。API 网关封装了系统内部架构，为每个客户端提供定制的
+  API。所有的客户端和消费端都通过统一的网关接入微服务，在网关层处理所有非业务功能。API 网关并不是微服务场景中必须的组件，如下图，不管有没有 API
+  网关，后端微服务都可以通过 API 很好地支持客户端的访问
+sort: ''
+title: API网关之Gateway
+status: Published
+updated: '2023-10-08 14:42:00'
+abbrlink: 45959
+---
+
 # Gateway
 
 ## **什么是服务网关**
