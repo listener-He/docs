@@ -46,34 +46,34 @@ widgets:
       options: 
         search: 
             type: engine # 可选engine（用搜索引擎搜索）、swiftype、或local（本地搜索）
-            url: https://cn.bing.com/search?q=site:nexmoe.com # 搜索引擎地址，在type为swiftype时无效 e.g:https://www.google.com/search?q={你的博客链接}
+            url: https://cn.bing.com/search?q=site:hehouhui.cn # 搜索引擎地址，在type为swiftype时无效 e.g:https://www.google.com/search?q={你的博客链接}
             id: <swiftype-id> # swiftype的id，见启用教程。在type为engine时无效
     - name: social
       enable: true
       options: 
         social:
             哔哩哔哩:
-                - https://space.bilibili.com/20238211
+                - https://space.bilibili.com/442038841
                 - icon-bilibili
                 - rgb(231, 106, 141)
                 - rgba(231, 106, 141, .1)
             GitHub:
-                - https://github.com/nexmoe/
+                - https://github.com/listener-He
                 - icon-github
                 - rgb(25, 23, 23)
                 - rgba(25, 23, 23, .1)
             知乎:
-                - https://www.zhihu.com/people/nexmoe
+                - https://www.zhihu.com/people/wen-xin-92-2-57
                 - icon-zhihu
                 - rgb(30, 136, 229)
                 - rgba(30, 136, 229, .1)
             Twitter:
-                - https://twitter.com/nexmoe
+                - https://twitter.com/Honesty861024
                 - icon-twitter
                 - rgb(59, 151, 239)
                 - rgba(59, 151, 239, .1)
             RSS:
-                - https://nexmoe.com/atom.xml
+                - https://docs.hehouhui.cn/atom.xml
                 - icon-rss
                 - rgb(247, 132, 34)
                 - rgba(247, 132, 34, .1)
@@ -99,7 +99,7 @@ widgets:
     - name: recent_posts
       enable: true
     - name: link #settings: widgetLink
-      enable: true
+      enable: false
       options: 
         widgetLink: #链接组件
             - title: 小舒同学
@@ -113,27 +113,41 @@ copyTip: "著作权归作者所有。\n商业转载请联系作者获得授权�
 
 slotHead: | 
   <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4D4ZJ9G024"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-248JM4ZRPJ"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag("js", new Date());
 
-    gtag("config", "G-4D4ZJ9G024");
+    gtag("config", "G-248JM4ZRPJ");
   </script>
 
 slotFooter: | 
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2058306854838448" crossorigin="anonymous"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1623991949842711" crossorigin="anonymous"></script>
 
 # 自定义侧边栏尾部内容
 slotSidebar: |
-  <br><a target="_blank" href="https://beian.miit.gov.cn/">鄂ICP备2020018486号</a>
+  <br><a target="_blank" href="https://beian.miit.gov.cn/">湘ICP备20014902号</a>
   <br><a target="_blank" href="https://www.upyun.com/?utm_source=lianmeng&utm_medium=referral">
-  <img src="https://i.dawnlab.me/c0268c1e6cfd0863d6ba35be1575941a.png" width="150px"></a>
 
 # 评论框插槽
 slotComment: | 
-  请在你的配置文件中设置 slotComment
+ <script src="https://giscus.app/client.js"
+        data-repo="listener-He/NotionNext"
+        data-repo-id="R_kgDOJI1XUA"
+        data-category="General"
+        data-category-id="R_kgDOJOsY1g"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="preferred_color_scheme"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+  </script>
 
 slotCopyright: | 
   <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
