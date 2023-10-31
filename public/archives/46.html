@@ -1,0 +1,868 @@
+<!doctype html>
+<html lang="zh"><head>
+<title>API网关之Gateway - Honesty wiki</title>
+<meta charset="UTF-8">
+<meta name="keywords" content="Honesty 知识库,Honesty Wiki, Honesty blog,hehouhui 知识库,hehouhui Wiki, hehouhui blog">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+<meta name="description" content="Gateway什么是服务网关API Gateway，顾名思义，是出现在系统边界上的一个面向 API 的、串行集中式的强管控服务，这里的边界是系统服务的边界，可以理解为服务防火墙，主要起到隔离外部访问与内部系统的作用。在微服务概念的流行之前，API 网关就已经诞生了，例如银行、证券等领域常见的前置机系统，它也是解决访问认证、报文转换、访问统计等问题的。 API 网关的流行，源于近几年来移动应用与企业">
+<meta property="og:type" content="article">
+<meta property="og:title" content="API网关之Gateway">
+<meta property="og:url" content="https://docs.hehouhui.cn/archives/46.html">
+<meta property="og:site_name" content="Honesty wiki">
+<meta property="og:description" content="Gateway什么是服务网关API Gateway，顾名思义，是出现在系统边界上的一个面向 API 的、串行集中式的强管控服务，这里的边界是系统服务的边界，可以理解为服务防火墙，主要起到隔离外部访问与内部系统的作用。在微服务概念的流行之前，API 网关就已经诞生了，例如银行、证券等领域常见的前置机系统，它也是解决访问认证、报文转换、访问统计等问题的。 API 网关的流行，源于近几年来移动应用与企业">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog-file.hehouhui.cn/1280X1280.png">
+<meta property="og:image" content="https://blog-file.hehouhui.cn/clip_image003.png">
+<meta property="og:image" content="https://blog-file.hehouhui.cn/clip_image005.png">
+<meta property="article:published_time" content="2022-03-05T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-10-08T06:42:00.000Z">
+<meta property="article:author" content="Honesty">
+<meta property="article:tag" content="Spring">
+<meta property="article:tag" content="微服务">
+<meta property="article:tag" content="分布式">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog-file.hehouhui.cn/1280X1280.png">
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1698751493483">
+
+<link rel="stylesheet" href="/css/style.css?v=1698751493483">
+
+
+
+
+    
+        <link rel="stylesheet" href="/custom.css?v=1698751493483">
+    
+
+
+
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+<script src="/lib/lax.min.js" async></script>
+
+
+<script async src="/js/app.js?v=1698751493483"></script>
+
+ 
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-248JM4ZRPJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+
+  gtag("config", "G-248JM4ZRPJ");
+</script>
+
+<meta name="generator" content="Hexo 6.3.0"></head><body class="nexmoe mdui-drawer-body-left"><div id="nexmoe-background"><div class="nexmoe-bg" style="background-image: url(https://blog-file.hehouhui.cn/202305111934350.jpeg)"></div><div class="mdui-appbar mdui-shadow-0"><div class="mdui-toolbar"><a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-drawer="{target: &#039;#drawer&#039;, swipe: true}" title="menu"><i class="mdui-icon nexmoefont icon-menu"></i></a><div class="mdui-toolbar-spacer"></div><a class="mdui-btn mdui-btn-icon" href="/" title="Honesty"><img src="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309111525908.jpeg" alt="Honesty"></a></div></div></div><div id="nexmoe-header"><div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="Honesty">
+            <img src="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309111525908.jpeg" alt="Honesty" alt="Honesty">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>30</div>
+        <div><span>标签</span>33</div>
+        <div><span>分类</span>4</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archive.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/PY.html" title="我的朋友">
+            <i class="mdui-list-item-icon nexmoefont icon-unorderedlist"></i>
+            <div class="mdui-list-item-content">
+                我的朋友
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/donate.html" title="给我赞助">
+            <i class="mdui-list-item-icon nexmoefont icon-coffee"></i>
+            <div class="mdui-list-item-content">
+                给我赞助
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/about.html" title="关于博主">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于博主
+            </div>
+        </a>
+        
+    </div>
+    
+    
+        
+        <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+         
+            <form id="search_form" action_e="https://cn.bing.com/search?q=site:hehouhui.cn" onsubmit="return search();">
+                <label><input id="search_value" name="q" type="search" placeholder="搜索"></label>
+            </form>
+         
+    </div>
+</div>
+
+
+
+
+    
+        
+        <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="https://space.bilibili.com/442038841"
+			target="_blank"
+			mdui-tooltip="{content: '哔哩哔哩'}"
+			style="
+				color: rgb(231, 106, 141);
+				background-color: rgba(231, 106, 141, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-bilibili"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://github.com/listener-He"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://www.zhihu.com/people/wen-xin-92-2-57"
+			target="_blank"
+			mdui-tooltip="{content: '知乎'}"
+			style="
+				color: rgb(30, 136, 229);
+				background-color: rgba(30, 136, 229, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-zhihu"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://twitter.com/Honesty861024"
+			target="_blank"
+			mdui-tooltip="{content: 'Twitter'}"
+			style="
+				color: rgb(59, 151, 239);
+				background-color: rgba(59, 151, 239, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-twitter"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://docs.hehouhui.cn/atom.xml"
+			target="_blank"
+			mdui-tooltip="{content: 'RSS'}"
+			style="
+				color: rgb(247, 132, 34);
+				background-color: rgba(247, 132, 34, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-rss"
+			></i> </a
+		>
+	</div>
+</div>
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/创作分享/">创作分享</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/学习思考/">学习思考</a>
+          <span class="category-list-count">3</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/技术分享/">技术分享</a>
+          <span class="category-list-count">25</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/碎片杂文/">碎片杂文</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/BUG/" style="font-size: 10px;">BUG</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/Jvm/" style="font-size: 10px;">Jvm</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Redis/" style="font-size: 15.71px;">Redis</a> <a href="/tags/SAAS/" style="font-size: 10px;">SAAS</a> <a href="/tags/Spring/" style="font-size: 18.57px;">Spring</a> <a href="/tags/WebFlux/" style="font-size: 10px;">WebFlux</a> <a href="/tags/chatgpt/" style="font-size: 10px;">chatgpt</a> <a href="/tags/hutool/" style="font-size: 10px;">hutool</a> <a href="/tags/keycloak/" style="font-size: 11.43px;">keycloak</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/notion/" style="font-size: 10px;">notion</a> <a href="/tags/oauth/" style="font-size: 11.43px;">oauth</a> <a href="/tags/%E5%81%A5%E5%BA%B7/" style="font-size: 10px;">健康</a> <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" style="font-size: 14.29px;">分布式</a> <a href="/tags/%E5%92%96%E5%95%A1/" style="font-size: 10px;">咖啡</a> <a href="/tags/%E5%93%8D%E5%BA%94%E5%BC%8F/" style="font-size: 10px;">响应式</a> <a href="/tags/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/" style="font-size: 11.43px;">图像处理</a> <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 10px;">多线程</a> <a href="/tags/%E5%AD%A6%E4%B9%A0/" style="font-size: 11.43px;">学习</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">工具</a> <a href="/tags/%E5%BB%BA%E7%AB%99/" style="font-size: 11.43px;">建站</a> <a href="/tags/%E5%BC%80%E5%8F%91/" style="font-size: 12.86px;">开发</a> <a href="/tags/%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/" style="font-size: 11.43px;">异步编程</a> <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" style="font-size: 17.14px;">微服务</a> <a href="/tags/%E6%80%9D%E8%80%83/" style="font-size: 12.86px;">思考</a> <a href="/tags/%E6%8A%80%E6%9C%AF%E6%B5%81/" style="font-size: 10px;">技术流</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 10px;">数据结构</a> <a href="/tags/%E6%95%B4%E6%B4%BB/" style="font-size: 10px;">整活</a> <a href="/tags/%E6%96%87%E5%AD%97/" style="font-size: 12.86px;">文字</a> <a href="/tags/%E7%89%A9%E8%81%94%E7%BD%91/" style="font-size: 10px;">物联网</a> <a href="/tags/%E7%BC%93%E5%AD%98/" style="font-size: 11.43px;">缓存</a>
+    </div>
+    
+      <script>
+        var maxTagcloud = parseInt(17);
+        var tags_length = parseInt(33);
+        var tags_arr = [];
+        for(var i = 0; i < tags_length; i++){
+          tags_arr.push(i);
+        }
+        tags_arr.sort(function (l, r) {
+          return Math.random() > 0.5 ? -1 : 1;
+        });
+        tags_arr = tags_arr.slice(0, maxTagcloud < tags_length ? tags_length - maxTagcloud : 0);
+        for(var tag_i = 0; tag_i < tags_arr.length; tag_i++){
+          document.getElementById("randomtagcloud").children[tags_arr[tag_i]].style.display = 'none';
+        }
+      </script>
+    
+  </div>
+
+    
+        
+        <!-- 一言 -->
+<div class="nexmoe-widget-wrap">
+  <h3 class="nexmoe-widget-title">
+    一言
+  </h3>
+  <div class="nexmoe-widget">
+    <ul class="hitokoto-box">
+      <li id="hitokoto_text_parent" class="hitokoto-text" hitokotoCategory="">
+        <a href="#" id="hitokoto_text">
+          
+        </a>
+        <a href="#" id="hitokoto_error_text" style="display: none;">
+          
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  let hitokotoText = document.getElementById('hitokoto_text')
+  let hitokotoErroText = document.getElementById('hitokoto_error_text')
+  let hitokotoCategory = document.getElementById('hitokoto_text_parent').getAttribute('hitokotoCategory')
+  window.addEventListener('load', function () {
+    let url = 'https://v1.hitokoto.cn'
+    if (hitokotoCategory) {
+      url += '?c=' + hitokotoCategory
+    }
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        hitokotoText.innerText = "「 " + data.hitokoto + " 」 from " + data.from
+        hitokotoText.href = 'https://hitokoto.cn/?uuid=' + data.uuid
+      })
+      .catch((reason) => {
+        console.error(11, reason)
+        hitokotoText.style.display = 'none'
+        hitokotoErroText.style.display = 'block'
+      })
+  })
+</script>
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/history/2023/">2023</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/history/2022/">2022</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/history/2021/">2021</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/history/2020/">2020</a><span class="archive-list-count">7</span></li></ul>
+    </div>
+  </div>
+
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">最新文章</h3>
+    <div class="nexmoe-widget">
+      <ul>
+        
+          <li>
+            <a href="/archives/spring-boot-tenant-202309.html">Spring Boot 实现多租户架构：支持应用多租户部署和管理</a>
+          </li>
+        
+          <li>
+            <a href="/archives/springcloud-data-202309.html">微服务之间的数据依赖问题，该如何解决？</a>
+          </li>
+        
+          <li>
+            <a href="/archives/redis-key-202309.html">Redis 热key是什么问题，如何导致的？有什么解决方案？</a>
+          </li>
+        
+          <li>
+            <a href="/archives/spring-restclient-2023.html">HttpClient? RestTemplate？WebClient? 不~是 RestClient</a>
+          </li>
+        
+          <li>
+            <a href="/archives/lkcoffee-shanghai-coffee-activities-20230602.html">上海咖啡文化周之薅瑞幸羊毛</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+    
+        
+   
+    <div class="nexmoe-copyright">
+        &copy; 2023 Honesty
+        Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+        & <a href="https://github.com/theme-nexmoe/hexo-theme-nexmoe" target="_blank">Nexmoe</a>
+        <br><a target="_blank" href="https://beian.miit.gov.cn/">湘ICP备20014902号</a>
+<br><a target="_blank" href="https://www.upyun.com/?utm_source=lianmeng&utm_medium=referral">
+
+    </div>
+</div><!-- .nexmoe-drawer --></div><div id="nexmoe-content"><div class="nexmoe-primary"><div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover"> 
+            <img src="https://blog-file.hehouhui.cn/202305111934350.jpeg" alt="API网关之Gateway" loading="lazy">
+            <h1>API网关之Gateway</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2022年03月05日</a>
+        
+            <a class="nexmoefont icon-appstore-fill -link" href="/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</a>
+        
+        
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <h1 id="Gateway"><a href="#Gateway" class="headerlink" title="Gateway"></a>Gateway</h1><h2 id="什么是服务网关"><a href="#什么是服务网关" class="headerlink" title="什么是服务网关"></a><strong>什么是服务网关</strong></h2><p><code>API Gateway</code>，顾名思义，是出现在系统边界上的一个面向 API 的、串行集中式的强管控服务，这里的边界是系统服务的边界，可以理解为<code>服务防火墙</code>，主要起到<code>隔离外部访问与内部系统的作用</code>。在微服务概念的流行之前，API 网关就已经诞生了，例如银行、证券等领域常见的前置机系统，它也是解决访问认证、报文转换、访问统计等问题的。</p>
+<p>API 网关的流行，源于近几年来移动应用与企业间互联需求的兴起。移动应用、企业互联，使得后台服务支持的对象，从以前单一的 Web 应用，扩展到多种使用场景，且每种使用场景对后台服务的要求都不尽相同。这不仅增加了后台服务的响应量，还增加了后台服务的复杂性。<code>随着微服务架构概念的提出，API网关成为了微服务架构的一个标配组件</code>。</p>
+<p>API 网关是一个服务器，是系统对外的唯一入口。API 网关封装了系统内部架构，为每个客户端提供定制的 API。所有的客户端和消费端都通过统一的网关接入微服务，在网关层处理所有非业务功能。API 网关并不是微服务场景中必须的组件，如下图，不管有没有 API 网关，后端微服务都可以通过 API 很好地支持客户端的访问。</p>
+<p><img src="https://blog-file.hehouhui.cn/1280X1280.png"></p>
+<p>API 网关出现的原因是微服务架构的出现，不同的微服务一般会有不同的网络地址，而外部客户端可能需要调用多个服务的接口才能完成一个业务需求，如果让客户端直接与各个微服务通信，会有以下的问题：</p>
+<ul>
+<li>客户端会多次请求不同的微服务，增加了客户端的复杂性。</li>
+<li>存在跨域请求，在一定场景下处理相对复杂。</li>
+<li>认证复杂，每个服务都需要独立认证。</li>
+<li>难以重构，随着项目的迭代，可能需要重新划分微服务。例如，可能将多个服务合并成一个或者将一个服务拆分成多个。如果客户端直接与微服务通信，那么重构将会很难实施。</li>
+<li>某些微服务可能使用了防火墙 &#x2F; 浏览器不友好的协议，直接访问会有一定的困难。</li>
+</ul>
+<p><strong>API 网关方式的核心要点是，所有的客户端和消费端都通过统一的网关接入微服务，</strong> 在网关层处理所有的非业务功能。通常，网关也是提供 REST&#x2F;HTTP 的访问 API。</p>
+<h2 id="网关解决了什么问题"><a href="#网关解决了什么问题" class="headerlink" title="网关解决了什么问题"></a><strong>网关解决了什么问题</strong></h2><p>但对于服务数量众多、复杂度比较高、规模比较大的业务来说，引入 API 网关也有一系列的好处：</p>
+<ul>
+<li>聚合接口使得服务对调用者透明，客户端与后端的耦合度降低</li>
+<li>聚合后台服务，节省流量，提高性能，提升用户体验</li>
+<li>提供安全、流控、过滤、缓存、计费、监控等 API 管理功能</li>
+</ul>
+<p><img src="https://blog-file.hehouhui.cn/clip_image003.png"></p>
+<p>网关应当具备以下功能</p>
+<ul>
+<li>性能：API 高可用，负载均衡，容错机制。</li>
+<li>安全：权限身份认证、脱敏，流量清洗分发，后端签名（保证全链路可信调用），黑名单（非法调用的限制）。</li>
+<li>日志：日志记录，一旦涉及分布式，全链路跟踪必不可少。</li>
+<li>缓存：数据缓存。</li>
+<li>监控：记录请求响应数据，API 耗时分析，性能监控。</li>
+<li>限流：流量控制，错峰流控，可以定义多种限流规则。</li>
+<li>灰度：线上灰度部署，可以减小风险。</li>
+<li>路由：动态路由规则。</li>
+</ul>
+<p>主要功能</p>
+<ul>
+<li>数据平面主要功能是接入用户的 HTTP 请求和微服务被拆分后的聚合。使用微服务网关统一对外暴露后端服务的 API 和契约，路由和过滤功能正是网关的核心能力模块。另外，微服务网关可以实现拦截机制和专注跨横切面的功能，包括协议转换、安全认证、熔断限流、灰度发布、日志管理、流量监控等。</li>
+<li>控制平面主要功能是对后端服务做统一的管控和配置管理。例如，可以控制网关的弹性伸缩；可以统一下发配置；可以对网关服务添加标签；</li>
+</ul>
+<h1 id="Spring-Cloud-Gateway"><a href="#Spring-Cloud-Gateway" class="headerlink" title="Spring Cloud Gateway"></a><strong>Spring Cloud Gateway</strong></h1><blockquote>
+<p>Spring Cloud Gateway 是基于 Spring 生态系统之上构建的 API 网关，包括：Spring 5，Spring Boot 2 和 Project Reactor。Spring Cloud Gateway 旨在提供一种简单而有效的方法来路由到 API，并为它们提供跨领域的关注点，例如：安全性，监视&#x2F;指标，限流等。</p>
+</blockquote>
+<pre><code>由于 Spring 5.0 支持 Netty，Http2，而 Spring Boot 2.0 支持 Spring 5.0，因此 Spring Cloud Gateway 天然支持 Netty 和 Http2。
+</code></pre>
+<p>Spring Cloud Gateway 建立在<a target="_blank" rel="noopener" href="https://spring.io/projects/spring-boot#learn">Spring Boot 2.x</a>、<a target="_blank" rel="noopener" href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html">Spring WebFlux</a>和<a target="_blank" rel="noopener" href="https://projectreactor.io/docs">Project Reactor</a>之上（基于⾼性能的 Reactor 模式响应式通信框架 Netty，异步⾮阻塞模型）。因此当使用 Spring Cloud Gateway 时，许多熟悉的同步库（例如 Spring Data 和 Spring Security）和模式可能并不适用。</p>
+<p>Spring Cloud Gateway 需要 Spring Boot 和 <code>Spring Webflux</code> 提供的 <code>Netty</code> 运行时。它不适用于传统的 Servlet 容器或构建为 WAR 时。</p>
+<h2 id="核心概念"><a href="#核心概念" class="headerlink" title="核心概念"></a><strong>核心概念</strong></h2><ul>
+<li><strong>Route:</strong> The basic building block of the gateway. It is defined by an ID, a destination URI, a collection of predicates, and a collection of filters. A route is matched if the aggregate predicate is true.<ul>
+<li>路由是构建网关的基本模块，它由 ID，目标 URI，一系列的断言和过滤器组成，如果断言为 true 则匹配该路由</li>
+</ul>
+</li>
+<li><strong>Predicate</strong>: This is a <a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html">Java 8 Function Predicate</a>. The input type is a <a target="_blank" rel="noopener" href="https://docs.spring.io/spring/docs/5.0.x/javadoc-api/org/springframework/web/server/ServerWebExchange.html">Spring Framework ServerWebExchange</a>. This lets you match on anything from the HTTP request, such as headers or parameters.<ul>
+<li>参考的是 java8 的 java.util.function.Predicate 开发人员可以匹配 HTTP 请求中的所有内容（例如请求头或请求参数），如果请求与断言相匹配则进行路由</li>
+</ul>
+</li>
+<li><strong>Filter</strong>: These are instances of <code>GatewayFilter</code> that have been constructed with a specific factory. Here, you can modify requests and responses before or after sending the downstream request.<ul>
+<li>指的是 Spring 框架中 GatewayFilter 的实例，使用过滤器，可以在请求被路由前或者之后对请求进行修改。</li>
+</ul>
+</li>
+</ul>
+<p>工作流程</p>
+<p><img src="https://blog-file.hehouhui.cn/clip_image005.png"></p>
+<p>如上图所示，客户端向 <code>Spring Cloud Gateway</code> 发出请求。再由网关处理程序 <code>Gateway Handler Mapping</code> 映射确定与请求相匹配的路由，将其发送到网关 Web 处理程序 <code>Gateway Web Handler</code>。该处理程序通过指定的过滤器链将请求发送到我们实际的服务执行业务逻辑，然后返回。过滤器由虚线分隔的原因是，过滤器可以在发送代理请求之前和之后运行逻辑。所有 <code>pre</code> 过滤器逻辑均被执行。然后发出代理请求。发出代理请求后，将运行 <code>post</code> 过滤器逻辑。</p>
+<h2 id="Predicate-断言"><a href="#Predicate-断言" class="headerlink" title="Predicate 断言"></a><strong>Predicate 断言</strong></h2><p>SpringCloud Gateway 包括许多内置的 Route Predicate 工厂。所有这些 Predicate 都与 HTTP 请求的不同属性匹配。多个 Route Predicate 工厂可以进行组合。</p>
+<p>SpringCloud Gateway 创建 Route 对象时，使用 RoutePredicateFactory 创建 Predicate 对象，Predicate 对象可以赋值给 Route。SpringCloud Gateway 包含许多内置的 RoutePredicateFactories。</p>
+<p>所有这些断言都匹配 HTTP 请求的不同属性。多种断言工厂可以组合，并通过逻辑 and。</p>
+<blockquote>
+<p>SpringCloud Gateway 将路由匹配作为 Spring WebFlux HandlerMapping 基础架构的一部分。</p>
+</blockquote>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">server:</span><br><span class="line">  port: 11001</span><br><span class="line">spring:</span><br><span class="line">  application:</span><br><span class="line">    name: gateway</span><br><span class="line">  cloud:</span><br><span class="line">    gateway:</span><br><span class="line">      discovery:</span><br><span class="line">        locator:</span><br><span class="line">          enabled: true  #开启从注册中心动态创建路由的功能，利用微服务名进行路由</span><br><span class="line">      routes:</span><br><span class="line">        - id: blog-admin #路由的ID，没有固定规则但要求唯一，建议配合服务名</span><br><span class="line">          #uri: &lt;http://localhost:8001&gt;   #匹配后提供服务的路由地址</span><br><span class="line">          uri: lb://blog-service</span><br><span class="line">          predicates:</span><br><span class="line">            - Path=/api/admin/**   #断言,路径相匹配的进行路由</span><br><span class="line">   - id: blog</span><br><span class="line">      #uri: &lt;http://localhost:8001&gt;   #匹配后提供服务的路由地址</span><br><span class="line">      uri: lb://blog-service</span><br><span class="line">      predicates:</span><br><span class="line">        - Path=/archives/**   #断言,路径相匹配的进行路由</span><br><span class="line">        #- After=2020-03-08T10:59:34.102+08:00[Asia/Shanghai]</span><br><span class="line">        #- Cookie=username,zhangshuai #并且Cookie是username=zhangshuai才能访问</span><br><span class="line">        #- Header=X-Request-Id, \\d+ #请求头中要有X-Request-Id属性并且值为整数的正则表达式</span><br><span class="line">        #- Host=**.atguigu.com</span><br><span class="line">        #- Method=GET</span><br><span class="line">        #- Query=username, \\d+ #要有参数名称并且是正整数才能路由</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="内置谓词断言"><a href="#内置谓词断言" class="headerlink" title="内置谓词断言"></a><strong>内置谓词断言</strong></h3><ul>
+<li><p><strong>After Route Predicate Factory</strong> 匹配在指定日期时间之后发生的请求</p>
+<ul>
+<li>参数：datetime</li>
+<li>注意时间格式带时区 ZonedDateTime</li>
+<li><code>spring: cloud: gateway: routes: - id: after_route_test uri: &lt;https://www.hehouhui.cn&gt; predicates: - After=2022-07-10T17:42:00.789-07:00[Asia/Shanghai]</code></li>
+</ul>
+</li>
+<li><p><strong>Before Route Predicate Factory</strong> 匹配在指定日期时间之前发生的请求</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">参数：datetime</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>注意时间格式带时区 ZonedDateTime</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">spring:</span><br><span class="line"> cloud:</span><br><span class="line">   gateway:</span><br><span class="line">     routes:</span><br><span class="line">     - id: before_route_test</span><br><span class="line">       uri: &lt;https://www.hehouhui.cn&gt;</span><br><span class="line">       predicates:</span><br><span class="line">       - Before=2022-07-10T17:43:48.789-07:00[Asia/Shanghai]</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>Between Route Predicate Factory</strong> 匹配在指定范围日期时间发生的请求<ul>
+<li>参数：datetime1 开始</li>
+<li>datetime2 结束</li>
+<li>注意时间格式带时区 ZonedDateTime</li>
+<li><code>spring: cloud: gateway: routes: - id: between_route_test uri: &lt;https://www.hehouhui.cn&gt; predicates: - Between=2022-07-10T17:42:30.789-07:00[Asia/Shanghai],2022-07-10T17:42:59.789-07:00[Asia/Shanghai]</code></li>
+</ul>
+</li>
+<li><strong>Cookie Route Predicate Factory</strong> 匹配在指定包含指定 cookie 值的请求</li>
+</ul>
+<p>参数：name cookie 名称</p>
+<ul>
+<li>regexp 匹配值的正则</li>
+<li><code>spring: cloud: gateway: routes: - id: cookie_route_test uri: &lt;https://www.hehouhui.cn&gt; predicates: - Cookie=token,allow_account</code></li>
+<li><strong>Header Route Predicate Factory</strong> 匹配在指定包含指定请求头的请求</li>
+</ul>
+<p>参数：name 请求头的名称</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">regexp 匹配值的正则</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">spring:</span><br><span class="line"> cloud:</span><br><span class="line">   gateway:</span><br><span class="line">     routes:</span><br><span class="line">     - id: handler_route_test</span><br><span class="line">       uri: &lt;https://www.hehouhui.cn&gt;</span><br><span class="line">       predicates:</span><br><span class="line">       - Handler=User-Agent,*Mac OS*</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>Host Route Predicate Factory</strong> 请求主机地址匹配</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">参数： patterns 正则集合</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">spring:</span><br><span class="line"> cloud:</span><br><span class="line">   gateway:</span><br><span class="line">     routes:</span><br><span class="line">     - id: host_route_test</span><br><span class="line">       uri: &lt;https://www.hehouhui.cn&gt;</span><br><span class="line">       predicates:</span><br><span class="line">       - Host=blog.hehouhui.cn</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>Method Route Predicate Factory</strong> 请求方法的匹配</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">参数： methods 集合</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">spring:</span><br><span class="line"> cloud:</span><br><span class="line">   gateway:</span><br><span class="line">     routes:</span><br><span class="line">     - id: method_route_test</span><br><span class="line">       uri: &lt;https://www.hehouhui.cn&gt;</span><br><span class="line">       predicates:</span><br><span class="line">       - Method=Get,Post</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>Path Route Predicate Factory</strong> 请求路由规则匹配</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">参数：patterns 匹配集合</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">spring:</span><br><span class="line">  cloud:</span><br><span class="line">    gateway:</span><br><span class="line">      routes:</span><br><span class="line">      - id: path_route_test</span><br><span class="line">        uri: &lt;https://www.hehouhui.cn&gt;</span><br><span class="line">        predicates:</span><br><span class="line">        - Path=/test/**</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>Query Route Predicate Factory</strong> 请求参数 url ？后的参数</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">参数  param 参数名</span><br><span class="line"></span><br><span class="line">          regexp 参数匹配值，如果为空的情况下表示任何值</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">spring:</span><br><span class="line">  cloud:</span><br><span class="line">    gateway:</span><br><span class="line">      routes:</span><br><span class="line">      - id: query_route_test</span><br><span class="line">        uri: &lt;https://www.hehouhui.cn&gt;</span><br><span class="line">        predicates:</span><br><span class="line">        - Query=name,laiweihua</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>RemoteAddr Route Predicate Factory</strong> 客户端请求 IP 匹配</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">参数：sources 注意此处为cidr格式 CIDR 表示法（IPv4 或 IPv6）字符串</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">spring:</span><br><span class="line">  cloud:</span><br><span class="line">    gateway:</span><br><span class="line">      routes:</span><br><span class="line">      - id: remoteAddr_route_test</span><br><span class="line">        uri: &lt;https://www.hehouhui.cn&gt;</span><br><span class="line">        predicates:</span><br><span class="line">        - RemoteAddr=192.168.1.1/24</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>默认情况下，RemoteAddr 路由谓词工厂使用来自传入请求的远程地址。如果 Spring Cloud Gateway 位于代理层后面，这可能与实际客户端 IP 地址不匹配。</p>
+<p>可以通过设置自定义来自定义解析远程地址的方式<code>RemoteAddressResolver</code>。Spring Cloud Gateway 带有一个基于<a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For">X-Forwarded-For 标头</a>的非默认远程地址解析器，<code>XForwardedRemoteAddressResolver</code>.</p>
+<p><code>XForwardedRemoteAddressResolver</code>有两个静态构造方法，它们采用不同的安全方法：</p>
+<ul>
+<li><p><code>XForwardedRemoteAddressResolver::trustAll</code>返回<code>RemoteAddressResolver</code>始终采用在<code>X-Forwarded-For</code>标头中找到的第一个 IP 地址的 a。这种方法容易受到欺骗，因为恶意客户端可以为 设置初始值，<code>X-Forwarded-For</code>解析器会接受该值。</p>
+</li>
+<li><p><code>XForwardedRemoteAddressResolver::maxTrustedIndex</code>采用与 Spring Cloud Gateway 前运行的受信任基础架构数量相关的索引。例如，如果 Spring Cloud Gateway 只能通过 HAProxy 访问，则应使用值 1。如果在访问 Spring Cloud Gateway 之前需要两跳可信基础架构，则应使用值 2。</p>
+</li>
+<li><p><strong>Weight Route Predicate Factory</strong> 权重路由匹配</p>
+<p>参数： group 自定义分组名称</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">weight 权重</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">spring:</span><br><span class="line">  cloud:</span><br><span class="line">    gateway:</span><br><span class="line">      routes:</span><br><span class="line">      - id: weight_high</span><br><span class="line">        uri: &lt;https://www.hehouhui.cn&gt;</span><br><span class="line">        predicates:</span><br><span class="line">        - Weight=group, 8</span><br><span class="line">      - id: weight_low</span><br><span class="line">        uri: &lt;https://blog.hehouhui.cn&gt;</span><br><span class="line">        predicates:</span><br><span class="line">        - Weight=group, 2</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">该路由会将约 80% 的流量转发到 &lt;https://www.hehouhui.cn&gt;，将约 20% 的流量转发到https://blog.hehouhui.cn</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>XForwarded Remote Addr Route Predicate Factory</strong> 根据 X-Forwarded-For 请求头匹配</p>
+<p>参数：sources 注意此处为 cidr 格式</p>
+</li>
+</ul>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">spring:</span><br><span class="line">  cloud:</span><br><span class="line">    gateway:</span><br><span class="line">      routes:</span><br><span class="line">      - id: xforwarded_route</span><br><span class="line">        uri: &lt;https://www.hehouhui.cn&gt;</span><br><span class="line">        predicates:</span><br><span class="line">        - XForwardedRemoteAddr=192.168.1.1/24</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="Filter-过滤器"><a href="#Filter-过滤器" class="headerlink" title="Filter 过滤器"></a><strong>Filter 过滤器</strong></h2><h3 id="GlobaFilter-全局过滤器"><a href="#GlobaFilter-全局过滤器" class="headerlink" title="GlobaFilter 全局过滤器"></a><strong>GlobaFilter 全局过滤器</strong></h3><blockquote>
+<p>GlobaFilter 全局过滤器，不需要在配置文件中配置，系统初始化时加载，并作用在每个路由上。 SpringCloud Gateway 核心的功能也是通过内置的全局过滤器来完成</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>类名</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CustomGlobalFilter</td>
+<td>组合所有过滤器的排序,包含 GlobaFilter 和 GatewayFilter。Gateway 区分过滤器逻辑执行的“前”和“后”阶段，具有最高优先级的过滤器是“前”阶段的第一个和“后”阶段的最后一个 -阶段。</td>
+</tr>
+<tr>
+<td>ForwardRoutingFilter</td>
+<td>forward:&#x2F;&#x2F;开头的 url 协议将会被转发</td>
+</tr>
+<tr>
+<td>ReactiveLoadBalancerClientFilter</td>
+<td>将以 lb:&#x2F;&#x2F;开头的 url 经过 ReactorLoadBalancer 路由加载转换</td>
+</tr>
+<tr>
+<td>NettyRoutingFilter</td>
+<td>http 或者 https 协议 由 Netty 过滤器运行。它使用 NettyHttpClient 发出下游代理请求</td>
+</tr>
+<tr>
+<td>NettyWriteResponseFilter</td>
+<td>并将代理响应写回网关客户端响应</td>
+</tr>
+<tr>
+<td>RouteToRequestUrlFilter</td>
+<td>将 Route 对象转为 URL,并存储原 Route 信息</td>
+</tr>
+<tr>
+<td>WebsocketRoutingFilter</td>
+<td>将以 ws,wss 或请求头 Upgrade &#x3D; WebSocket 的 http,https 以 We bsocket 协议执行</td>
+</tr>
+<tr>
+<td>GatewayMetricsFilter</td>
+<td>路由指标数据收集用于集成 Grafana 仪表板</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="AbstractGatewayFilterFactory-局部过滤器工厂"><a href="#AbstractGatewayFilterFactory-局部过滤器工厂" class="headerlink" title="AbstractGatewayFilterFactory 局部过滤器工厂"></a><strong>AbstractGatewayFilterFactory 局部过滤器工厂</strong></h3><blockquote>
+<p>GatewayFilter 局部过滤器，是针对单个路由的过滤器。 在 SpringCloud Gateway 组件中提供了大量内置的局部过滤器，对请求和响应坐过滤操作。</p>
+</blockquote>
+<blockquote>
+<p>遵循约定大于配置的思想，只需要在配置文件配置局部过滤器名称，并为其制定对应的值。就可以让其生效。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>作用</th>
+<th>参数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AddRequestHeader</td>
+<td>为路由添加请求头</td>
+<td>name,value</td>
+</tr>
+<tr>
+<td>AddRequestParameter</td>
+<td>为路由添加请求 query 参数(拼接在 url 后)</td>
+<td>name,value</td>
+</tr>
+<tr>
+<td>AddResponseHeader</td>
+<td>为路由添加响应头</td>
+<td>name,value</td>
+</tr>
+<tr>
+<td>DedupeResponseHeader</td>
+<td>响应头去重,默认取响应头的首个 value，最主要是用来处理自 2.2.5 版本后网关和下游服务都处理了 CORS 的 bug</td>
+<td>name,strategy</td>
+</tr>
+<tr>
+<td>CircuitBreaker</td>
+<td>路由断路器，在服务异常或者返回指定状态码时转发路由至指定 fallbackUri</td>
+<td>name,fallbackUri,routeId,statusCodes</td>
+</tr>
+<tr>
+<td>FallbackHeaders</td>
+<td>在执行请求转发时添加指定的请求头信息</td>
+<td></td>
+</tr>
+<tr>
+<td>MapRequestHeader</td>
+<td>copy 请求头中指定值到新的请求头中</td>
+<td>fromHeader,toHeader</td>
+</tr>
+<tr>
+<td>PrefixPath</td>
+<td>为路由 URL 添加统一前缀</td>
+<td>prefix</td>
+</tr>
+<tr>
+<td>PreserveHostHeader</td>
+<td>无特殊逻辑，只是标记一下路由为原始请求</td>
+<td></td>
+</tr>
+<tr>
+<td>RequestRateLimiter</td>
+<td>路由限流，由 KeyResolver 解析出路由细粒度，RateLimiter 进行限流处理</td>
+<td>keyResolver, <strong>rate-limiter.replenish-rate ,rate-limiter.burst-capacity,rate-limiter.requested-tokens</strong>。requestedTokens 每次请求消耗多少令牌，burstCapacity 令牌桶总容量，replenishRate 每多少秒生产一枚令牌</td>
+</tr>
+<tr>
+<td>RedirectTo</td>
+<td>请求转发</td>
+<td></td>
+</tr>
+<tr>
+<td>RemoveRequestHeader</td>
+<td>删除请求头</td>
+<td></td>
+</tr>
+<tr>
+<td>RemoveResponseHeader</td>
+<td>删除响应头</td>
+<td></td>
+</tr>
+<tr>
+<td>RemoveRequestParameter</td>
+<td>删除请求参数</td>
+<td></td>
+</tr>
+<tr>
+<td>RequestHeaderSize</td>
+<td>累计请求头 value bytes 大小不超过最大值</td>
+<td></td>
+</tr>
+<tr>
+<td>RewritePath</td>
+<td>重写 Path</td>
+<td></td>
+</tr>
+<tr>
+<td>RewriteLocationResponseHeader</td>
+<td>修改 Location 的值</td>
+<td></td>
+</tr>
+<tr>
+<td>RewriteResponseHeader</td>
+<td>重写响应头值</td>
+<td></td>
+</tr>
+<tr>
+<td>SaveSession</td>
+<td>保存 session</td>
+<td></td>
+</tr>
+<tr>
+<td>SecureHeaders</td>
+<td>安全生命请求头</td>
+<td></td>
+</tr>
+<tr>
+<td>SetPath</td>
+<td>设置新 Path</td>
+<td></td>
+</tr>
+<tr>
+<td>SetRequestHeader</td>
+<td>设置请求头</td>
+<td></td>
+</tr>
+<tr>
+<td>SetResponseHeader</td>
+<td>设置响应头</td>
+<td></td>
+</tr>
+<tr>
+<td>SetStatus</td>
+<td>设置状态码</td>
+<td></td>
+</tr>
+<tr>
+<td>StripPrefix</td>
+<td>路由摘除以&#x2F;分割</td>
+<td>parts</td>
+</tr>
+<tr>
+<td>Retry</td>
+<td>路由重试</td>
+<td>retries：重试次数,statuses: 判断可重试的状态吗默认 5xx,methods: 支持重试的请求方法,exceptions: 重试的抛出异常列表</td>
+</tr>
+<tr>
+<td>RequestSize</td>
+<td>通过 Content-length 判断是否超过最大请求大小</td>
+<td></td>
+</tr>
+<tr>
+<td>SetRequestHostHeader</td>
+<td>清除原请求头 Host，并添加新值</td>
+<td></td>
+</tr>
+<tr>
+<td>ModifyRequestBody</td>
+<td>修改请求体</td>
+<td></td>
+</tr>
+<tr>
+<td>ModifyResponseBody</td>
+<td>修改响应体</td>
+<td></td>
+</tr>
+<tr>
+<td>TokenRelay</td>
+<td>OAuth2 标准认证服务，执行授权认证后并将信息传递下游服务</td>
+<td></td>
+</tr>
+<tr>
+<td>CacheRequestBody</td>
+<td>缓存请求体</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="RouteLocator"><a href="#RouteLocator" class="headerlink" title="RouteLocator"></a>RouteLocator</h3><pre><code>路由配置加载
+</code></pre>
+<h3 id="ConfigurationService"><a href="#ConfigurationService" class="headerlink" title="ConfigurationService"></a>ConfigurationService</h3><p>路由&amp;谓词&amp;过滤器工程等动态配置等实现</p>
+
+    <p><img src="https://i.dawnlab.me/53a8c7cf3ad77a0f0a456ce2c6afe88a.png" loading="lazy"></p>
+
+  </article>
+
+  
+      
+    <div class="nexmoe-post-copyright">
+        <strong>本文作者：</strong>Honesty<br>
+        <strong>本文链接：</strong><a href="https://docs.hehouhui.cn/archives/46.html" title="https:&#x2F;&#x2F;docs.hehouhui.cn&#x2F;archives&#x2F;46.html" target="_blank" rel="noopener">https:&#x2F;&#x2F;docs.hehouhui.cn&#x2F;archives&#x2F;46.html</a><br>
+        
+            <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
+
+        
+    </div>
+
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/Spring/" rel="tag">Spring</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag">分布式</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" rel="tag">微服务</a>
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1698751493252"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          <script src="https://giscus.app/client.js"
+       data-repo="listener-He/NotionNext"
+       data-repo-id="R_kgDOJI1XUA"
+       data-category="General"
+       data-category-id="R_kgDOJOsY1g"
+       data-mapping="pathname"
+       data-strict="0"
+       data-reactions-enabled="1"
+       data-emit-metadata="0"
+       data-input-position="top"
+       data-theme="preferred_color_scheme"
+       data-lang="zh-CN"
+       data-loading="lazy"
+       crossorigin="anonymous"
+       async>
+ </script>
+
+      </div>
+  
+</div></div><div class="nexmoe-post-right">    <div class="nexmoe-fixed">
+        <div class="nexmoe-tool">
+
+            
+
+            
+            
+            <button class="mdui-fab catalog" style="overflow:unset;">
+                <i class="nexmoefont icon-i-catalog"></i>
+                <div class="nexmoe-toc">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Gateway"><span class="toc-number">1.</span> <span class="toc-text">Gateway</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%9C%8D%E5%8A%A1%E7%BD%91%E5%85%B3"><span class="toc-number">1.1.</span> <span class="toc-text">什么是服务网关</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BD%91%E5%85%B3%E8%A7%A3%E5%86%B3%E4%BA%86%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="toc-number">1.2.</span> <span class="toc-text">网关解决了什么问题</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Spring-Cloud-Gateway"><span class="toc-number">2.</span> <span class="toc-text">Spring Cloud Gateway</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5"><span class="toc-number">2.1.</span> <span class="toc-text">核心概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Predicate-%E6%96%AD%E8%A8%80"><span class="toc-number">2.2.</span> <span class="toc-text">Predicate 断言</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E7%BD%AE%E8%B0%93%E8%AF%8D%E6%96%AD%E8%A8%80"><span class="toc-number">2.2.1.</span> <span class="toc-text">内置谓词断言</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Filter-%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="toc-number">2.3.</span> <span class="toc-text">Filter 过滤器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#GlobaFilter-%E5%85%A8%E5%B1%80%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="toc-number">2.3.1.</span> <span class="toc-text">GlobaFilter 全局过滤器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AbstractGatewayFilterFactory-%E5%B1%80%E9%83%A8%E8%BF%87%E6%BB%A4%E5%99%A8%E5%B7%A5%E5%8E%82"><span class="toc-number">2.3.2.</span> <span class="toc-text">AbstractGatewayFilterFactory 局部过滤器工厂</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RouteLocator"><span class="toc-number">2.3.3.</span> <span class="toc-text">RouteLocator</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ConfigurationService"><span class="toc-number">2.3.4.</span> <span class="toc-text">ConfigurationService</span></a></li></ol></li></ol></li></ol>
+                </div>
+            </button>
+            
+
+            
+
+            <a href="#nexmoe-content" class="backtop toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+        </div>
+    </div>
+</div></div><div id="nexmoe-footer"><!--!--></div><div><div id="nexmoe-search-space">
+	<div class="search-container">
+		<div class="search-header">
+			<div class="search-input-container">
+				<input
+					class="search-input"
+					type="text"
+					placeholder="搜索"
+					oninput="sinput();"
+				/>
+			</div>
+			<a class="search-close" onclick="sclose();">×</a>
+		</div>
+		<div class="search-body"></div>
+	</div>
+</div>
+</div><div><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1623991949842711" crossorigin="anonymous"></script>
+</div></body></html>

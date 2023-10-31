@@ -1,0 +1,687 @@
+<!doctype html>
+<html lang="zh"><head>
+<title>spring cache - Honesty wiki</title>
+<meta charset="UTF-8">
+<meta name="keywords" content="Honesty 知识库,Honesty Wiki, Honesty blog,hehouhui 知识库,hehouhui Wiki, hehouhui blog">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+<meta name="description" content="💡 Spring Cache 是一个强大的缓存框架，可用于提高应用程序的性能和可靠性。它是 Spring 框架的一部分，基于标准的缓存抽象，提供了一个统一的、可扩展的缓存解决方案。Spring Cache 支持多种缓存提供者，包括 Ehcache、Redis、Couchbase 等。它还提供了灵活的配置选项，使开发人员可以根据应用程序的需要选择最适合的缓存解决方案。 使用 Spring Cac">
+<meta property="og:type" content="article">
+<meta property="og:title" content="spring cache">
+<meta property="og:url" content="https://docs.hehouhui.cn/archives/18.html">
+<meta property="og:site_name" content="Honesty wiki">
+<meta property="og:description" content="💡 Spring Cache 是一个强大的缓存框架，可用于提高应用程序的性能和可靠性。它是 Spring 框架的一部分，基于标准的缓存抽象，提供了一个统一的、可扩展的缓存解决方案。Spring Cache 支持多种缓存提供者，包括 Ehcache、Redis、Couchbase 等。它还提供了灵活的配置选项，使开发人员可以根据应用程序的需要选择最适合的缓存解决方案。 使用 Spring Cac">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-06-02T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-10-08T06:42:00.000Z">
+<meta property="article:author" content="Honesty">
+<meta property="article:tag" content="Spring">
+<meta property="article:tag" content="缓存">
+<meta name="twitter:card" content="summary">
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1698751493530">
+
+<link rel="stylesheet" href="/css/style.css?v=1698751493530">
+
+
+
+
+    
+        <link rel="stylesheet" href="/custom.css?v=1698751493530">
+    
+
+
+
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+<script src="/lib/lax.min.js" async></script>
+
+
+<script async src="/js/app.js?v=1698751493530"></script>
+
+ 
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-248JM4ZRPJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+
+  gtag("config", "G-248JM4ZRPJ");
+</script>
+
+<meta name="generator" content="Hexo 6.3.0"></head><body class="nexmoe mdui-drawer-body-left"><div id="nexmoe-background"><div class="nexmoe-bg" style="background-image: url(https://blog-file.hehouhui.cn/202305111934350.jpeg)"></div><div class="mdui-appbar mdui-shadow-0"><div class="mdui-toolbar"><a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-drawer="{target: &#039;#drawer&#039;, swipe: true}" title="menu"><i class="mdui-icon nexmoefont icon-menu"></i></a><div class="mdui-toolbar-spacer"></div><a class="mdui-btn mdui-btn-icon" href="/" title="Honesty"><img src="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309111525908.jpeg" alt="Honesty"></a></div></div></div><div id="nexmoe-header"><div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="Honesty">
+            <img src="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309111525908.jpeg" alt="Honesty" alt="Honesty">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>30</div>
+        <div><span>标签</span>33</div>
+        <div><span>分类</span>4</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archive.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/PY.html" title="我的朋友">
+            <i class="mdui-list-item-icon nexmoefont icon-unorderedlist"></i>
+            <div class="mdui-list-item-content">
+                我的朋友
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/donate.html" title="给我赞助">
+            <i class="mdui-list-item-icon nexmoefont icon-coffee"></i>
+            <div class="mdui-list-item-content">
+                给我赞助
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/about.html" title="关于博主">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于博主
+            </div>
+        </a>
+        
+    </div>
+    
+    
+        
+        <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+         
+            <form id="search_form" action_e="https://cn.bing.com/search?q=site:hehouhui.cn" onsubmit="return search();">
+                <label><input id="search_value" name="q" type="search" placeholder="搜索"></label>
+            </form>
+         
+    </div>
+</div>
+
+
+
+
+    
+        
+        <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="https://space.bilibili.com/442038841"
+			target="_blank"
+			mdui-tooltip="{content: '哔哩哔哩'}"
+			style="
+				color: rgb(231, 106, 141);
+				background-color: rgba(231, 106, 141, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-bilibili"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://github.com/listener-He"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://www.zhihu.com/people/wen-xin-92-2-57"
+			target="_blank"
+			mdui-tooltip="{content: '知乎'}"
+			style="
+				color: rgb(30, 136, 229);
+				background-color: rgba(30, 136, 229, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-zhihu"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://twitter.com/Honesty861024"
+			target="_blank"
+			mdui-tooltip="{content: 'Twitter'}"
+			style="
+				color: rgb(59, 151, 239);
+				background-color: rgba(59, 151, 239, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-twitter"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://docs.hehouhui.cn/atom.xml"
+			target="_blank"
+			mdui-tooltip="{content: 'RSS'}"
+			style="
+				color: rgb(247, 132, 34);
+				background-color: rgba(247, 132, 34, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-rss"
+			></i> </a
+		>
+	</div>
+</div>
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/创作分享/">创作分享</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/学习思考/">学习思考</a>
+          <span class="category-list-count">3</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/技术分享/">技术分享</a>
+          <span class="category-list-count">25</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/碎片杂文/">碎片杂文</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/BUG/" style="font-size: 10px;">BUG</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/Jvm/" style="font-size: 10px;">Jvm</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Redis/" style="font-size: 15.71px;">Redis</a> <a href="/tags/SAAS/" style="font-size: 10px;">SAAS</a> <a href="/tags/Spring/" style="font-size: 18.57px;">Spring</a> <a href="/tags/WebFlux/" style="font-size: 10px;">WebFlux</a> <a href="/tags/chatgpt/" style="font-size: 10px;">chatgpt</a> <a href="/tags/hutool/" style="font-size: 10px;">hutool</a> <a href="/tags/keycloak/" style="font-size: 11.43px;">keycloak</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/notion/" style="font-size: 10px;">notion</a> <a href="/tags/oauth/" style="font-size: 11.43px;">oauth</a> <a href="/tags/%E5%81%A5%E5%BA%B7/" style="font-size: 10px;">健康</a> <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" style="font-size: 14.29px;">分布式</a> <a href="/tags/%E5%92%96%E5%95%A1/" style="font-size: 10px;">咖啡</a> <a href="/tags/%E5%93%8D%E5%BA%94%E5%BC%8F/" style="font-size: 10px;">响应式</a> <a href="/tags/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/" style="font-size: 11.43px;">图像处理</a> <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 10px;">多线程</a> <a href="/tags/%E5%AD%A6%E4%B9%A0/" style="font-size: 11.43px;">学习</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">工具</a> <a href="/tags/%E5%BB%BA%E7%AB%99/" style="font-size: 11.43px;">建站</a> <a href="/tags/%E5%BC%80%E5%8F%91/" style="font-size: 12.86px;">开发</a> <a href="/tags/%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/" style="font-size: 11.43px;">异步编程</a> <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" style="font-size: 17.14px;">微服务</a> <a href="/tags/%E6%80%9D%E8%80%83/" style="font-size: 12.86px;">思考</a> <a href="/tags/%E6%8A%80%E6%9C%AF%E6%B5%81/" style="font-size: 10px;">技术流</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 10px;">数据结构</a> <a href="/tags/%E6%95%B4%E6%B4%BB/" style="font-size: 10px;">整活</a> <a href="/tags/%E6%96%87%E5%AD%97/" style="font-size: 12.86px;">文字</a> <a href="/tags/%E7%89%A9%E8%81%94%E7%BD%91/" style="font-size: 10px;">物联网</a> <a href="/tags/%E7%BC%93%E5%AD%98/" style="font-size: 11.43px;">缓存</a>
+    </div>
+    
+      <script>
+        var maxTagcloud = parseInt(17);
+        var tags_length = parseInt(33);
+        var tags_arr = [];
+        for(var i = 0; i < tags_length; i++){
+          tags_arr.push(i);
+        }
+        tags_arr.sort(function (l, r) {
+          return Math.random() > 0.5 ? -1 : 1;
+        });
+        tags_arr = tags_arr.slice(0, maxTagcloud < tags_length ? tags_length - maxTagcloud : 0);
+        for(var tag_i = 0; tag_i < tags_arr.length; tag_i++){
+          document.getElementById("randomtagcloud").children[tags_arr[tag_i]].style.display = 'none';
+        }
+      </script>
+    
+  </div>
+
+    
+        
+        <!-- 一言 -->
+<div class="nexmoe-widget-wrap">
+  <h3 class="nexmoe-widget-title">
+    一言
+  </h3>
+  <div class="nexmoe-widget">
+    <ul class="hitokoto-box">
+      <li id="hitokoto_text_parent" class="hitokoto-text" hitokotoCategory="">
+        <a href="#" id="hitokoto_text">
+          
+        </a>
+        <a href="#" id="hitokoto_error_text" style="display: none;">
+          
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  let hitokotoText = document.getElementById('hitokoto_text')
+  let hitokotoErroText = document.getElementById('hitokoto_error_text')
+  let hitokotoCategory = document.getElementById('hitokoto_text_parent').getAttribute('hitokotoCategory')
+  window.addEventListener('load', function () {
+    let url = 'https://v1.hitokoto.cn'
+    if (hitokotoCategory) {
+      url += '?c=' + hitokotoCategory
+    }
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        hitokotoText.innerText = "「 " + data.hitokoto + " 」 from " + data.from
+        hitokotoText.href = 'https://hitokoto.cn/?uuid=' + data.uuid
+      })
+      .catch((reason) => {
+        console.error(11, reason)
+        hitokotoText.style.display = 'none'
+        hitokotoErroText.style.display = 'block'
+      })
+  })
+</script>
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/history/2023/">2023</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/history/2022/">2022</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/history/2021/">2021</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/history/2020/">2020</a><span class="archive-list-count">7</span></li></ul>
+    </div>
+  </div>
+
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">最新文章</h3>
+    <div class="nexmoe-widget">
+      <ul>
+        
+          <li>
+            <a href="/archives/spring-boot-tenant-202309.html">Spring Boot 实现多租户架构：支持应用多租户部署和管理</a>
+          </li>
+        
+          <li>
+            <a href="/archives/springcloud-data-202309.html">微服务之间的数据依赖问题，该如何解决？</a>
+          </li>
+        
+          <li>
+            <a href="/archives/redis-key-202309.html">Redis 热key是什么问题，如何导致的？有什么解决方案？</a>
+          </li>
+        
+          <li>
+            <a href="/archives/spring-restclient-2023.html">HttpClient? RestTemplate？WebClient? 不~是 RestClient</a>
+          </li>
+        
+          <li>
+            <a href="/archives/lkcoffee-shanghai-coffee-activities-20230602.html">上海咖啡文化周之薅瑞幸羊毛</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+    
+        
+   
+    <div class="nexmoe-copyright">
+        &copy; 2023 Honesty
+        Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+        & <a href="https://github.com/theme-nexmoe/hexo-theme-nexmoe" target="_blank">Nexmoe</a>
+        <br><a target="_blank" href="https://beian.miit.gov.cn/">湘ICP备20014902号</a>
+<br><a target="_blank" href="https://www.upyun.com/?utm_source=lianmeng&utm_medium=referral">
+
+    </div>
+</div><!-- .nexmoe-drawer --></div><div id="nexmoe-content"><div class="nexmoe-primary"><div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover"> 
+            <img src="https://blog-file.hehouhui.cn/202305111934350.jpeg" alt="spring cache" loading="lazy">
+            <h1>spring cache</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2020年06月02日</a>
+        
+            <a class="nexmoefont icon-appstore-fill -link" href="/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</a>
+        
+        
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <blockquote>
+<p>💡 Spring Cache 是一个强大的缓存框架，可用于提高应用程序的性能和可靠性。它是 Spring 框架的一部分，基于标准的缓存抽象，提供了一个统一的、可扩展的缓存解决方案。Spring Cache 支持多种缓存提供者，包括 Ehcache、Redis、Couchbase 等。它还提供了灵活的配置选项，使开发人员可以根据应用程序的需要选择最适合的缓存解决方案。</p>
+<p>使用 Spring Cache 可以帮助应用程序减少对数据库和其他外部资源的访问次数，从而提高应用程序的响应速度和吞吐量。除了提高性能之外，Spring Cache 还可以用于添加应用程序级别的缓存逻辑，例如缓存用户会话、结果集等。</p>
+<p>总之，Spring Cache 是一个十分强大的工具，可用于提高应用程序的性能和可靠性。它在 Spring 框架中的定位十分重要，是一个不可或缺的组件。如果您想要在应用程序中使用缓存，那么 Spring Cache 绝对是一个值得考虑的选择。</p>
+</blockquote>
+<h3 id="Cacheable"><a href="#Cacheable" class="headerlink" title="@Cacheable"></a><strong>@Cacheable</strong></h3><p>@Cacheable 的作用 主要针对方法配置，<strong>能够根据方法的请求参数对其结果进行缓存</strong></p>
+<p>@Cacheable 作用和配置方法</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>解释</th>
+<th>example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>value</td>
+<td>缓存的名称，在 <a target="_blank" rel="noopener" href="http://www.aspku.com/kaifa/java/237386.html">spring</a> 配置文件中定义，必须指定至少一个</td>
+<td>例如: @Cacheable(value&#x3D;”mycache”) @Cacheable(value&#x3D;{”cache1”,”cache2”}</td>
+</tr>
+<tr>
+<td>key</td>
+<td>缓存的 key，可以为空，如果指定要按照 SpEL 表达式编写，如果不指定，则缺省按照方法的所有参数进行组合</td>
+<td>@Cacheable(value&#x3D;”testcache”,key&#x3D;”#userName”)</td>
+</tr>
+<tr>
+<td>condition</td>
+<td>缓存的条件，可以为空，使用 SpEL 编写，返回 true 或者 false，只有为 true 才进行缓存</td>
+<td>@Cacheable(value&#x3D;”testcache”,condition&#x3D;”#userName.length()&gt;2”)</td>
+</tr>
+</tbody></table>
+<hr>
+<p><strong>实例</strong></p>
+<blockquote>
+<p>@Cacheable(value&#x3D;”accountCache”)，这个注释的意思是：</p>
+</blockquote>
+<p>当调用这个方法的时候，<strong>会先从一个名叫 accountCache 的缓存中查询</strong>，如果没有，则执行实际的方法（即查询数据库），并将执行的结果存入缓存中，否则返回缓存中的对象。<strong>这里的缓存中的 key 就是参数 userName，value 就是 Account 对象。</strong></p>
+<p>**“accountCache”缓存是在 ****spring*.xml** <strong>中定义的名称。</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Cacheable(value=&quot;accountCache&quot;)</span><span class="comment">// 使用了一个缓存名叫 accountCache</span></span><br><span class="line"><span class="keyword">public</span> Account <span class="title function_">getAccountByName</span><span class="params">(String userName)</span> &#123;</span><br><span class="line">   <span class="comment">// 方法内部实现不考虑缓存逻辑，直接实现业务</span></span><br><span class="line">   System.out.println(<span class="string">&quot;real query account.&quot;</span>+userName);</span><br><span class="line">   <span class="keyword">return</span> getFromDB(userName);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>而在 SpringBoot 中使用的话是存放在 resources 下的**<strong>ehcache.xml*</strong>*。</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">ehcache</span> <span class="attr">xmlns:xsi</span>=<span class="string">&quot;&lt;http://www.w3.org/2001/XMLSchema-instance&gt;&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xsi:noNamespaceSchemaLocation</span>=<span class="string">&quot;&lt;http://ehcache.org/ehcache.xsd&gt;&quot;</span></span></span><br><span class="line"><span class="tag"></span></span><br><span class="line"><span class="tag">         <span class="attr">updateCheck</span>=<span class="string">&quot;false&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!--账号缓存--&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">cache</span> <span class="attr">name</span>=<span class="string">&quot;accountCache&quot;</span> <span class="attr">maxElementsInMemory</span>=<span class="string">&quot;10000&quot;</span> <span class="attr">timeToLiveSeconds</span>=<span class="string">&quot;300&quot;</span>  <span class="attr">timeToIdleSeconds</span>=<span class="string">&quot;310&quot;</span>   <span class="attr">eternal</span>=<span class="string">&quot;false&quot;</span> <span class="attr">overflowToDisk</span>=<span class="string">&quot;true&quot;</span>/&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">ehcache</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="CachePut"><a href="#CachePut" class="headerlink" title="@CachePut"></a><strong>@CachePut</strong></h3><blockquote>
+<p>@CachePut 作用和配置方法：</p>
+</blockquote>
+<p>@CachePut 的作用 主要针对方法配置，能够根据方法的请求参数对其结果进行缓存，和 @Cacheable 不同的是，<strong>它每次都会触发真实方法的调用</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>解释</th>
+<th>example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>value</td>
+<td>缓存的名称，在 spring 配置文件中定义，必须指定至少一个</td>
+<td>@CachePut(value&#x3D;”my cache”)</td>
+</tr>
+<tr>
+<td>key</td>
+<td>缓存的 key，可以为空，如果指定要按照 SpEL 表达式编写，如果不指定，则缺省按照方法的所有参数进行组合</td>
+<td>@CachePut(value&#x3D;”testcache”,key&#x3D;”#userName”)</td>
+</tr>
+<tr>
+<td>condition</td>
+<td>缓存的条件，可以为空，使用 SpEL 编写，返回 true 或者 false，只有为 true 才进行缓存</td>
+<td>@CachePut(value&#x3D;”testcache”,condition&#x3D;”#userName.length()&gt;2”)</td>
+</tr>
+</tbody></table>
+<p><strong>实例</strong></p>
+<p><strong>@CachePut 注释，这个注释可以确保方法被执行，同时方法的返回值也被记录到缓存中，实现缓存与数据库的同步更新。</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@CachePut(value=&quot;accountCache&quot;,key=&quot;#account.getName()&quot;)</span><span class="comment">// 更新accountCache 缓存</span></span><br><span class="line"><span class="keyword">public</span> Account <span class="title function_">updateAccount</span><span class="params">(Account account)</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> updateDB(account);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="CacheEvict"><a href="#CacheEvict" class="headerlink" title="@CacheEvict"></a><strong>@CacheEvict</strong></h3><blockquote>
+<p>@CacheEvict 作用和配置方法</p>
+</blockquote>
+<p>@CachEvict 的作用 主要针对方法配置，<strong>能够根据一定的条件对缓存进行清空</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>解释</th>
+<th>example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>value</td>
+<td>缓存的名称，在 spring 配置文件中定义，必须指定至少一个</td>
+<td>@CacheEvict(value&#x3D;”my cache”)</td>
+</tr>
+<tr>
+<td>key</td>
+<td>缓存的 key，可以为空，如果指定要按照 SpEL 表达式编写，如果不指定，则缺省按照方法的所有参数进行组合</td>
+<td>@CacheEvict(value&#x3D;”testcache”,key&#x3D;”#userName”)</td>
+</tr>
+<tr>
+<td>condition</td>
+<td>缓存的条件，可以为空，使用 SpEL 编写，返回 true 或者 false，只有为 true 才进行缓存</td>
+<td>@CacheEvict(value&#x3D;”testcache”,condition&#x3D;”#userName.length()&gt;2”)</td>
+</tr>
+<tr>
+<td>allEntries</td>
+<td>是否清空所有缓存内容，缺省为 false，如果指定为 true，则方法调用后将立即清空所有缓存</td>
+<td>@CachEvict(value&#x3D;”testcache”,allEntries&#x3D;true)</td>
+</tr>
+<tr>
+<td>beforeInvocation</td>
+<td>是否在方法执行前就清空，缺省为 false，如果指定为 true，则在方法还没有执行的时候就清空缓存，缺省情况下，如果方法执行抛出异常，则不会清空缓存</td>
+<td>@CachEvict(value&#x3D;”testcache”，beforeInvocation&#x3D;true)</td>
+</tr>
+</tbody></table>
+<p>实例</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@CacheEvict(value=&quot;accountCache&quot;,key=&quot;#account.getName()&quot;)</span><span class="comment">// 清空accountCache 缓存</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">updateAccount</span><span class="params">(Account account)</span> &#123;</span><br><span class="line">   updateDB(account);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@CacheEvict(value=&quot;accountCache&quot;,allEntries=true)</span><span class="comment">// 清空accountCache 缓存</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">reload</span><span class="params">()</span> &#123;</span><br><span class="line"></span><br><span class="line">   reloadAll()</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@Cacheable(value=&quot;accountCache&quot;,condition=&quot;#userName.length() &lt;=4&quot;)</span><span class="comment">// 缓存名叫 accountCache</span></span><br><span class="line"><span class="keyword">public</span> Account <span class="title function_">getAccountByName</span><span class="params">(String userName)</span> &#123;</span><br><span class="line"></span><br><span class="line"> <span class="comment">// 方法内部实现不考虑缓存逻辑，直接实现业务</span></span><br><span class="line"> <span class="keyword">return</span> getFromDB(userName);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="CacheConfig"><a href="#CacheConfig" class="headerlink" title="@CacheConfig"></a><strong>@CacheConfig</strong></h3><p>所有的@Cacheable（）里面都有一个 value ＝“xxx”的属性，这显然如果方法多了，写起来也是挺累的，如果可以一次性声明完 那就省事了， 所以，有了@CacheConfig 这个配置，@CacheConfig is a class-level annotation that allows to share the cache names，如果你在你的方法写别的名字，那么依然以方法的名字为准。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@CacheConfig(&quot;books&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">BookRepositoryImpl</span> <span class="keyword">implements</span> <span class="title class_">BookRepository</span> &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="meta">@Cacheable</span></span><br><span class="line">  <span class="keyword">public</span> Book <span class="title function_">findBook</span><span class="params">(ISBN isbn)</span> &#123;...&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="条件缓存"><a href="#条件缓存" class="headerlink" title="条件缓存"></a><strong>条件缓存</strong></h3><p>下面提供一些常用的条件缓存</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//@Cacheable将在执行方法之前( #result还拿不到返回值)判断condition，如果返回true，则查缓存；</span></span><br><span class="line"><span class="meta">@Cacheable(value = &quot;user&quot;, key = &quot;#id&quot;, condition = &quot;#id lt 10&quot;)</span></span><br><span class="line"><span class="keyword">public</span> User <span class="title function_">conditionFindById</span><span class="params">(<span class="keyword">final</span> Long id)</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//@CachePut将在执行完方法后（#result就能拿到返回值了）判断condition，如果返回true，则放入缓存；</span></span><br><span class="line"><span class="meta">@CachePut(value = &quot;user&quot;, key = &quot;#id&quot;, condition = &quot;#result.username ne &#x27;zhang&#x27;&quot;)</span></span><br><span class="line"><span class="keyword">public</span> User <span class="title function_">conditionSave</span><span class="params">(<span class="keyword">final</span> User user)</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//@CachePut将在执行完方法后（#result就能拿到返回值了）判断unless，如果返回false，则放入缓存；（即跟condition相反）</span></span><br><span class="line"><span class="meta">@CachePut(value = &quot;user&quot;, key = &quot;#user.id&quot;, unless = &quot;#result.username eq &#x27;zhang&#x27;&quot;)</span></span><br><span class="line"><span class="keyword">public</span> User <span class="title function_">conditionSave2</span><span class="params">(<span class="keyword">final</span> User user)</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//@CacheEvict， beforeInvocation=false表示在方法执行之后调用（#result能拿到返回值了）；且判断condition，如果返回true，则移除缓存；</span></span><br><span class="line"><span class="meta">@CacheEvict(value = &quot;user&quot;, key = &quot;#user.id&quot;, beforeInvocation = false, condition = &quot;#result.username ne &#x27;zhang&#x27;&quot;)</span></span><br><span class="line"><span class="keyword">public</span> User <span class="title function_">conditionDelete</span><span class="params">(<span class="keyword">final</span> User user)</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="Caching"><a href="#Caching" class="headerlink" title="@Caching"></a><strong>@Caching</strong></h3><p>有时候我们可能组合多个 Cache 注解使用；比如用户新增成功后，我们要添加 id–&gt;user；username—&gt;user；email—&gt;user 的缓存；此时就需要@Caching 组合多个注解标签了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Caching(put = &#123;</span></span><br><span class="line"><span class="meta">@CachePut(value = &quot;user&quot;, key = &quot;#user.id&quot;),</span></span><br><span class="line"><span class="meta">@CachePut(value = &quot;user&quot;, key = &quot;#user.username&quot;),</span></span><br><span class="line"><span class="meta">@CachePut(value = &quot;user&quot;, key = &quot;#user.email&quot;)</span></span><br><span class="line"><span class="meta">&#125;)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> User <span class="title function_">save</span><span class="params">(User user)</span> &#123;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="自定义缓存注解"><a href="#自定义缓存注解" class="headerlink" title="自定义缓存注解"></a><strong>自定义缓存注解</strong></h3><p>比如之前的那个@Caching 组合，会让方法上的注解显得整个代码比较乱，此时可以使用自定义注解把这些注解组合到一个注解中，如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Caching(put = &#123;</span></span><br><span class="line"><span class="meta">@CachePut(value = &quot;user&quot;, key = &quot;#user.id&quot;),</span></span><br><span class="line"><span class="meta">@CachePut(value = &quot;user&quot;, key = &quot;#user.username&quot;),</span></span><br><span class="line"><span class="meta"> @CachePut(value = &quot;user&quot;, key = &quot;#user.email&quot;)</span></span><br><span class="line"><span class="meta">&#125;)</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@Target(&#123;ElementType.METHOD, ElementType.TYPE&#125;)</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="meta">@Inherited</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> UserSaveCache &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样我们在方法上使用如下代码即可，整个代码显得比较干净。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@UserSaveCache</span></span><br><span class="line"><span class="keyword">public</span> User <span class="title function_">save</span><span class="params">(User user)</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><p>比如 findByUsername 时，不应该只放 username–&gt;user，应该连同 id—&gt;user 和 email—&gt;user 一起放入；这样下次如果按照 id 查找直接从缓存中就命中了</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Caching(</span></span><br><span class="line"><span class="meta">  cacheable = &#123;</span></span><br><span class="line"><span class="meta">    @Cacheable(value = &quot;user&quot;, key = &quot;#username&quot;)</span></span><br><span class="line"><span class="meta">  &#125;,</span></span><br><span class="line"><span class="meta">  put = &#123;</span></span><br><span class="line"><span class="meta">    @CachePut(value = &quot;user&quot;, key = &quot;#result.id&quot;, condition = &quot;#result != null&quot;),</span></span><br><span class="line"><span class="meta">    @CachePut(value = &quot;user&quot;, key = &quot;#result.email&quot;, condition = &quot;#result != null&quot;)</span></span><br><span class="line"><span class="meta">  &#125;</span></span><br><span class="line"><span class="meta">)</span></span><br><span class="line"><span class="keyword">public</span> User <span class="title function_">findByUsername</span><span class="params">(<span class="keyword">final</span> String username)</span> &#123;</span><br><span class="line">  System.out.println(<span class="string">&quot;cache miss, invoke find by username, username:&quot;</span> + username);</span><br><span class="line">  <span class="keyword">for</span> (User user : users) &#123;</span><br><span class="line">    <span class="keyword">if</span> (user.getUsername().equals(username)) &#123;</span><br><span class="line">      <span class="keyword">return</span> user;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>其实对于：id—&gt;user；username—-&gt;user；email—&gt;user；更好的方式可能是：id—&gt;user；username—&gt;id；email—&gt;id；保证 user 只存一份；如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@CachePut(value=&quot;cacheName&quot;, key=&quot;#user.username&quot;, cacheValue=&quot;#user.username&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">save</span><span class="params">(User user)</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@Cacheable(value=&quot;cacheName&quot;, key=&quot;#user.username&quot;, cacheValue=&quot;#caches[0].get(#caches[0].get(#username).get())&quot;)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> User <span class="title function_">findByUsername</span><span class="params">(String username)</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>SpEL 上下文数据</strong></p>
+<p>Spring Cache 提供了一些供我们使用的 SpEL 上下文数据，下表直接摘自 Spring 官方文档：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>位置</th>
+<th>描述</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>methodName</td>
+<td>root 对象</td>
+<td>当前被调用的方法名</td>
+<td>root.methodName</td>
+</tr>
+<tr>
+<td>method</td>
+<td>root 对象</td>
+<td>当前被调用的方法</td>
+<td><a target="_blank" rel="noopener" href="http://root.method.name/">root.method.name</a></td>
+</tr>
+<tr>
+<td>target</td>
+<td>root 对象</td>
+<td>当前被调用的目标对象</td>
+<td>root.target</td>
+</tr>
+<tr>
+<td>targetClass</td>
+<td>root 对象</td>
+<td>当前被调用的目标对象类</td>
+<td>root.targetClass</td>
+</tr>
+<tr>
+<td>args</td>
+<td>root 对象</td>
+<td>当前被调用的方法的参数列表</td>
+<td>root.args[0]</td>
+</tr>
+<tr>
+<td>caches</td>
+<td>root 对象</td>
+<td>当前方法调用使用的缓存列表（如@Cacheable(value&#x3D;{“cache1”, “cache2”})），则有两个 cache</td>
+<td>root.caches[0].name</td>
+</tr>
+<tr>
+<td>argument name</td>
+<td>执行上下文</td>
+<td>当前被调用的方法的参数，如 findById(Long id)，我们可以通过#id 拿到参数</td>
+<td><a target="_blank" rel="noopener" href="http://user.id/">user.id</a></td>
+</tr>
+<tr>
+<td>result</td>
+<td>执行上下文</td>
+<td>方法执行后的返回值（仅当方法执行之后的判断有效，如‘unless’，’cache evict’的 beforeInvocation&#x3D;false）</td>
+<td>result</td>
+</tr>
+</tbody></table>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@CacheEvict(value = &quot;user&quot;, key = &quot;#user.id&quot;, condition = &quot;#root.target.canCache() and #root.caches[0].get(#user.id).get().username ne #user.username&quot;, beforeInvocation = true)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">conditionUpdate</span><span class="params">(User user)</span></span><br></pre></td></tr></table></figure>
+
+    <p><img src="https://i.dawnlab.me/53a8c7cf3ad77a0f0a456ce2c6afe88a.png" loading="lazy"></p>
+
+  </article>
+
+  
+      
+    <div class="nexmoe-post-copyright">
+        <strong>本文作者：</strong>Honesty<br>
+        <strong>本文链接：</strong><a href="https://docs.hehouhui.cn/archives/18.html" title="https:&#x2F;&#x2F;docs.hehouhui.cn&#x2F;archives&#x2F;18.html" target="_blank" rel="noopener">https:&#x2F;&#x2F;docs.hehouhui.cn&#x2F;archives&#x2F;18.html</a><br>
+        
+            <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
+
+        
+    </div>
+
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/Spring/" rel="tag">Spring</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/%E7%BC%93%E5%AD%98/" rel="tag">缓存</a>
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1698751493272"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          <script src="https://giscus.app/client.js"
+       data-repo="listener-He/NotionNext"
+       data-repo-id="R_kgDOJI1XUA"
+       data-category="General"
+       data-category-id="R_kgDOJOsY1g"
+       data-mapping="pathname"
+       data-strict="0"
+       data-reactions-enabled="1"
+       data-emit-metadata="0"
+       data-input-position="top"
+       data-theme="preferred_color_scheme"
+       data-lang="zh-CN"
+       data-loading="lazy"
+       crossorigin="anonymous"
+       async>
+ </script>
+
+      </div>
+  
+</div></div><div class="nexmoe-post-right">    <div class="nexmoe-fixed">
+        <div class="nexmoe-tool">
+
+            
+
+            
+            
+            <button class="mdui-fab catalog" style="overflow:unset;">
+                <i class="nexmoefont icon-i-catalog"></i>
+                <div class="nexmoe-toc">
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Cacheable"><span class="toc-number">1.</span> <span class="toc-text">@Cacheable</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CachePut"><span class="toc-number">2.</span> <span class="toc-text">@CachePut</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CacheEvict"><span class="toc-number">3.</span> <span class="toc-text">@CacheEvict</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CacheConfig"><span class="toc-number">4.</span> <span class="toc-text">@CacheConfig</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9D%A1%E4%BB%B6%E7%BC%93%E5%AD%98"><span class="toc-number">5.</span> <span class="toc-text">条件缓存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Caching"><span class="toc-number">6.</span> <span class="toc-text">@Caching</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BC%93%E5%AD%98%E6%B3%A8%E8%A7%A3"><span class="toc-number">7.</span> <span class="toc-text">自定义缓存注解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A9%E5%B1%95"><span class="toc-number">8.</span> <span class="toc-text">扩展</span></a></li></ol>
+                </div>
+            </button>
+            
+
+            
+
+            <a href="#nexmoe-content" class="backtop toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+        </div>
+    </div>
+</div></div><div id="nexmoe-footer"><!--!--></div><div><div id="nexmoe-search-space">
+	<div class="search-container">
+		<div class="search-header">
+			<div class="search-input-container">
+				<input
+					class="search-input"
+					type="text"
+					placeholder="搜索"
+					oninput="sinput();"
+				/>
+			</div>
+			<a class="search-close" onclick="sclose();">×</a>
+		</div>
+		<div class="search-body"></div>
+	</div>
+</div>
+</div><div><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1623991949842711" crossorigin="anonymous"></script>
+</div></body></html>

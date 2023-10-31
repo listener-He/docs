@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="zh"><head>
+<title>Hutool 5.8.8  BeanUtil.copyProperties 致命异常 - Honesty wiki</title>
+<meta charset="UTF-8">
+<meta name="keywords" content="Honesty 知识库,Honesty Wiki, Honesty blog,hehouhui 知识库,hehouhui Wiki, hehouhui blog">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+<meta name="description" content="前言最近项目上要求升级一个工具包hutool的版本，以解决安全漏洞问题，这不升级还好，一升级反而捅出了更大的篓子，究竟是怎么回事呢？ 事件回顾我们项目原先使用的hutool版本是 5.7.2，在代码中，我们的数据传输对象 DTO 和数据实体对象中大量使用了工具包中的BeanUtil.copyProperties(), 大体代码如下：  数据传输对象  12345678@Data@ToStringp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hutool 5.8.8  BeanUtil.copyProperties 致命异常">
+<meta property="og:url" content="https://docs.hehouhui.cn/archives/hutool-beanutil-error.html">
+<meta property="og:site_name" content="Honesty wiki">
+<meta property="og:description" content="前言最近项目上要求升级一个工具包hutool的版本，以解决安全漏洞问题，这不升级还好，一升级反而捅出了更大的篓子，究竟是怎么回事呢？ 事件回顾我们项目原先使用的hutool版本是 5.7.2，在代码中，我们的数据传输对象 DTO 和数据实体对象中大量使用了工具包中的BeanUtil.copyProperties(), 大体代码如下：  数据传输对象  12345678@Data@ToStringp">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/oH5VKTC5sLgticcibSXbXUSYLrUMNovDaTjjibKRMn2hre1iczL2YJiaKBfP6nMRibht3Aj5rABic23bXfGCiaAW0E9slQ/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/oH5VKTC5sLgticcibSXbXUSYLrUMNovDaTU3PxCE8ZdB1RbGTZeOico3N8u9KV7okT3zWGN5kV5les3lYcX5SAXjg/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/oH5VKTC5sLgticcibSXbXUSYLrUMNovDaTG9TzjlbbByPMyMa7cAztWZJ3hBTRiatE1I4pLotd84fNgwkRIibyKAVw/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/oH5VKTC5sLgticcibSXbXUSYLrUMNovDaTliaL28982IYstMia7EjVia0KhJvWAwSkD4bjUwWFBnsAXGGvtbQfoOK0Q/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/oH5VKTC5sLgticcibSXbXUSYLrUMNovDaT3mFLBMO8icetJcjicn4RqCwMuaeqibKoTNxTaJRuZOicXn4OdnYP9TPibsw/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/oH5VKTC5sLgticcibSXbXUSYLrUMNovDaTSGKwbEQxgZgfbZQumibSH0yavicrPa9TJB2vxz6UCXN4hHBGv0j5flFA/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="article:published_time" content="2023-05-23T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-10-08T06:42:00.000Z">
+<meta property="article:author" content="Honesty">
+<meta property="article:tag" content="BUG">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="hutool">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mmbiz.qpic.cn/mmbiz_png/oH5VKTC5sLgticcibSXbXUSYLrUMNovDaTjjibKRMn2hre1iczL2YJiaKBfP6nMRibht3Aj5rABic23bXfGCiaAW0E9slQ/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1">
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1698751493429">
+
+<link rel="stylesheet" href="/css/style.css?v=1698751493429">
+
+
+
+
+    
+        <link rel="stylesheet" href="/custom.css?v=1698751493429">
+    
+
+
+
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+<script src="/lib/lax.min.js" async></script>
+
+
+<script async src="/js/app.js?v=1698751493429"></script>
+
+ 
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-248JM4ZRPJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+
+  gtag("config", "G-248JM4ZRPJ");
+</script>
+
+<meta name="generator" content="Hexo 6.3.0"></head><body class="nexmoe mdui-drawer-body-left"><div id="nexmoe-background"><div class="nexmoe-bg" style="background-image: url(https://blog-file.hehouhui.cn/202305111934350.jpeg)"></div><div class="mdui-appbar mdui-shadow-0"><div class="mdui-toolbar"><a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-drawer="{target: &#039;#drawer&#039;, swipe: true}" title="menu"><i class="mdui-icon nexmoefont icon-menu"></i></a><div class="mdui-toolbar-spacer"></div><a class="mdui-btn mdui-btn-icon" href="/" title="Honesty"><img src="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309111525908.jpeg" alt="Honesty"></a></div></div></div><div id="nexmoe-header"><div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="Honesty">
+            <img src="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309111525908.jpeg" alt="Honesty" alt="Honesty">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>30</div>
+        <div><span>标签</span>33</div>
+        <div><span>分类</span>4</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archive.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/PY.html" title="我的朋友">
+            <i class="mdui-list-item-icon nexmoefont icon-unorderedlist"></i>
+            <div class="mdui-list-item-content">
+                我的朋友
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/donate.html" title="给我赞助">
+            <i class="mdui-list-item-icon nexmoefont icon-coffee"></i>
+            <div class="mdui-list-item-content">
+                给我赞助
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/about.html" title="关于博主">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于博主
+            </div>
+        </a>
+        
+    </div>
+    
+    
+        
+        <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+         
+            <form id="search_form" action_e="https://cn.bing.com/search?q=site:hehouhui.cn" onsubmit="return search();">
+                <label><input id="search_value" name="q" type="search" placeholder="搜索"></label>
+            </form>
+         
+    </div>
+</div>
+
+
+
+
+    
+        
+        <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="https://space.bilibili.com/442038841"
+			target="_blank"
+			mdui-tooltip="{content: '哔哩哔哩'}"
+			style="
+				color: rgb(231, 106, 141);
+				background-color: rgba(231, 106, 141, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-bilibili"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://github.com/listener-He"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://www.zhihu.com/people/wen-xin-92-2-57"
+			target="_blank"
+			mdui-tooltip="{content: '知乎'}"
+			style="
+				color: rgb(30, 136, 229);
+				background-color: rgba(30, 136, 229, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-zhihu"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://twitter.com/Honesty861024"
+			target="_blank"
+			mdui-tooltip="{content: 'Twitter'}"
+			style="
+				color: rgb(59, 151, 239);
+				background-color: rgba(59, 151, 239, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-twitter"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://docs.hehouhui.cn/atom.xml"
+			target="_blank"
+			mdui-tooltip="{content: 'RSS'}"
+			style="
+				color: rgb(247, 132, 34);
+				background-color: rgba(247, 132, 34, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-rss"
+			></i> </a
+		>
+	</div>
+</div>
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/创作分享/">创作分享</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/学习思考/">学习思考</a>
+          <span class="category-list-count">3</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/技术分享/">技术分享</a>
+          <span class="category-list-count">25</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/碎片杂文/">碎片杂文</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/BUG/" style="font-size: 10px;">BUG</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/Jvm/" style="font-size: 10px;">Jvm</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Redis/" style="font-size: 15.71px;">Redis</a> <a href="/tags/SAAS/" style="font-size: 10px;">SAAS</a> <a href="/tags/Spring/" style="font-size: 18.57px;">Spring</a> <a href="/tags/WebFlux/" style="font-size: 10px;">WebFlux</a> <a href="/tags/chatgpt/" style="font-size: 10px;">chatgpt</a> <a href="/tags/hutool/" style="font-size: 10px;">hutool</a> <a href="/tags/keycloak/" style="font-size: 11.43px;">keycloak</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/notion/" style="font-size: 10px;">notion</a> <a href="/tags/oauth/" style="font-size: 11.43px;">oauth</a> <a href="/tags/%E5%81%A5%E5%BA%B7/" style="font-size: 10px;">健康</a> <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" style="font-size: 14.29px;">分布式</a> <a href="/tags/%E5%92%96%E5%95%A1/" style="font-size: 10px;">咖啡</a> <a href="/tags/%E5%93%8D%E5%BA%94%E5%BC%8F/" style="font-size: 10px;">响应式</a> <a href="/tags/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/" style="font-size: 11.43px;">图像处理</a> <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 10px;">多线程</a> <a href="/tags/%E5%AD%A6%E4%B9%A0/" style="font-size: 11.43px;">学习</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">工具</a> <a href="/tags/%E5%BB%BA%E7%AB%99/" style="font-size: 11.43px;">建站</a> <a href="/tags/%E5%BC%80%E5%8F%91/" style="font-size: 12.86px;">开发</a> <a href="/tags/%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/" style="font-size: 11.43px;">异步编程</a> <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" style="font-size: 17.14px;">微服务</a> <a href="/tags/%E6%80%9D%E8%80%83/" style="font-size: 12.86px;">思考</a> <a href="/tags/%E6%8A%80%E6%9C%AF%E6%B5%81/" style="font-size: 10px;">技术流</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 10px;">数据结构</a> <a href="/tags/%E6%95%B4%E6%B4%BB/" style="font-size: 10px;">整活</a> <a href="/tags/%E6%96%87%E5%AD%97/" style="font-size: 12.86px;">文字</a> <a href="/tags/%E7%89%A9%E8%81%94%E7%BD%91/" style="font-size: 10px;">物联网</a> <a href="/tags/%E7%BC%93%E5%AD%98/" style="font-size: 11.43px;">缓存</a>
+    </div>
+    
+      <script>
+        var maxTagcloud = parseInt(17);
+        var tags_length = parseInt(33);
+        var tags_arr = [];
+        for(var i = 0; i < tags_length; i++){
+          tags_arr.push(i);
+        }
+        tags_arr.sort(function (l, r) {
+          return Math.random() > 0.5 ? -1 : 1;
+        });
+        tags_arr = tags_arr.slice(0, maxTagcloud < tags_length ? tags_length - maxTagcloud : 0);
+        for(var tag_i = 0; tag_i < tags_arr.length; tag_i++){
+          document.getElementById("randomtagcloud").children[tags_arr[tag_i]].style.display = 'none';
+        }
+      </script>
+    
+  </div>
+
+    
+        
+        <!-- 一言 -->
+<div class="nexmoe-widget-wrap">
+  <h3 class="nexmoe-widget-title">
+    一言
+  </h3>
+  <div class="nexmoe-widget">
+    <ul class="hitokoto-box">
+      <li id="hitokoto_text_parent" class="hitokoto-text" hitokotoCategory="">
+        <a href="#" id="hitokoto_text">
+          
+        </a>
+        <a href="#" id="hitokoto_error_text" style="display: none;">
+          
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  let hitokotoText = document.getElementById('hitokoto_text')
+  let hitokotoErroText = document.getElementById('hitokoto_error_text')
+  let hitokotoCategory = document.getElementById('hitokoto_text_parent').getAttribute('hitokotoCategory')
+  window.addEventListener('load', function () {
+    let url = 'https://v1.hitokoto.cn'
+    if (hitokotoCategory) {
+      url += '?c=' + hitokotoCategory
+    }
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        hitokotoText.innerText = "「 " + data.hitokoto + " 」 from " + data.from
+        hitokotoText.href = 'https://hitokoto.cn/?uuid=' + data.uuid
+      })
+      .catch((reason) => {
+        console.error(11, reason)
+        hitokotoText.style.display = 'none'
+        hitokotoErroText.style.display = 'block'
+      })
+  })
+</script>
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/history/2023/">2023</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/history/2022/">2022</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/history/2021/">2021</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/history/2020/">2020</a><span class="archive-list-count">7</span></li></ul>
+    </div>
+  </div>
+
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">最新文章</h3>
+    <div class="nexmoe-widget">
+      <ul>
+        
+          <li>
+            <a href="/archives/spring-boot-tenant-202309.html">Spring Boot 实现多租户架构：支持应用多租户部署和管理</a>
+          </li>
+        
+          <li>
+            <a href="/archives/springcloud-data-202309.html">微服务之间的数据依赖问题，该如何解决？</a>
+          </li>
+        
+          <li>
+            <a href="/archives/redis-key-202309.html">Redis 热key是什么问题，如何导致的？有什么解决方案？</a>
+          </li>
+        
+          <li>
+            <a href="/archives/spring-restclient-2023.html">HttpClient? RestTemplate？WebClient? 不~是 RestClient</a>
+          </li>
+        
+          <li>
+            <a href="/archives/lkcoffee-shanghai-coffee-activities-20230602.html">上海咖啡文化周之薅瑞幸羊毛</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+    
+        
+   
+    <div class="nexmoe-copyright">
+        &copy; 2023 Honesty
+        Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+        & <a href="https://github.com/theme-nexmoe/hexo-theme-nexmoe" target="_blank">Nexmoe</a>
+        <br><a target="_blank" href="https://beian.miit.gov.cn/">湘ICP备20014902号</a>
+<br><a target="_blank" href="https://www.upyun.com/?utm_source=lianmeng&utm_medium=referral">
+
+    </div>
+</div><!-- .nexmoe-drawer --></div><div id="nexmoe-content"><div class="nexmoe-primary"><div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover"> 
+            <img src="https://blog-file.hehouhui.cn/202305111934350.jpeg" alt="Hutool 5.8.8  BeanUtil.copyProperties 致命异常" loading="lazy">
+            <h1>Hutool 5.8.8  BeanUtil.copyProperties 致命异常</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2023年05月23日</a>
+        
+            <a class="nexmoefont icon-appstore-fill -link" href="/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</a>
+        
+        
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近项目上要求升级一个工具包<code>hutool</code>的版本，以解决安全漏洞问题，这不升级还好，一升级反而捅出了更大的篓子，究竟是怎么回事呢？</p>
+<h2 id="事件回顾"><a href="#事件回顾" class="headerlink" title="事件回顾"></a>事件回顾</h2><p>我们项目原先使用的<code>hutool</code>版本是 5.7.2，在代码中，我们的数据传输对象 DTO 和数据实体对象中大量使用了工具包中的<code>BeanUtil.copyProperties()</code>, 大体代码如下：</p>
+<ol>
+<li>数据传输对象</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@ToString</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DiagramDTO</span> &#123; </span><br><span class="line">   <span class="comment">// 前端生产的字符串id  </span></span><br><span class="line">   <span class="keyword">private</span> String id;  </span><br><span class="line">   <span class="keyword">private</span> String code;</span><br><span class="line">   <span class="keyword">private</span> String name;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>数据实体对象</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@ToString</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Diagram</span> &#123;  </span><br><span class="line">  <span class="keyword">private</span> Integer id;   </span><br><span class="line">  <span class="keyword">private</span> String code; </span><br><span class="line">  <span class="keyword">private</span> String name;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>业务逻辑</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">BeanCopyTest</span> &#123;   </span><br><span class="line">	 <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123; </span><br><span class="line">       <span class="comment">// 前端传输的对象       </span></span><br><span class="line">			 <span class="type">DiagramDTO</span> <span class="variable">diagramDTO</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DiagramDTO</span>();  </span><br><span class="line">      <span class="comment">// 如果前端传入的id事包含e的，升级后就会报错     </span></span><br><span class="line">		   diagramDTO.setId(<span class="string">&quot;3em3dgqsgmn0&quot;</span>);     </span><br><span class="line">		   diagramDTO.setCode(<span class="string">&quot;d1&quot;</span>);       </span><br><span class="line">			 diagramDTO.setName(<span class="string">&quot;图表&quot;</span>);   </span><br><span class="line">	     <span class="type">Diagram</span> <span class="variable">diagram</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Diagram</span>();  </span><br><span class="line">      <span class="comment">// 关键点，数据拷贝        </span></span><br><span class="line">			BeanUtil.copyProperties(diagramDTO, diagram);   </span><br><span class="line">      System.out.println(<span class="string">&quot;数据实体对象：&quot;</span> + diagram);     </span><br><span class="line">	   <span class="comment">//设置id为空，自增        </span></span><br><span class="line">			diagram.setId(<span class="literal">null</span>); </span><br><span class="line">      <span class="comment">//保存到数据库中 TODO    </span></span><br><span class="line">	    <span class="comment">//diagramMapper.save(diagram); </span></span><br><span class="line">   &#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>升级前，<code>hutool</code>是 5.7.2 版本下，执行结果如下图。</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/oH5VKTC5sLgticcibSXbXUSYLrUMNovDaTjjibKRMn2hre1iczL2YJiaKBfP6nMRibht3Aj5rABic23bXfGCiaAW0E9slQ/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<ul>
+<li><code>BeanUtil.copyProperties</code>虽然字段类型不一样，但是做了兼容处理，所以业务没有影响业务逻辑。</li>
+</ul>
+<p>升级后，<code>hutool</code>是 5.8.8 版本，执行结果如下图所示：</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/oH5VKTC5sLgticcibSXbXUSYLrUMNovDaTU3PxCE8ZdB1RbGTZeOico3N8u9KV7okT3zWGN5kV5les3lYcX5SAXjg/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<ul>
+<li>执行报错，因为升级后的版本修改了实现，增加了下面的逻辑，如果包含 E, 就会抛错，从而影响了业务逻辑，同时这个 id 是否包含 e 又是随机因素，到了生产才发现，就悲剧了。</li>
+</ul>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/oH5VKTC5sLgticcibSXbXUSYLrUMNovDaTG9TzjlbbByPMyMa7cAztWZJ3hBTRiatE1I4pLotd84fNgwkRIibyKAVw/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<h2 id="分析探讨"><a href="#分析探讨" class="headerlink" title="分析探讨"></a>分析探讨</h2><p>我发现大部分人写代码都喜欢偷懒，在上面的场景中，虽然<code>BeanUtil.copyProperties</code>用的一时爽，但有时候带来的后果是很严重的，所以很不推荐这种方式。为什么这么说呢？</p>
+<p>比如团队中的某些人偷偷改了数据传输对象 DTO，比如修改了类型、删去了某个字段。用<code>BeanUtil.copyProperties</code>的方式压根无法在编译阶段发现，更别提修改的影响范围了，这就只能把风险暴露到生产上去了。那有什么更好的方法呢？</p>
+<h2 id="推荐方案"><a href="#推荐方案" class="headerlink" title="推荐方案"></a>推荐方案</h2><ol>
+<li>原始的<code>get</code>、<code>set</code>方式</li>
+</ol>
+<p>我是比较推崇这种做法的，比如现在<code>DiagramDTO</code>删去某个字段，编译器就会报错，就会引起你的注意了，让问题提前暴露，无处遁形。</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/oH5VKTC5sLgticcibSXbXUSYLrUMNovDaTliaL28982IYstMia7EjVia0KhJvWAwSkD4bjUwWFBnsAXGGvtbQfoOK0Q/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<p>你可能觉得站着说话不腰疼，字段少好，如果字段很多还不得写死啊，我这里推荐一个 IDEA 的插件，可以帮你智能生成这样的代码。</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/oH5VKTC5sLgticcibSXbXUSYLrUMNovDaT3mFLBMO8icetJcjicn4RqCwMuaeqibKoTNxTaJRuZOicXn4OdnYP9TPibsw/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/oH5VKTC5sLgticcibSXbXUSYLrUMNovDaTSGKwbEQxgZgfbZQumibSH0yavicrPa9TJB2vxz6UCXN4hHBGv0j5flFA/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<p>话不多说，自己玩儿去~~</p>
+<ol>
+<li>使用开源库<code>ModelMapper</code></li>
+</ol>
+<p><code>ModelMapper</code>是一个开源库，可以很方便、简单地将对象从一种类型映射到另一种类型，底层是通过反射来自动确定对象之间的映射，还可以自定义映射规则。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">testModelMapper</span><span class="params">()</span> &#123;  </span><br><span class="line">      <span class="type">ModelMapper</span> <span class="variable">modelMapper</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ModelMapper</span>(); </span><br><span class="line">      <span class="type">DiagramDTO</span> <span class="variable">diagramDTO</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DiagramDTO</span>(); </span><br><span class="line">       diagramDTO.setId(<span class="string">&quot;3em3dgqsgmn0&quot;</span>);    </span><br><span class="line">	     diagramDTO.setCode(<span class="string">&quot;d1&quot;</span>);    </span><br><span class="line">	     diagramDTO.setName(<span class="string">&quot;图表&quot;</span>);   </span><br><span class="line">     <span class="type">Diagram</span> <span class="variable">diagram</span> <span class="operator">=</span> modelMapper.map(diagramDTO, Diagram.class);   </span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>使用开源库<code>MapStruct</code></li>
+</ol>
+<p><code>MapStruct</code>也是 Java 中另外一个用于映射对象很流行的开源工具。它是在编译阶段生成对应的映射代码，相对于<code>ModelMapper</code>底层放射的方案，性能更好。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Mapperpublic</span> </span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">DiagramMapper</span> &#123;  </span><br><span class="line">  <span class="type">DiagramMapper</span> <span class="variable">INSTANCE</span> <span class="operator">=</span> Mappers.getMapper(DiagramMapper.class);   </span><br><span class="line"> DiagramDTO <span class="title function_">toDTO</span><span class="params">(Diagram diagram)</span>; </span><br><span class="line"> Diagram <span class="title function_">toEntity</span><span class="params">(DiagramDTO diagram)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">testMapStruct</span><span class="params">()</span> &#123;  </span><br><span class="line">  <span class="type">DiagramDTO</span> <span class="variable">diagramDTO</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DiagramDTO</span>();</span><br><span class="line">    diagramDTO.setId(<span class="string">&quot;3em3dgqsgmn0&quot;</span>);  </span><br><span class="line">    diagramDTO.setCode(<span class="string">&quot;d1&quot;</span>);   </span><br><span class="line">    diagramDTO.setName(<span class="string">&quot;图表&quot;</span>); </span><br><span class="line">  <span class="type">Diagram</span> <span class="variable">diagram</span> <span class="operator">=</span> DiagramMapper.INSTANCE.toEntity(diagramDTO);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>DiagramMapper</code>接口使用了<code>@Mapper</code>注解，用来表明使用<code>MapStruct</code>处理</li>
+<li><code>MapStruct</code>中更多高级特性大家自己探索一下。</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>小结一下，对象在不同层之间进行转换映射，很不建议使用<code>BeanUtil.copyProperties</code>这种方式，更加推荐使用原生的<code>set</code>, <code>get</code>方式，不容易出错。当然这不是将<code>BeanUtil.copyProperties</code>一棒子打死，毫无用武之地，在特定场景，比如方法内部对象的转换等影响小的范围还是很方便的。</p>
+<p>原作者： <a target="_blank" rel="noopener" href="https://blog.csdn.net/weiioy">https://blog.csdn.net/weiioy</a></p>
+
+    <p><img src="https://i.dawnlab.me/53a8c7cf3ad77a0f0a456ce2c6afe88a.png" loading="lazy"></p>
+
+  </article>
+
+  
+      
+    <div class="nexmoe-post-copyright">
+        <strong>本文作者：</strong>Honesty<br>
+        <strong>本文链接：</strong><a href="https://docs.hehouhui.cn/archives/hutool-beanutil-error.html" title="https:&#x2F;&#x2F;docs.hehouhui.cn&#x2F;archives&#x2F;hutool-beanutil-error.html" target="_blank" rel="noopener">https:&#x2F;&#x2F;docs.hehouhui.cn&#x2F;archives&#x2F;hutool-beanutil-error.html</a><br>
+        
+            <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
+
+        
+    </div>
+
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/BUG/" rel="tag">BUG</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/Java/" rel="tag">Java</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/hutool/" rel="tag">hutool</a>
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1698751493227"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          <script src="https://giscus.app/client.js"
+       data-repo="listener-He/NotionNext"
+       data-repo-id="R_kgDOJI1XUA"
+       data-category="General"
+       data-category-id="R_kgDOJOsY1g"
+       data-mapping="pathname"
+       data-strict="0"
+       data-reactions-enabled="1"
+       data-emit-metadata="0"
+       data-input-position="top"
+       data-theme="preferred_color_scheme"
+       data-lang="zh-CN"
+       data-loading="lazy"
+       crossorigin="anonymous"
+       async>
+ </script>
+
+      </div>
+  
+</div></div><div class="nexmoe-post-right">    <div class="nexmoe-fixed">
+        <div class="nexmoe-tool">
+
+            
+
+            
+            
+            <button class="mdui-fab catalog" style="overflow:unset;">
+                <i class="nexmoefont icon-i-catalog"></i>
+                <div class="nexmoe-toc">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E5%9B%9E%E9%A1%BE"><span class="toc-number">2.</span> <span class="toc-text">事件回顾</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%9E%90%E6%8E%A2%E8%AE%A8"><span class="toc-number">3.</span> <span class="toc-text">分析探讨</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A8%E8%8D%90%E6%96%B9%E6%A1%88"><span class="toc-number">4.</span> <span class="toc-text">推荐方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li></ol>
+                </div>
+            </button>
+            
+
+            
+
+            <a href="#nexmoe-content" class="backtop toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+        </div>
+    </div>
+</div></div><div id="nexmoe-footer"><!--!--></div><div><div id="nexmoe-search-space">
+	<div class="search-container">
+		<div class="search-header">
+			<div class="search-input-container">
+				<input
+					class="search-input"
+					type="text"
+					placeholder="搜索"
+					oninput="sinput();"
+				/>
+			</div>
+			<a class="search-close" onclick="sclose();">×</a>
+		</div>
+		<div class="search-body"></div>
+	</div>
+</div>
+</div><div><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1623991949842711" crossorigin="anonymous"></script>
+</div></body></html>

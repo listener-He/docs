@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="zh"><head>
+<title>Spring Boot 实现多租户架构：支持应用多租户部署和管理 - Honesty wiki</title>
+<meta charset="UTF-8">
+<meta name="keywords" content="Honesty 知识库,Honesty Wiki, Honesty blog,hehouhui 知识库,hehouhui Wiki, hehouhui blog">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+<meta name="description" content="1 什么是多租户架构？多租户架构是指在一个应用中支持多个租户（Tenant）同时访问，每个租户拥有独立的资源和数据，并且彼此之间完全隔离。通俗来说，多租户就是把一个应用按照客户的需求“分割”成多个独立的实例，每个实例互不干扰。 2 多租户架构的优势 更好地满足不同租户的个性化需求。 可以降低运维成本，减少硬件、网络等基础设施的投入。 节约开发成本，通过复用代码，快速上线新的租户实例。 增强了系统的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring Boot 实现多租户架构：支持应用多租户部署和管理">
+<meta property="og:url" content="https://docs.hehouhui.cn/archives/spring-boot-tenant-202309.html">
+<meta property="og:site_name" content="Honesty wiki">
+<meta property="og:description" content="1 什么是多租户架构？多租户架构是指在一个应用中支持多个租户（Tenant）同时访问，每个租户拥有独立的资源和数据，并且彼此之间完全隔离。通俗来说，多租户就是把一个应用按照客户的需求“分割”成多个独立的实例，每个实例互不干扰。 2 多租户架构的优势 更好地满足不同租户的个性化需求。 可以降低运维成本，减少硬件、网络等基础设施的投入。 节约开发成本，通过复用代码，快速上线新的租户实例。 增强了系统的">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-15T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-10-08T06:40:00.000Z">
+<meta property="article:author" content="Honesty">
+<meta property="article:tag" content="Spring">
+<meta property="article:tag" content="微服务">
+<meta property="article:tag" content="SAAS">
+<meta name="twitter:card" content="summary">
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1698751493365">
+
+<link rel="stylesheet" href="/css/style.css?v=1698751493365">
+
+
+
+
+    
+        <link rel="stylesheet" href="/custom.css?v=1698751493365">
+    
+
+
+
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+<script src="/lib/lax.min.js" async></script>
+
+
+<script async src="/js/app.js?v=1698751493365"></script>
+
+ 
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-248JM4ZRPJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+
+  gtag("config", "G-248JM4ZRPJ");
+</script>
+
+<meta name="generator" content="Hexo 6.3.0"></head><body class="nexmoe mdui-drawer-body-left"><div id="nexmoe-background"><div class="nexmoe-bg" style="background-image: url(https://blog-file.hehouhui.cn/202305111934350.jpeg)"></div><div class="mdui-appbar mdui-shadow-0"><div class="mdui-toolbar"><a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-drawer="{target: &#039;#drawer&#039;, swipe: true}" title="menu"><i class="mdui-icon nexmoefont icon-menu"></i></a><div class="mdui-toolbar-spacer"></div><a class="mdui-btn mdui-btn-icon" href="/" title="Honesty"><img src="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309111525908.jpeg" alt="Honesty"></a></div></div></div><div id="nexmoe-header"><div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="Honesty">
+            <img src="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309111525908.jpeg" alt="Honesty" alt="Honesty">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>30</div>
+        <div><span>标签</span>33</div>
+        <div><span>分类</span>4</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archive.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/PY.html" title="我的朋友">
+            <i class="mdui-list-item-icon nexmoefont icon-unorderedlist"></i>
+            <div class="mdui-list-item-content">
+                我的朋友
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/donate.html" title="给我赞助">
+            <i class="mdui-list-item-icon nexmoefont icon-coffee"></i>
+            <div class="mdui-list-item-content">
+                给我赞助
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/about.html" title="关于博主">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于博主
+            </div>
+        </a>
+        
+    </div>
+    
+    
+        
+        <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+         
+            <form id="search_form" action_e="https://cn.bing.com/search?q=site:hehouhui.cn" onsubmit="return search();">
+                <label><input id="search_value" name="q" type="search" placeholder="搜索"></label>
+            </form>
+         
+    </div>
+</div>
+
+
+
+
+    
+        
+        <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="https://space.bilibili.com/442038841"
+			target="_blank"
+			mdui-tooltip="{content: '哔哩哔哩'}"
+			style="
+				color: rgb(231, 106, 141);
+				background-color: rgba(231, 106, 141, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-bilibili"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://github.com/listener-He"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://www.zhihu.com/people/wen-xin-92-2-57"
+			target="_blank"
+			mdui-tooltip="{content: '知乎'}"
+			style="
+				color: rgb(30, 136, 229);
+				background-color: rgba(30, 136, 229, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-zhihu"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://twitter.com/Honesty861024"
+			target="_blank"
+			mdui-tooltip="{content: 'Twitter'}"
+			style="
+				color: rgb(59, 151, 239);
+				background-color: rgba(59, 151, 239, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-twitter"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://docs.hehouhui.cn/atom.xml"
+			target="_blank"
+			mdui-tooltip="{content: 'RSS'}"
+			style="
+				color: rgb(247, 132, 34);
+				background-color: rgba(247, 132, 34, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-rss"
+			></i> </a
+		>
+	</div>
+</div>
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/创作分享/">创作分享</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/学习思考/">学习思考</a>
+          <span class="category-list-count">3</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/技术分享/">技术分享</a>
+          <span class="category-list-count">25</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/碎片杂文/">碎片杂文</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/BUG/" style="font-size: 10px;">BUG</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/Jvm/" style="font-size: 10px;">Jvm</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Redis/" style="font-size: 15.71px;">Redis</a> <a href="/tags/SAAS/" style="font-size: 10px;">SAAS</a> <a href="/tags/Spring/" style="font-size: 18.57px;">Spring</a> <a href="/tags/WebFlux/" style="font-size: 10px;">WebFlux</a> <a href="/tags/chatgpt/" style="font-size: 10px;">chatgpt</a> <a href="/tags/hutool/" style="font-size: 10px;">hutool</a> <a href="/tags/keycloak/" style="font-size: 11.43px;">keycloak</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/notion/" style="font-size: 10px;">notion</a> <a href="/tags/oauth/" style="font-size: 11.43px;">oauth</a> <a href="/tags/%E5%81%A5%E5%BA%B7/" style="font-size: 10px;">健康</a> <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" style="font-size: 14.29px;">分布式</a> <a href="/tags/%E5%92%96%E5%95%A1/" style="font-size: 10px;">咖啡</a> <a href="/tags/%E5%93%8D%E5%BA%94%E5%BC%8F/" style="font-size: 10px;">响应式</a> <a href="/tags/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/" style="font-size: 11.43px;">图像处理</a> <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 10px;">多线程</a> <a href="/tags/%E5%AD%A6%E4%B9%A0/" style="font-size: 11.43px;">学习</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">工具</a> <a href="/tags/%E5%BB%BA%E7%AB%99/" style="font-size: 11.43px;">建站</a> <a href="/tags/%E5%BC%80%E5%8F%91/" style="font-size: 12.86px;">开发</a> <a href="/tags/%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/" style="font-size: 11.43px;">异步编程</a> <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" style="font-size: 17.14px;">微服务</a> <a href="/tags/%E6%80%9D%E8%80%83/" style="font-size: 12.86px;">思考</a> <a href="/tags/%E6%8A%80%E6%9C%AF%E6%B5%81/" style="font-size: 10px;">技术流</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 10px;">数据结构</a> <a href="/tags/%E6%95%B4%E6%B4%BB/" style="font-size: 10px;">整活</a> <a href="/tags/%E6%96%87%E5%AD%97/" style="font-size: 12.86px;">文字</a> <a href="/tags/%E7%89%A9%E8%81%94%E7%BD%91/" style="font-size: 10px;">物联网</a> <a href="/tags/%E7%BC%93%E5%AD%98/" style="font-size: 11.43px;">缓存</a>
+    </div>
+    
+      <script>
+        var maxTagcloud = parseInt(17);
+        var tags_length = parseInt(33);
+        var tags_arr = [];
+        for(var i = 0; i < tags_length; i++){
+          tags_arr.push(i);
+        }
+        tags_arr.sort(function (l, r) {
+          return Math.random() > 0.5 ? -1 : 1;
+        });
+        tags_arr = tags_arr.slice(0, maxTagcloud < tags_length ? tags_length - maxTagcloud : 0);
+        for(var tag_i = 0; tag_i < tags_arr.length; tag_i++){
+          document.getElementById("randomtagcloud").children[tags_arr[tag_i]].style.display = 'none';
+        }
+      </script>
+    
+  </div>
+
+    
+        
+        <!-- 一言 -->
+<div class="nexmoe-widget-wrap">
+  <h3 class="nexmoe-widget-title">
+    一言
+  </h3>
+  <div class="nexmoe-widget">
+    <ul class="hitokoto-box">
+      <li id="hitokoto_text_parent" class="hitokoto-text" hitokotoCategory="">
+        <a href="#" id="hitokoto_text">
+          
+        </a>
+        <a href="#" id="hitokoto_error_text" style="display: none;">
+          
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  let hitokotoText = document.getElementById('hitokoto_text')
+  let hitokotoErroText = document.getElementById('hitokoto_error_text')
+  let hitokotoCategory = document.getElementById('hitokoto_text_parent').getAttribute('hitokotoCategory')
+  window.addEventListener('load', function () {
+    let url = 'https://v1.hitokoto.cn'
+    if (hitokotoCategory) {
+      url += '?c=' + hitokotoCategory
+    }
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        hitokotoText.innerText = "「 " + data.hitokoto + " 」 from " + data.from
+        hitokotoText.href = 'https://hitokoto.cn/?uuid=' + data.uuid
+      })
+      .catch((reason) => {
+        console.error(11, reason)
+        hitokotoText.style.display = 'none'
+        hitokotoErroText.style.display = 'block'
+      })
+  })
+</script>
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/history/2023/">2023</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/history/2022/">2022</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/history/2021/">2021</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/history/2020/">2020</a><span class="archive-list-count">7</span></li></ul>
+    </div>
+  </div>
+
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">最新文章</h3>
+    <div class="nexmoe-widget">
+      <ul>
+        
+          <li>
+            <a href="/archives/spring-boot-tenant-202309.html">Spring Boot 实现多租户架构：支持应用多租户部署和管理</a>
+          </li>
+        
+          <li>
+            <a href="/archives/springcloud-data-202309.html">微服务之间的数据依赖问题，该如何解决？</a>
+          </li>
+        
+          <li>
+            <a href="/archives/redis-key-202309.html">Redis 热key是什么问题，如何导致的？有什么解决方案？</a>
+          </li>
+        
+          <li>
+            <a href="/archives/spring-restclient-2023.html">HttpClient? RestTemplate？WebClient? 不~是 RestClient</a>
+          </li>
+        
+          <li>
+            <a href="/archives/lkcoffee-shanghai-coffee-activities-20230602.html">上海咖啡文化周之薅瑞幸羊毛</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+    
+        
+   
+    <div class="nexmoe-copyright">
+        &copy; 2023 Honesty
+        Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+        & <a href="https://github.com/theme-nexmoe/hexo-theme-nexmoe" target="_blank">Nexmoe</a>
+        <br><a target="_blank" href="https://beian.miit.gov.cn/">湘ICP备20014902号</a>
+<br><a target="_blank" href="https://www.upyun.com/?utm_source=lianmeng&utm_medium=referral">
+
+    </div>
+</div><!-- .nexmoe-drawer --></div><div id="nexmoe-content"><div class="nexmoe-primary"><div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover"> 
+            <img src="https://blog-file.hehouhui.cn/202305111934350.jpeg" alt="Spring Boot 实现多租户架构：支持应用多租户部署和管理" loading="lazy">
+            <h1>Spring Boot 实现多租户架构：支持应用多租户部署和管理</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2023年09月15日</a>
+        
+            <a class="nexmoefont icon-appstore-fill -link" href="/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</a>
+        
+        
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <h3 id="1-什么是多租户架构？"><a href="#1-什么是多租户架构？" class="headerlink" title="1 什么是多租户架构？"></a>1 什么是多租户架构？</h3><p>多租户架构是指在一个应用中支持多个租户（Tenant）同时访问，每个租户拥有独立的资源和数据，并且彼此之间完全隔离。通俗来说，多租户就是把一个应用按照客户的需求“分割”成多个独立的实例，每个实例互不干扰。</p>
+<h3 id="2-多租户架构的优势"><a href="#2-多租户架构的优势" class="headerlink" title="2 多租户架构的优势"></a>2 多租户架构的优势</h3><ul>
+<li>更好地满足不同租户的个性化需求。</li>
+<li>可以降低运维成本，减少硬件、网络等基础设施的投入。</li>
+<li>节约开发成本，通过复用代码，快速上线新的租户实例。</li>
+<li>增强了系统的可扩展性和可伸缩性，支持水平扩展，每个租户的数据和资源均可管理和控制。</li>
+</ul>
+<h3 id="3-实现多租户架构的技术选择"><a href="#3-实现多租户架构的技术选择" class="headerlink" title="3 实现多租户架构的技术选择"></a>3 实现多租户架构的技术选择</h3><p>对于实现多租户架构技术不是最重要的最重要的是正确的架构思路。但是选择正确的技术可以更快地实现多租户架构。</p>
+<h3 id="1-架构选型"><a href="#1-架构选型" class="headerlink" title="1 架构选型"></a>1 架构选型</h3><p>基于 Java 开发多租户应用推荐使用 Spring Boot 和 Spring Cloud。Spring Boot 能快速搭建应用并提供许多成熟的插件。Spring Cloud 则提供了许多实现微服务架构的工具和组件。</p>
+<h3 id="1-1-Spring-Boot"><a href="#1-1-Spring-Boot" class="headerlink" title="1.1 Spring Boot"></a>1.1 Spring Boot</h3><p>使用 Spring Boot 可以简化项目的搭建过程自动配置许多常见的第三方库和组件，减少了开发人员的工作量。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TenantController</span> &#123;</span><br><span class="line"></span><br><span class="line">		<span class="meta">@GetMapping(&quot;/hello&quot;)</span></span><br><span class="line">		<span class="keyword">public</span> String <span class="title function_">hello</span><span class="params">(<span class="meta">@RequestHeader(&quot;tenant-id&quot;)</span> String tenantId)</span> &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="string">&quot;Hello, &quot;</span> + tenantId;</span><br><span class="line">		&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2-Spring-Cloud"><a href="#1-2-Spring-Cloud" class="headerlink" title="1.2 Spring Cloud"></a>1.2 Spring Cloud</h3><p>在架构多租户的系统时 Spring Cloud 会更加有用。Spring Cloud 提供了一些成熟的解决方案，如 Eureka、Zookeeper、Consul 等，以实现服务发现、负载均衡等微服务功能。</p>
+<h3 id="2-数据库设计"><a href="#2-数据库设计" class="headerlink" title="2 数据库设计"></a>2 数据库设计</h3><p>在多租户环境中数据库必须为每个租户分别存储数据并确保数据隔离。我们通常使用以下两种方式实现：</p>
+<ul>
+<li>多个租户共享相同的数据库，每个表中都包含 tenant_id 这一列，用于区分不同租户的数据。</li>
+<li>为每个租户创建单独的数据库，每个数据库内的表结构相同，但数据相互隔离。</li>
+</ul>
+<h3 id="3-应用多租户部署"><a href="#3-应用多租户部署" class="headerlink" title="3 应用多租户部署"></a>3 应用多租户部署</h3><p>为了实现多租户在应用部署时我们需要考虑以下两个问题。</p>
+<h3 id="3-1-应用隔离"><a href="#3-1-应用隔离" class="headerlink" title="3.1 应用隔离"></a>3.1 应用隔离</h3><p>在多租户环境中不同租户需要访问不同的资源，因此需要进行应用隔离。可以通过构建独立的容器或虚拟机、使用命名空间等方式实现。Docker 就是一种非常流行的隔离容器技术。</p>
+<h3 id="3-2-应用配置"><a href="#3-2-应用配置" class="headerlink" title="3.2 应用配置"></a>3.2 应用配置</h3><p>由于每个租户都有自己的配置需求因此需要为每个租户分别设置应用配置信息，例如端口号、SSL 证书等等。这些配置可以存储在数据库中，也可以存储在云配置中心中。</p>
+<h3 id="4-租户管理"><a href="#4-租户管理" class="headerlink" title="4 租户管理"></a>4 租户管理</h3><p>在多租户系统中需要能够管理不同租户的数据和资源，同时需要为每个租户分配相应的权限。解决方案通常包括以下两部分。</p>
+<h3 id="4-1-租户信息维护"><a href="#4-1-租户信息维护" class="headerlink" title="4.1 租户信息维护"></a>4.1 租户信息维护</h3><p>租户信息的维护包括添加、修改、删除、查询等操作，要求能够根据租户名称或租户 ID 快速查找对应的租户信息。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> tenant (    </span><br><span class="line">	id <span class="type">BIGINT</span> AUTO_INCREMENT <span class="keyword">PRIMARY</span> KEY,</span><br><span class="line">    name <span class="type">VARCHAR</span>(<span class="number">50</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">UNIQUE</span>,</span><br><span class="line">    description <span class="type">VARCHAR</span>(<span class="number">255</span>),</span><br><span class="line">    created_time <span class="type">TIMESTAMP</span> <span class="keyword">DEFAULT</span> <span class="built_in">CURRENT_TIMESTAMP</span>,</span><br><span class="line">    updated_time <span class="type">TIMESTAMP</span> <span class="keyword">DEFAULT</span> <span class="built_in">CURRENT_TIMESTAMP</span> <span class="keyword">ON</span> <span class="keyword">UPDATE</span> <span class="built_in">CURRENT_TIMESTAMP</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2-租户权限控制"><a href="#4-2-租户权限控制" class="headerlink" title="4.2 租户权限控制"></a>4.2 租户权限控制</h3><p>在多租户应用中必须为每个租户分别设置对系统资源的访问权限。例如，A 租户和 B 租户不能访问彼此的数据。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@EnableGlobalMethodSecurity(prePostEnabled = true)</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SecurityConfig</span> <span class="keyword">extends</span> <span class="title class_">WebSecurityConfigurerAdapter</span> &#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">configure</span><span class="params">(HttpSecurity http)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">	    http.authorizeRequests()</span><br><span class="line">	        .antMatchers(<span class="string">&quot;/api/tenant/**&quot;</span>).hasRole(<span class="string">&quot;ADMIN&quot;</span>)</span><br><span class="line">	        .anyRequest().authenticated()</span><br><span class="line">	        .and()</span><br><span class="line">	        .formLogin();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="meta">@Autowired</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">configureGlobal</span><span class="params">(AuthenticationManagerBuilder auth)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">	    auth.userDetailsService(userDetailsService())</span><br><span class="line">	        .passwordEncoder(<span class="keyword">new</span> <span class="title class_">BCryptPasswordEncoder</span>())</span><br><span class="line">	        .and()</span><br><span class="line">	        .inMemoryAuthentication()</span><br><span class="line">	        .withUser(<span class="string">&quot;admin&quot;</span>)</span><br><span class="line">	        .password(<span class="keyword">new</span> <span class="title class_">BCryptPasswordEncoder</span>().encode(<span class="string">&quot;123456&quot;</span>))</span><br><span class="line">	        .roles(<span class="string">&quot;ADMIN&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-Spring-Boot-中的多租户实现"><a href="#1-Spring-Boot-中的多租户实现" class="headerlink" title="1 Spring Boot 中的多租户实现"></a>1 Spring Boot 中的多租户实现</h3><p>在 Spring Boot 中可以通过多数据源和动态路由来实现多租户机制。</p>
+<h3 id="1-1-多数据源实现"><a href="#1-1-多数据源实现" class="headerlink" title="1.1 多数据源实现"></a>1.1 多数据源实现</h3><p>多数据源是指为不同的租户配置不同的数据源，使得每个租户都可以访问自己的独立数据。具体实现方法如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DataSourceConfig</span> &#123;</span><br><span class="line">		<span class="meta">@Bean(name = &quot;dataSourceA&quot;)</span></span><br><span class="line">		<span class="meta">@ConfigurationProperties(prefix = &quot;spring.datasource.a&quot;)</span></span><br><span class="line">		<span class="keyword">public</span> DataSource <span class="title function_">dataSourceA</span><span class="params">()</span> &#123;</span><br><span class="line">		    <span class="keyword">return</span> DataSourceBuilder.create().build();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="meta">@Bean(name = &quot;dataSourceB&quot;)</span></span><br><span class="line">		<span class="meta">@ConfigurationProperties(prefix = &quot;spring.datasource.b&quot;)</span></span><br><span class="line">		<span class="keyword">public</span> DataSource <span class="title function_">dataSourceB</span><span class="params">()</span> &#123;</span><br><span class="line">		    <span class="keyword">return</span> DataSourceBuilder.create().build();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="meta">@Bean(name = &quot;dataSourceC&quot;)</span></span><br><span class="line">		<span class="meta">@ConfigurationProperties(prefix = &quot;spring.datasource.c&quot;)</span></span><br><span class="line">		<span class="keyword">public</span> DataSource <span class="title function_">dataSourceC</span><span class="params">()</span> &#123;</span><br><span class="line">		    <span class="keyword">return</span> DataSourceBuilder.create().build();</span><br><span class="line">		&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上代码是配置了三个数据源分别对应三个租户。然后在使用时，可以使用注解标记需要连接的数据源。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ProductService</span> &#123;</span><br><span class="line">	<span class="meta">@Autowired</span></span><br><span class="line">	<span class="meta">@Qualifier(“dataSourceA”)</span></span><br><span class="line">	<span class="keyword">private</span> DataSource dataSource;</span><br><span class="line">	<span class="comment">// …</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2-动态路由实现"><a href="#1-2-动态路由实现" class="headerlink" title="1.2 动态路由实现"></a>1.2 动态路由实现</h3><p>动态路由是指根据请求的 URL 或参数动态地切换到对应租户的数据源。具体实现如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DynamicDataSource</span> <span class="keyword">extends</span> <span class="title class_">AbstractRoutingDataSource</span> &#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">protected</span> Object <span class="title function_">determineCurrentLookupKey</span><span class="params">()</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> TenantContextHolder.getTenantId();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DataSourceConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Bean(name = &quot;dataSource&quot;)</span></span><br><span class="line">	<span class="meta">@ConfigurationProperties(prefix = &quot;spring.datasource&quot;)</span></span><br><span class="line">	<span class="keyword">public</span> DataSource <span class="title function_">dataSource</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> DataSourceBuilder.create().type(DynamicDataSource.class).build();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上是动态路由的核心代码<code>DynamicDataSource</code>继承自<code>AbstractRoutingDataSource</code>，通过<code>determineCurrentLookupKey()</code>方法动态获得租户 ID，然后切换到对应的数据源。</p>
+<h3 id="2-Spring-Cloud-中的多租户实现"><a href="#2-Spring-Cloud-中的多租户实现" class="headerlink" title="2 Spring Cloud 中的多租户实现"></a>2 Spring Cloud 中的多租户实现</h3><p>在 Spring Cloud 中可以通过服务注册与发现、配置中心、负载均衡等方式实现多租户机制。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 多租户配置类</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TenantConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 注册多租户拦截器</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> TenantInterceptor <span class="title function_">tenantInterceptor</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">TenantInterceptor</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 注册多租户数据源</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@ConfigurationProperties(prefix = &quot;spring.datasource&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> DataSource <span class="title function_">dataSource</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> DataSourceBuilder.create().build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 配置多租户Mybatis插件</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> MybatisPlusInterceptor <span class="title function_">mybatisPlusInterceptor</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">MybatisPlusInterceptor</span> <span class="variable">interceptor</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MybatisPlusInterceptor</span>();</span><br><span class="line">        interceptor.addInnerInterceptor(<span class="keyword">new</span> <span class="title class_">TenantLineInnerInterceptor</span>(<span class="keyword">new</span> <span class="title class_">TenantHandler</span>()));</span><br><span class="line">        <span class="keyword">return</span> interceptor;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 配置多租户Mybatis拦截器</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> MybatisInterceptor <span class="title function_">mybatisInterceptor</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">MybatisInterceptor</span> <span class="variable">interceptor</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MybatisInterceptor</span>();</span><br><span class="line">        interceptor.addInnerInterceptor(<span class="keyword">new</span> <span class="title class_">TenantLineInnerInterceptor</span>(<span class="keyword">new</span> <span class="title class_">TenantHandler</span>()));</span><br><span class="line">        <span class="keyword">return</span> interceptor;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 配置多租户Feign拦截器</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> RequestInterceptor <span class="title function_">feignInterceptor</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">TenantFeignInterceptor</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 配置多租户Ribbon拦截器</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> LoadBalancerInterceptor <span class="title function_">ribbonInterceptor</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">TenantLoadBalancerInterceptor</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 注册多租户Redis配置</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> TenantRedisConfig <span class="title function_">tenantRedisConfig</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">TenantRedisConfig</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-1-服务注册与发现"><a href="#2-1-服务注册与发现" class="headerlink" title="2.1 服务注册与发现"></a>2.1 服务注册与发现</h3><p>使用 Spring Cloud 中的 Eureka 实现服务注册与发现。每个租户的服务都在注册中心以不同的应用名称进行注册，客户端可以通过服务名称来访问对应租户的服务。</p>
+<h3 id="2-2-配置中心"><a href="#2-2-配置中心" class="headerlink" title="2.2 配置中心"></a>2.2 配置中心</h3><p>使用 Spring Cloud Config 作为配置中心。配置文件以租户 ID 进行区分，客户端通过读取对应租户的配置文件来获取配置信息。</p>
+<h3 id="2-3-负载均衡"><a href="#2-3-负载均衡" class="headerlink" title="2.3 负载均衡"></a>2.3 负载均衡</h3><p>使用 Spring Cloud Ribbon 作为负载均衡器。根据请求的 URL 或参数选择对应租户的服务实例进行请求转发。</p>
+<h3 id="2-4-API"><a href="#2-4-API" class="headerlink" title="2.4 API"></a>2.4 API</h3><p>在 API 网关层面实现多租户机制根据请求的 URL 或参数判断所属租户，并转发到对应租户的服务实例。</p>
+<h3 id="1-私有云环境"><a href="#1-私有云环境" class="headerlink" title="1 私有云环境"></a>1 私有云环境</h3><p>私有云环境指的是由企业自行搭建的云环境，不对外提供服务，主要应用于企业内部的数据存储、管理、共享和安全控制。相较于公有云，私有云的优点在于可以更好地保护企业核心数据，同时也能够满足企业对于数据安全性和可控性的要求。</p>
+<h3 id="2-公有云环境"><a href="#2-公有云环境" class="headerlink" title="2 公有云环境"></a>2 公有云环境</h3><p>公有云环境指的是由云服务商搭建并对外提供服务的云环境，用户可以根据需要购买相应的云服务，如云存储、云计算、云数据库等。相较于私有云，公有云的优点在于具有成本低廉、弹性伸缩、全球化部署等特点，能够更好地满足企业快速发展的需求。</p>
+<h3 id="3-企业级应用"><a href="#3-企业级应用" class="headerlink" title="3 企业级应用"></a>3 企业级应用</h3><p>企业级应用是指面向企业客户的应用程序，主要包括 ERP、CRM、OA 等一系列应用系统。这类应用的特点在于功能强大、流程复杂、数据量大，需要满足企业的高效率、高可靠性、高安全性和易维护性等要求。在云计算环境下，企业可以将这些应用部署在私有云或公有云上，减少了硬件设备的投入和维护成本，提高了管理效率。</p>
+<h3 id="1-搭建-Spring-Boot-和-Spring-Cloud-环境"><a href="#1-搭建-Spring-Boot-和-Spring-Cloud-环境" class="headerlink" title="1 搭建 Spring Boot 和 Spring Cloud 环境"></a>1 搭建 Spring Boot 和 Spring Cloud 环境</h3><p>首先需要在 Maven 项目中引入以下依赖：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencyManagement</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-dependencies<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>2020.0.3<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">type</span>&gt;</span>pom<span class="tag">&lt;/<span class="name">type</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">scope</span>&gt;</span>import<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencyManagement</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后需要在 application.yml 中配置相应的参数，如下所示：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">datasource:</span></span><br><span class="line">    <span class="attr">url:</span> <span class="string">jdbc:mysql://localhost:3306/appdb?useUnicode=true&amp;characterEncoding=utf-8&amp;serverTimezone=Asia/Shanghai</span></span><br><span class="line">    <span class="attr">username:</span> <span class="string">root</span></span><br><span class="line">    <span class="attr">password:</span> <span class="number">123456</span></span><br><span class="line">  <span class="attr">mybatis:</span></span><br><span class="line">    <span class="attr">type-aliases-package:</span> <span class="string">com.example.demo.model</span></span><br><span class="line">    <span class="attr">mapper-locations:</span> <span class="string">classpath:mapper/*.xml</span></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">8080</span></span><br><span class="line"><span class="attr">eureka:</span></span><br><span class="line">  <span class="attr">client:</span></span><br><span class="line">    <span class="attr">serviceUrl:</span></span><br><span class="line">      <span class="attr">defaultZone:</span> <span class="string">http://localhost:8761/eureka/</span></span><br><span class="line">  <span class="attr">management:</span></span><br><span class="line">    <span class="attr">endpoints:</span></span><br><span class="line">      <span class="attr">web:</span></span><br><span class="line">        <span class="attr">exposure:</span></span><br><span class="line">          <span class="attr">include:</span> <span class="string">&quot;*&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>其中<code>datasource.url</code>为数据库连接的 URL，username 和 password 为数据库连接的账号和密码；<code>server.port</code>为 Spring Boot 应用启动的端口；<code>eureka.client.serviceUrl.defaultZone</code>为 Eureka 服务注册中心的 URL。</p>
+<h3 id="2-修改数据库设计"><a href="#2-修改数据库设计" class="headerlink" title="2 修改数据库设计"></a>2 修改数据库设计</h3><p>接下来需要对数据库进行相应的修改，以支持多租户部署。具体来说，我们需要在数据库中添加一个与租户相关的字段，以便在应用中区分不同的租户。</p>
+<h3 id="3-实现应用多租户部署"><a href="#3-实现应用多租户部署" class="headerlink" title="3 实现应用多租户部署"></a>3 实现应用多租户部署</h3><p>接着需要在代码中实现应用的多租户部署功能。具体来说，我们需要为每个租户实例化对应的 Spring Bean，并根据租户 ID 将请求路由到相应的 Bean 中去处理。</p>
+<p>以下是一个简单的实现示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MultiTenantConfig</span> &#123;</span><br><span class="line">    <span class="comment">// 提供对应租户的数据源</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> DataSource <span class="title function_">dataSource</span><span class="params">(TenantRegistry tenantRegistry)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">TenantAwareDataSource</span>(tenantRegistry);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 多租户Session工厂</span></span><br><span class="line">    <span class="meta">@Bean(name = &quot;sqlSessionFactory&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> SqlSessionFactory <span class="title function_">sqlSessionFactory</span><span class="params">(DataSource dataSource)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">SqlSessionFactoryBean</span> <span class="variable">sessionFactory</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SqlSessionFactoryBean</span>();</span><br><span class="line">        sessionFactory.setDataSource(dataSource);</span><br><span class="line">        <span class="keyword">return</span> sessionFactory.getObject();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 动态切换租户</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> MultiTenantInterceptor <span class="title function_">multiTenantInterceptor</span><span class="params">(TenantResolver tenantResolver)</span> &#123;</span><br><span class="line">        <span class="type">MultiTenantInterceptor</span> <span class="variable">interceptor</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MultiTenantInterceptor</span>();</span><br><span class="line">        interceptor.setTenantResolver(tenantResolver);</span><br><span class="line">        <span class="keyword">return</span> interceptor;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 注册拦截器</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addInterceptors</span><span class="params">(InterceptorRegistry registry)</span> &#123;</span><br><span class="line">        registry.addInterceptor(multiTenantInterceptor());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 注册租户信息</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> TenantRegistry <span class="title function_">tenantRegistry</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">TenantRegistryImpl</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 解析租户ID</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> TenantResolver <span class="title function_">tenantResolver</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">HeaderTenantResolver</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中<code>MultiTenantConfig</code>是多租户部署的核心配置类，它提供了对应租户数据源、多租户 Session 工厂、动态切换租户等功能。</p>
+<h3 id="4-实现租户管理"><a href="#4-实现租户管理" class="headerlink" title="4 实现租户管理"></a>4 实现租户管理</h3><p>最后需要实现一个租户管理的功能，以便在系统中管理不同的租户。具体来说，我们可以使用 Spring Cloud 的服务注册与发现组件 Eureka 来注册每个租户的实例，并在管理界面中进行相应的操作。另外，我们还需要为每个租户提供一个独立的数据库，以保证数据隔离性。</p>
+<p>本文详细介绍了如何使用 Spring Boot 和 Spring Cloud 实现一个支持多租户部署的应用。主要包括搭建 Spring Boot 和 Spring Cloud 环境、修改数据库设计、实现应用多租户部署、实现租户管理等方面。</p>
+<p>应用场景主要包括 SaaS 应用、多租户云服务等。优劣势主要体现在提升了应用的可扩展性和可维护性，但也增加了部署和管理的复杂度。未来的改进方向可以考虑进一步提升多租户管理的自动化程度，减少人工干预和错误率。</p>
+<p>添加 Eureka 依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-netflix-eureka-server<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">// 创建租户服务</span><br><span class="line">// 添加Eureka依赖</span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-netflix-eureka-client<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">// 创建租户管理模块</span><br><span class="line">// 添加Spring Data JPA依赖</span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-data-jpa<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在Spring Boot和Spring Cloud环境下搭建多租户应用</span></span><br><span class="line"><span class="comment">// 修改数据库设计，实现应用多租户部署，实现租户管理</span></span><br><span class="line"><span class="comment">// 使用Eureka服务注册与发现组件注册每个租户的实例</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 启用Eureka</span></span><br><span class="line"><span class="meta">@EnableEurekaServer</span></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Application</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(Application.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 注册租户服务</span></span><br><span class="line"><span class="meta">@EnableDiscoveryClient</span></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TenantServiceApplication</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(TenantServiceApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 配置文件</span></span><br><span class="line">spring:</span><br><span class="line">  application:</span><br><span class="line">    name: tenant-service</span><br><span class="line">eureka:</span><br><span class="line">  client:</span><br><span class="line">    service-url:</span><br><span class="line">      defaultZone: http:<span class="comment">//localhost:8761/eureka/</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建Tenant实体类</span></span><br><span class="line"><span class="meta">@Entity</span></span><br><span class="line"><span class="meta">@Table(name = &quot;tenant&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Tenant</span> &#123;</span><br><span class="line">    <span class="meta">@Id</span></span><br><span class="line">    <span class="meta">@GeneratedValue(strategy = GenerationType.IDENTITY)</span></span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> String databaseName;</span><br><span class="line">    <span class="keyword">private</span> String databaseUsername;</span><br><span class="line">    <span class="keyword">private</span> String databasePassword;</span><br><span class="line">    <span class="comment">// getter和setter</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建TenantRepository接口</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">TenantRepository</span> <span class="keyword">extends</span> <span class="title class_">JpaRepository</span>&lt;Tenant, Long&gt; &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建TenantService类</span></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TenantService</span> &#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> TenantRepository tenantRepository;</span><br><span class="line">    <span class="comment">// 添加租户</span></span><br><span class="line">    <span class="keyword">public</span> Tenant <span class="title function_">addTenant</span><span class="params">(Tenant tenant)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> tenantRepository.save(tenant);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 获取所有租户</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;Tenant&gt; <span class="title function_">getAllTenants</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> tenantRepository.findAll();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 根据id获取租户</span></span><br><span class="line">    <span class="keyword">public</span> Tenant <span class="title function_">getTenantById</span><span class="params">(Long id)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> tenantRepository.findById(id).orElse(<span class="literal">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 根据id删除租户</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">deleteTenantById</span><span class="params">(Long id)</span> &#123;</span><br><span class="line">        tenantRepository.deleteById(id);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建TenantController类</span></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/tenants&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TenantController</span> &#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> TenantService tenantService;</span><br><span class="line">    <span class="comment">// 添加租户</span></span><br><span class="line">    <span class="meta">@PostMapping(&quot;&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> Tenant <span class="title function_">addTenant</span><span class="params">(<span class="meta">@RequestBody</span> Tenant tenant)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> tenantService.addTenant(tenant);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 获取所有租户</span></span><br><span class="line">    <span class="meta">@GetMapping(&quot;&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;Tenant&gt; <span class="title function_">getAllTenants</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> tenantService.getAllTenants();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 根据id获取租户</span></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/&#123;id&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> Tenant <span class="title function_">getTenantById</span><span class="params">(<span class="meta">@PathVariable</span> Long id)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> tenantService.getTenantById(id);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 根据id删除租户</span></span><br><span class="line">    <span class="meta">@DeleteMapping(&quot;/&#123;id&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">deleteTenantById</span><span class="params">(<span class="meta">@PathVariable</span> Long id)</span> &#123;</span><br><span class="line">        tenantService.deleteTenantById(id);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建多租户数据库</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MultiTenantConnectionProviderImpl</span> <span class="keyword">implements</span> <span class="title class_">MultiTenantConnectionProvider</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Map&lt;String, DataSource&gt; dataSourceMap = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Connection <span class="title function_">getAnyConnection</span><span class="params">()</span> <span class="keyword">throws</span> SQLException &#123;</span><br><span class="line">        <span class="keyword">return</span> dataSourceMap.values().iterator().next().getConnection();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Connection <span class="title function_">getConnection</span><span class="params">(String tenantIdentifier)</span> <span class="keyword">throws</span> SQLException &#123;</span><br><span class="line">        <span class="type">DataSource</span> <span class="variable">dataSource</span> <span class="operator">=</span> dataSourceMap.get(tenantIdentifier);</span><br><span class="line">        <span class="keyword">if</span> (dataSource == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">SQLException</span>(<span class="string">&quot;No dataSource found for tenantIdentifier: &quot;</span> + tenantIdentifier);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dataSource.getConnection();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">releaseAnyConnection</span><span class="params">(Connection connection)</span> <span class="keyword">throws</span> SQLException &#123;</span><br><span class="line">        connection.close();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">releaseConnection</span><span class="params">(String tenantIdentifier, Connection connection)</span> <span class="keyword">throws</span> SQLException &#123;</span><br><span class="line">        connection.close();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">supportsAggressiveRelease</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建多租户实体类</span></span><br><span class="line"><span class="meta">@Entity</span></span><br><span class="line"><span class="meta">@Table(name = &quot;customer&quot;, schema = &quot;tenant1&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Customer</span> &#123;</span><br><span class="line">    <span class="meta">@Id</span></span><br><span class="line">    <span class="meta">@GeneratedValue(strategy = GenerationType.IDENTITY)</span></span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> String email;</span><br><span class="line">    <span class="comment">// getter和setter</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建多租户Repository接口</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">CustomerRepository</span> <span class="keyword">extends</span> <span class="title class_">JpaRepository</span>&lt;Customer, Long&gt; &#123;</span><br><span class="line">    List&lt;Customer&gt; <span class="title function_">findByTenantId</span><span class="params">(Long tenantId)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建多租户Service类</span></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CustomerService</span> &#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> CustomerRepository customerRepository;</span><br><span class="line">    <span class="comment">// 添加客户</span></span><br><span class="line">    <span class="keyword">public</span> Customer <span class="title function_">addCustomer</span><span class="params">(Customer customer)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> customerRepository.save(customer);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 获取所有客户</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;Customer&gt; <span class="title function_">getAllCustomers</span><span class="params">(Long tenantId)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> customerRepository.findByTenantId(tenantId);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 根据id获取客户</span></span><br><span class="line">    <span class="keyword">public</span> Customer <span class="title function_">getCustomerById</span><span class="params">(Long id)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> customerRepository.findById(id).orElse(<span class="literal">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 根据id删除客户</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">deleteCustomerById</span><span class="params">(Long id)</span> &#123;</span><br><span class="line">        customerRepository.deleteById(id);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建多租户Controller类</span></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/&#123;tenantId&#125;/customers&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CustomerController</span> &#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> CustomerService customerService;</span><br><span class="line">    <span class="comment">// 添加客户</span></span><br><span class="line">    <span class="meta">@PostMapping(&quot;&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> Customer <span class="title function_">addCustomer</span><span class="params">(<span class="meta">@RequestBody</span> Customer customer)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> customerService.addCustomer(customer);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 获取所有客户</span></span><br><span class="line">    <span class="meta">@GetMapping(&quot;&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;Customer&gt; <span class="title function_">getAllCustomers</span><span class="params">(<span class="meta">@PathVariable</span> Long tenantId)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> customerService.getAllCustomers(tenantId);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 根据id获取客户</span></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/&#123;id&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> Customer <span class="title function_">getCustomerById</span><span class="params">(<span class="meta">@PathVariable</span> Long id)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> customerService.getCustomerById(id);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 根据id删除客户</span></span><br><span class="line">    <span class="meta">@DeleteMapping(&quot;/&#123;id&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">deleteCustomerById</span><span class="params">(<span class="meta">@PathVariable</span> Long id)</span> &#123;</span><br><span class="line">        customerService.deleteCustomerById(id);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">//</span> <span class="string">配置文件</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">eureka-server</span></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">8761</span></span><br></pre></td></tr></table></figure>
+
+    <p><img src="https://i.dawnlab.me/53a8c7cf3ad77a0f0a456ce2c6afe88a.png" loading="lazy"></p>
+
+  </article>
+
+  
+      
+    <div class="nexmoe-post-copyright">
+        <strong>本文作者：</strong>Honesty<br>
+        <strong>本文链接：</strong><a href="https://docs.hehouhui.cn/archives/spring-boot-tenant-202309.html" title="https:&#x2F;&#x2F;docs.hehouhui.cn&#x2F;archives&#x2F;spring-boot-tenant-202309.html" target="_blank" rel="noopener">https:&#x2F;&#x2F;docs.hehouhui.cn&#x2F;archives&#x2F;spring-boot-tenant-202309.html</a><br>
+        
+            <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
+
+        
+    </div>
+
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/SAAS/" rel="tag">SAAS</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/Spring/" rel="tag">Spring</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" rel="tag">微服务</a>
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1698751493223"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          <script src="https://giscus.app/client.js"
+       data-repo="listener-He/NotionNext"
+       data-repo-id="R_kgDOJI1XUA"
+       data-category="General"
+       data-category-id="R_kgDOJOsY1g"
+       data-mapping="pathname"
+       data-strict="0"
+       data-reactions-enabled="1"
+       data-emit-metadata="0"
+       data-input-position="top"
+       data-theme="preferred_color_scheme"
+       data-lang="zh-CN"
+       data-loading="lazy"
+       crossorigin="anonymous"
+       async>
+ </script>
+
+      </div>
+  
+</div></div><div class="nexmoe-post-right">    <div class="nexmoe-fixed">
+        <div class="nexmoe-tool">
+
+            
+
+            
+            
+            <button class="mdui-fab catalog" style="overflow:unset;">
+                <i class="nexmoefont icon-i-catalog"></i>
+                <div class="nexmoe-toc">
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%BB%80%E4%B9%88%E6%98%AF%E5%A4%9A%E7%A7%9F%E6%88%B7%E6%9E%B6%E6%9E%84%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">1 什么是多租户架构？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%A4%9A%E7%A7%9F%E6%88%B7%E6%9E%B6%E6%9E%84%E7%9A%84%E4%BC%98%E5%8A%BF"><span class="toc-number">2.</span> <span class="toc-text">2 多租户架构的优势</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%AE%9E%E7%8E%B0%E5%A4%9A%E7%A7%9F%E6%88%B7%E6%9E%B6%E6%9E%84%E7%9A%84%E6%8A%80%E6%9C%AF%E9%80%89%E6%8B%A9"><span class="toc-number">3.</span> <span class="toc-text">3 实现多租户架构的技术选择</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%9E%B6%E6%9E%84%E9%80%89%E5%9E%8B"><span class="toc-number">4.</span> <span class="toc-text">1 架构选型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-Spring-Boot"><span class="toc-number">5.</span> <span class="toc-text">1.1 Spring Boot</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-Spring-Cloud"><span class="toc-number">6.</span> <span class="toc-text">1.2 Spring Cloud</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AE%BE%E8%AE%A1"><span class="toc-number">7.</span> <span class="toc-text">2 数据库设计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%BA%94%E7%94%A8%E5%A4%9A%E7%A7%9F%E6%88%B7%E9%83%A8%E7%BD%B2"><span class="toc-number">8.</span> <span class="toc-text">3 应用多租户部署</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E5%BA%94%E7%94%A8%E9%9A%94%E7%A6%BB"><span class="toc-number">9.</span> <span class="toc-text">3.1 应用隔离</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E5%BA%94%E7%94%A8%E9%85%8D%E7%BD%AE"><span class="toc-number">10.</span> <span class="toc-text">3.2 应用配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E7%A7%9F%E6%88%B7%E7%AE%A1%E7%90%86"><span class="toc-number">11.</span> <span class="toc-text">4 租户管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E7%A7%9F%E6%88%B7%E4%BF%A1%E6%81%AF%E7%BB%B4%E6%8A%A4"><span class="toc-number">12.</span> <span class="toc-text">4.1 租户信息维护</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E7%A7%9F%E6%88%B7%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6"><span class="toc-number">13.</span> <span class="toc-text">4.2 租户权限控制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Spring-Boot-%E4%B8%AD%E7%9A%84%E5%A4%9A%E7%A7%9F%E6%88%B7%E5%AE%9E%E7%8E%B0"><span class="toc-number">14.</span> <span class="toc-text">1 Spring Boot 中的多租户实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90%E5%AE%9E%E7%8E%B0"><span class="toc-number">15.</span> <span class="toc-text">1.1 多数据源实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1%E5%AE%9E%E7%8E%B0"><span class="toc-number">16.</span> <span class="toc-text">1.2 动态路由实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Spring-Cloud-%E4%B8%AD%E7%9A%84%E5%A4%9A%E7%A7%9F%E6%88%B7%E5%AE%9E%E7%8E%B0"><span class="toc-number">17.</span> <span class="toc-text">2 Spring Cloud 中的多租户实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%8F%91%E7%8E%B0"><span class="toc-number">18.</span> <span class="toc-text">2.1 服务注册与发现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83"><span class="toc-number">19.</span> <span class="toc-text">2.2 配置中心</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="toc-number">20.</span> <span class="toc-text">2.3 负载均衡</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-API"><span class="toc-number">21.</span> <span class="toc-text">2.4 API</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E7%A7%81%E6%9C%89%E4%BA%91%E7%8E%AF%E5%A2%83"><span class="toc-number">22.</span> <span class="toc-text">1 私有云环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%85%AC%E6%9C%89%E4%BA%91%E7%8E%AF%E5%A2%83"><span class="toc-number">23.</span> <span class="toc-text">2 公有云环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E4%BC%81%E4%B8%9A%E7%BA%A7%E5%BA%94%E7%94%A8"><span class="toc-number">24.</span> <span class="toc-text">3 企业级应用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%90%AD%E5%BB%BA-Spring-Boot-%E5%92%8C-Spring-Cloud-%E7%8E%AF%E5%A2%83"><span class="toc-number">25.</span> <span class="toc-text">1 搭建 Spring Boot 和 Spring Cloud 环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%BF%AE%E6%94%B9%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AE%BE%E8%AE%A1"><span class="toc-number">26.</span> <span class="toc-text">2 修改数据库设计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%AE%9E%E7%8E%B0%E5%BA%94%E7%94%A8%E5%A4%9A%E7%A7%9F%E6%88%B7%E9%83%A8%E7%BD%B2"><span class="toc-number">27.</span> <span class="toc-text">3 实现应用多租户部署</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%AE%9E%E7%8E%B0%E7%A7%9F%E6%88%B7%E7%AE%A1%E7%90%86"><span class="toc-number">28.</span> <span class="toc-text">4 实现租户管理</span></a></li></ol>
+                </div>
+            </button>
+            
+
+            
+
+            <a href="#nexmoe-content" class="backtop toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+        </div>
+    </div>
+</div></div><div id="nexmoe-footer"><!--!--></div><div><div id="nexmoe-search-space">
+	<div class="search-container">
+		<div class="search-header">
+			<div class="search-input-container">
+				<input
+					class="search-input"
+					type="text"
+					placeholder="搜索"
+					oninput="sinput();"
+				/>
+			</div>
+			<a class="search-close" onclick="sclose();">×</a>
+		</div>
+		<div class="search-body"></div>
+	</div>
+</div>
+</div><div><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1623991949842711" crossorigin="anonymous"></script>
+</div></body></html>

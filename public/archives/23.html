@@ -1,0 +1,876 @@
+<!doctype html>
+<html lang="zh"><head>
+<title>Redis集群与特性 - Honesty wiki</title>
+<meta charset="UTF-8">
+<meta name="keywords" content="Honesty 知识库,Honesty Wiki, Honesty blog,hehouhui 知识库,hehouhui Wiki, hehouhui blog">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+<meta name="description" content="一致性 hash 在 Redis 集群模式 Cluster 中，Redis 采用的是分片 Sharding 的方式，也就是将数据采用一定的分区策略，分发到相应的集群节点中。但是我们使用上述 HASH 算法进行缓存时，会出现一些缺陷，主要体现在服务器数量变动的时候，所有缓存的位置都要发生改变！具体来讲就是说第一当缓存服务器数量发生变化时，会引起缓存的雪崩，可能会引起整体系统压力过大而崩溃（大量缓存同">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis集群与特性">
+<meta property="og:url" content="https://docs.hehouhui.cn/archives/23.html">
+<meta property="og:site_name" content="Honesty wiki">
+<meta property="og:description" content="一致性 hash 在 Redis 集群模式 Cluster 中，Redis 采用的是分片 Sharding 的方式，也就是将数据采用一定的分区策略，分发到相应的集群节点中。但是我们使用上述 HASH 算法进行缓存时，会出现一些缺陷，主要体现在服务器数量变动的时候，所有缓存的位置都要发生改变！具体来讲就是说第一当缓存服务器数量发生变化时，会引起缓存的雪崩，可能会引起整体系统压力过大而崩溃（大量缓存同">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/764785/201806/764785-20180629092443832-206225549.png">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/764785/201806/764785-20180629092420294-1751487154.png">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/764785/201806/764785-20180629094553158-1599779576.png">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/764785/201806/764785-20180629094725047-214223016.png">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/764785/201806/764785-20180629094815575-184254002.png">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/764785/201806/764785-20180629095126662-1063517024.png">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/764785/201806/764785-20180629095541491-1901809546.png">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/764785/201806/764785-20180629095632770-302235804.png">
+<meta property="og:image" content="https://images2015.cnblogs.com/blog/17405/201607/17405-20160729120110388-883077606.jpg">
+<meta property="og:image" content="https://images2015.cnblogs.com/blog/17405/201607/17405-20160729120154169-1347608301.jpg">
+<meta property="article:published_time" content="2021-12-18T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-10-08T06:42:00.000Z">
+<meta property="article:author" content="Honesty">
+<meta property="article:tag" content="微服务">
+<meta property="article:tag" content="分布式">
+<meta property="article:tag" content="Redis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://images2018.cnblogs.com/blog/764785/201806/764785-20180629092443832-206225549.png">
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1698751493506">
+
+<link rel="stylesheet" href="/css/style.css?v=1698751493506">
+
+
+
+
+    
+        <link rel="stylesheet" href="/custom.css?v=1698751493506">
+    
+
+
+
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+<script src="/lib/lax.min.js" async></script>
+
+
+<script async src="/js/app.js?v=1698751493506"></script>
+
+ 
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-248JM4ZRPJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+
+  gtag("config", "G-248JM4ZRPJ");
+</script>
+
+<meta name="generator" content="Hexo 6.3.0"></head><body class="nexmoe mdui-drawer-body-left"><div id="nexmoe-background"><div class="nexmoe-bg" style="background-image: url(https://blog-file.hehouhui.cn/202305111934350.jpeg)"></div><div class="mdui-appbar mdui-shadow-0"><div class="mdui-toolbar"><a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-drawer="{target: &#039;#drawer&#039;, swipe: true}" title="menu"><i class="mdui-icon nexmoefont icon-menu"></i></a><div class="mdui-toolbar-spacer"></div><a class="mdui-btn mdui-btn-icon" href="/" title="Honesty"><img src="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309111525908.jpeg" alt="Honesty"></a></div></div></div><div id="nexmoe-header"><div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="Honesty">
+            <img src="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309111525908.jpeg" alt="Honesty" alt="Honesty">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>30</div>
+        <div><span>标签</span>33</div>
+        <div><span>分类</span>4</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archive.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/PY.html" title="我的朋友">
+            <i class="mdui-list-item-icon nexmoefont icon-unorderedlist"></i>
+            <div class="mdui-list-item-content">
+                我的朋友
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/donate.html" title="给我赞助">
+            <i class="mdui-list-item-icon nexmoefont icon-coffee"></i>
+            <div class="mdui-list-item-content">
+                给我赞助
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/about.html" title="关于博主">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于博主
+            </div>
+        </a>
+        
+    </div>
+    
+    
+        
+        <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+         
+            <form id="search_form" action_e="https://cn.bing.com/search?q=site:hehouhui.cn" onsubmit="return search();">
+                <label><input id="search_value" name="q" type="search" placeholder="搜索"></label>
+            </form>
+         
+    </div>
+</div>
+
+
+
+
+    
+        
+        <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="https://space.bilibili.com/442038841"
+			target="_blank"
+			mdui-tooltip="{content: '哔哩哔哩'}"
+			style="
+				color: rgb(231, 106, 141);
+				background-color: rgba(231, 106, 141, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-bilibili"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://github.com/listener-He"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://www.zhihu.com/people/wen-xin-92-2-57"
+			target="_blank"
+			mdui-tooltip="{content: '知乎'}"
+			style="
+				color: rgb(30, 136, 229);
+				background-color: rgba(30, 136, 229, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-zhihu"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://twitter.com/Honesty861024"
+			target="_blank"
+			mdui-tooltip="{content: 'Twitter'}"
+			style="
+				color: rgb(59, 151, 239);
+				background-color: rgba(59, 151, 239, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-twitter"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://docs.hehouhui.cn/atom.xml"
+			target="_blank"
+			mdui-tooltip="{content: 'RSS'}"
+			style="
+				color: rgb(247, 132, 34);
+				background-color: rgba(247, 132, 34, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-rss"
+			></i> </a
+		>
+	</div>
+</div>
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/创作分享/">创作分享</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/学习思考/">学习思考</a>
+          <span class="category-list-count">3</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/技术分享/">技术分享</a>
+          <span class="category-list-count">25</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/碎片杂文/">碎片杂文</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/BUG/" style="font-size: 10px;">BUG</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/Jvm/" style="font-size: 10px;">Jvm</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Redis/" style="font-size: 15.71px;">Redis</a> <a href="/tags/SAAS/" style="font-size: 10px;">SAAS</a> <a href="/tags/Spring/" style="font-size: 18.57px;">Spring</a> <a href="/tags/WebFlux/" style="font-size: 10px;">WebFlux</a> <a href="/tags/chatgpt/" style="font-size: 10px;">chatgpt</a> <a href="/tags/hutool/" style="font-size: 10px;">hutool</a> <a href="/tags/keycloak/" style="font-size: 11.43px;">keycloak</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/notion/" style="font-size: 10px;">notion</a> <a href="/tags/oauth/" style="font-size: 11.43px;">oauth</a> <a href="/tags/%E5%81%A5%E5%BA%B7/" style="font-size: 10px;">健康</a> <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" style="font-size: 14.29px;">分布式</a> <a href="/tags/%E5%92%96%E5%95%A1/" style="font-size: 10px;">咖啡</a> <a href="/tags/%E5%93%8D%E5%BA%94%E5%BC%8F/" style="font-size: 10px;">响应式</a> <a href="/tags/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/" style="font-size: 11.43px;">图像处理</a> <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 10px;">多线程</a> <a href="/tags/%E5%AD%A6%E4%B9%A0/" style="font-size: 11.43px;">学习</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">工具</a> <a href="/tags/%E5%BB%BA%E7%AB%99/" style="font-size: 11.43px;">建站</a> <a href="/tags/%E5%BC%80%E5%8F%91/" style="font-size: 12.86px;">开发</a> <a href="/tags/%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/" style="font-size: 11.43px;">异步编程</a> <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" style="font-size: 17.14px;">微服务</a> <a href="/tags/%E6%80%9D%E8%80%83/" style="font-size: 12.86px;">思考</a> <a href="/tags/%E6%8A%80%E6%9C%AF%E6%B5%81/" style="font-size: 10px;">技术流</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 10px;">数据结构</a> <a href="/tags/%E6%95%B4%E6%B4%BB/" style="font-size: 10px;">整活</a> <a href="/tags/%E6%96%87%E5%AD%97/" style="font-size: 12.86px;">文字</a> <a href="/tags/%E7%89%A9%E8%81%94%E7%BD%91/" style="font-size: 10px;">物联网</a> <a href="/tags/%E7%BC%93%E5%AD%98/" style="font-size: 11.43px;">缓存</a>
+    </div>
+    
+      <script>
+        var maxTagcloud = parseInt(17);
+        var tags_length = parseInt(33);
+        var tags_arr = [];
+        for(var i = 0; i < tags_length; i++){
+          tags_arr.push(i);
+        }
+        tags_arr.sort(function (l, r) {
+          return Math.random() > 0.5 ? -1 : 1;
+        });
+        tags_arr = tags_arr.slice(0, maxTagcloud < tags_length ? tags_length - maxTagcloud : 0);
+        for(var tag_i = 0; tag_i < tags_arr.length; tag_i++){
+          document.getElementById("randomtagcloud").children[tags_arr[tag_i]].style.display = 'none';
+        }
+      </script>
+    
+  </div>
+
+    
+        
+        <!-- 一言 -->
+<div class="nexmoe-widget-wrap">
+  <h3 class="nexmoe-widget-title">
+    一言
+  </h3>
+  <div class="nexmoe-widget">
+    <ul class="hitokoto-box">
+      <li id="hitokoto_text_parent" class="hitokoto-text" hitokotoCategory="">
+        <a href="#" id="hitokoto_text">
+          
+        </a>
+        <a href="#" id="hitokoto_error_text" style="display: none;">
+          
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  let hitokotoText = document.getElementById('hitokoto_text')
+  let hitokotoErroText = document.getElementById('hitokoto_error_text')
+  let hitokotoCategory = document.getElementById('hitokoto_text_parent').getAttribute('hitokotoCategory')
+  window.addEventListener('load', function () {
+    let url = 'https://v1.hitokoto.cn'
+    if (hitokotoCategory) {
+      url += '?c=' + hitokotoCategory
+    }
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        hitokotoText.innerText = "「 " + data.hitokoto + " 」 from " + data.from
+        hitokotoText.href = 'https://hitokoto.cn/?uuid=' + data.uuid
+      })
+      .catch((reason) => {
+        console.error(11, reason)
+        hitokotoText.style.display = 'none'
+        hitokotoErroText.style.display = 'block'
+      })
+  })
+</script>
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/history/2023/">2023</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/history/2022/">2022</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/history/2021/">2021</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/history/2020/">2020</a><span class="archive-list-count">7</span></li></ul>
+    </div>
+  </div>
+
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">最新文章</h3>
+    <div class="nexmoe-widget">
+      <ul>
+        
+          <li>
+            <a href="/archives/spring-boot-tenant-202309.html">Spring Boot 实现多租户架构：支持应用多租户部署和管理</a>
+          </li>
+        
+          <li>
+            <a href="/archives/springcloud-data-202309.html">微服务之间的数据依赖问题，该如何解决？</a>
+          </li>
+        
+          <li>
+            <a href="/archives/redis-key-202309.html">Redis 热key是什么问题，如何导致的？有什么解决方案？</a>
+          </li>
+        
+          <li>
+            <a href="/archives/spring-restclient-2023.html">HttpClient? RestTemplate？WebClient? 不~是 RestClient</a>
+          </li>
+        
+          <li>
+            <a href="/archives/lkcoffee-shanghai-coffee-activities-20230602.html">上海咖啡文化周之薅瑞幸羊毛</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+    
+        
+   
+    <div class="nexmoe-copyright">
+        &copy; 2023 Honesty
+        Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+        & <a href="https://github.com/theme-nexmoe/hexo-theme-nexmoe" target="_blank">Nexmoe</a>
+        <br><a target="_blank" href="https://beian.miit.gov.cn/">湘ICP备20014902号</a>
+<br><a target="_blank" href="https://www.upyun.com/?utm_source=lianmeng&utm_medium=referral">
+
+    </div>
+</div><!-- .nexmoe-drawer --></div><div id="nexmoe-content"><div class="nexmoe-primary"><div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover"> 
+            <img src="https://blog-file.hehouhui.cn/202305111934350.jpeg" alt="Redis集群与特性" loading="lazy">
+            <h1>Redis集群与特性</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2021年12月18日</a>
+        
+            <a class="nexmoefont icon-appstore-fill -link" href="/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</a>
+        
+        
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <h2 id="一致性-hash"><a href="#一致性-hash" class="headerlink" title="一致性 hash"></a>一致性 hash</h2><blockquote>
+<p>在 Redis 集群模式 Cluster 中，Redis 采用的是分片 Sharding 的方式，也就是将数据采用一定的分区策略，分发到相应的集群节点中。但是我们使用上述 HASH 算法进行缓存时，会出现一些缺陷，主要体现在服务器数量变动的时候，所有缓存的位置都要发生改变！具体来讲就是说第一当缓存服务器数量发生变化时，会引起缓存的雪崩，可能会引起整体系统压力过大而崩溃（大量缓存同一时间失效）。第二当缓存服务器数量发生变化时，几乎所有缓存的位置都会发生改变。</p>
+</blockquote>
+<p>一致性 Hash 算法也是使用取模的方法，只是，刚才描述的取模法是对服务器的数量进行取模，而一致性 Hash 算法是对 232 取模，什么意思呢？简单来说，一致性 Hash 算法将整个哈希值空间组织成一个虚拟的圆环，如假设某哈希函数 H 的值空间为 0-232-1（即哈希值是一个 32 位无符号整形），整个哈希环如下：</p>
+<p>整个空间按顺时针方向组织，圆环的正上方的点代表 0，0 点右侧的第一个点代表 1，以此类推，2、3、4、5、6……直到 232-1，也就是说 0 点左侧的第一个点代表 232-1， 0 和 232-1 在零点中方向重合，我们把这个由 232 个点组成的圆环称为 Hash 环。</p>
+<p>那么，一致性哈希算法与上图中的圆环有什么关系呢？我们继续聊，仍然以之前描述的场景为例，假设我们有 4 台缓存服务器，服务器 A、服务器 B、服务器 C，服务器 D，那么，在生产环境中，这 4 台服务器肯定有自己的 IP 地址或主机名，我们使用它们各自的 IP 地址或主机名作为关键字进行哈希计算，使用哈希后的结果对 2^32 取模，可以使用如下公式示意：</p>
+<p>hash（服务器 A 的 IP 地址） % 2^32</p>
+<p>通过上述公式算出的结果一定是一个 0 到 232-1 之间的一个整数，我们就用算出的这个整数，代表服务器 A，既然这个整数肯定处于 0 到 232-1 之间，那么，上图中的 hash 环上必定有一个点与这个整数对应，而我们刚才已经说明，使用这个整数代表服务器 A，那么，服务器 A 就可以映射到这个环上。</p>
+<p>以此类推，下一步将各个服务器使用类似的 Hash 算式进行一个哈希，这样每台机器就能确定其在哈希环上的位置，这里假设将上文中四台服务器使用 IP 地址哈希后在环空间的位置如下：</p>
+<p>接下来使用如下算法定位数据访问到相应服务器： 将数据 key 使用相同的函数 Hash 计算出哈希值，并确定此数据在环上的位置，从此位置沿环顺时针“行走”，第一台遇到的服务器就是其应该定位到的服务器！</p>
+<h3 id="Hash-算法的容错性和可扩展性"><a href="#Hash-算法的容错性和可扩展性" class="headerlink" title="Hash 算法的容错性和可扩展性"></a>Hash 算法的容错性和可扩展性</h3><p>现假设 Node C 不幸宕机，可以看到此时对象 A、B、D 不会受到影响，只有 C 对象被重定位到 Node D。一般的，在一致性 Hash 算法中，如果一台服务器不可用，则受影响的数据仅仅是此服务器到其环空间中前一台服务器（即沿着逆时针方向行走遇到的第一台服务器）之间数据，其它不会受到影响，如下所示：</p>
+<p>![image-20210228225729174](&#x2F;Users&#x2F;hehui&#x2F;Library&#x2F;Application Support&#x2F;typora-user-images&#x2F;image-20210228225729174.png)</p>
+<p>下面考虑另外一种情况，如果在系统中增加一台服务器 Node X，如下图所示：</p>
+<p>![image-20210228225716137](&#x2F;Users&#x2F;hehui&#x2F;Library&#x2F;Application Support&#x2F;typora-user-images&#x2F;image-20210228225716137.png)</p>
+<p>此时对象 Object A、B、D 不受影响，只有对象 C 需要重定位到新的 Node X ！一般的，在一致性 Hash 算法中，如果增加一台服务器，则受影响的数据仅仅是新服务器到其环空间中前一台服务器（即沿着逆时针方向行走遇到的第一台服务器）之间数据，其它数据也不会受到影响。</p>
+<p>综上所述，一致性 Hash 算法对于节点的增减都只需重定位环空间中的一小部分数据，具有较好的容错性和可扩展性。</p>
+<h3 id="数据倾斜问题"><a href="#数据倾斜问题" class="headerlink" title="数据倾斜问题"></a>数据倾斜问题</h3><p>一致性 Hash 算法在服务节点太少时，容易因为节点分部不均匀而造成数据倾斜（被缓存的对象大部分集中缓存在某一台服务器上）问题，例如系统中只有两台服务器，其环分布如下：</p>
+<p>![image-20210228225828563](&#x2F;Users&#x2F;hehui&#x2F;Library&#x2F;Application Support&#x2F;typora-user-images&#x2F;image-20210228225828563.png)</p>
+<p>此时必然造成大量数据集中到 Node A 上，而只有极少量会定位到 Node B 上，从而出现 hash 环偏斜的情况，当 hash 环偏斜以后，缓存往往会极度不均衡的分布在各服务器上，如果想要均衡的将缓存分布到 2 台服务器上，最好能让这 2 台服务器尽量多的、均匀的出现在 hash 环上，但是，真实的服务器资源只有 2 台，我们怎样凭空的让它们多起来呢，没错，就是凭空的让服务器节点多起来，既然没有多余的真正的物理服务器节点，我们就只能将现有的物理节点通过虚拟的方法复制出来。</p>
+<p>这些由实际节点虚拟复制而来的节点被称为”虚拟节点”，即对每一个服务节点计算多个哈希，每个计算结果位置都放置一个此服务节点，称为虚拟节点。具体做法可以在服务器 IP 或主机名的后面增加编号来实现。</p>
+<p>例如上面的情况，可以为每台服务器计算三个虚拟节点，于是可以分别计算 “Node A#1”、“Node A#2”、“Node A#3”、“Node B#1”、“Node B#2”、“Node B#3”的哈希值，于是形成六个虚拟节点：</p>
+<p>![image-20210228225807543](&#x2F;Users&#x2F;hehui&#x2F;Library&#x2F;Application Support&#x2F;typora-user-images&#x2F;image-20210228225807543.png)</p>
+<p>同时数据定位算法不变，只是多了一步虚拟节点到实际节点的映射，例如定位到“Node A#1”、“Node A#2”、“Node A#3”三个虚拟节点的数据均定位到 Node A 上。这样就解决了服务节点少时数据倾斜的问题。在实际应用中，通常将虚拟节点数设置为 32 甚至更大，因此即使很少的服务节点也能做到相对均匀的数据分布。</p>
+<h2 id="集群情况下什么时候不可用"><a href="#集群情况下什么时候不可用" class="headerlink" title="集群情况下什么时候不可用"></a>集群情况下什么时候不可用</h2><ul>
+<li>如果集群任意<em>master</em>挂掉*,<em>且当前_master</em>没有*slave.<em>集群进入_fail</em>状态</li>
+<li>有 A,B,C 三个节点的集群，在没有复制模型的情况下，如果节点 B 失败了，那么整个集群就会以为缺少 5501-11000 这个范围的槽而不可用。</li>
+<li>如果集群超过半数以上<em>master</em>挂掉，无论是否有<em>slave</em>集群进入<em>fail</em>状态</li>
+<li>集群某一节点的主从全数宕机 （与 2 相似）</li>
+</ul>
+<h2 id="故障的处理过程"><a href="#故障的处理过程" class="headerlink" title="故障的处理过程"></a>故障的处理过程</h2><ol>
+<li><p>查看业务日志（微服务）</p>
+</li>
+<li><p>首先查看 redis 集群状态。</p>
+</li>
+<li><p>继续查看 redis 集群节点的状态。</p>
+<p><strong>处理过程</strong></p>
+</li>
+</ol>
+<p>1、先停止所有 redis 节点。<br>2、删除每个节点的缓存文件，包括 node-6380.conf dump.rdp 等文件。<br>3、重启每个 redis 节点。<br>4、重新创建 redis 集群。</p>
+<h2 id="集群"><a href="#集群" class="headerlink" title="集群"></a>集群</h2><blockquote>
+<p>发现我们当前项目用的 redis 是主从，但是跟单点其实没有什么区别，因为我们在应用层面没有做读写分离，所以其实从服务器只是做了一个主从复制的工作，其他的什么都没有做。</p>
+</blockquote>
+<pre><code>那么如果我们的系统升级，用户量上升，那么一主一从可能扛不住那么大的压力，可能需要一主多从做备机，那么假如主服务器宕机了，选举哪台从服务器做主呢？这就是一个问题，需要一个第三个人来解决，所以我查了一下，哨兵模式可以解决这个问题。哨兵模式的细节下面会讲到。
+
+
+然后我又想了，那如果单台服务器无法承受100%的存储压力，那就应该将存储压力分散开来，所以集群就可以解决这个问题 了，比如我们用6台服务器做集群，3主3从，那么每台服务器只需要存储1/3即可。好，那么我们就来详细看一下这些具体怎么做的。
+</code></pre>
+<h3 id="单点主从"><a href="#单点主从" class="headerlink" title="单点主从"></a>单点主从</h3><p>基本上就是一主一从，我们应用层主要使用的是主节点，从节点的主要工作是从主节点做主从复制。关键时刻，如果主服务器挂掉，可以手动启动从服务器，然后更改应用层的 redis 的 ip 即可</p>
+<blockquote>
+<p>实现主从复制（Master-Slave Replication）的工作原理：Slave 从节点服务启动并连接到 Master 之后，它将主动发送一个 SYNC 命令。Master 服务主节点收到同步命令后将启动后台存盘进程，同时收集所有接收到的用于修改数据集的命令，在后台进程执行完毕后，Master 将传送整个数据库文件到 Slave，以完成一次完全同步。而 Slave 从节点服务在接收到数据库文件数据之后将其存盘并加载到内存中。此后，Master 主节点继续将所有已经收集到的修改命令，和新的修改命令依次传送给 Slaves，Slave 将在本次执行这些数据修改命令，从而达到最终的数据同步。</p>
+</blockquote>
+<p>如果 Master 和 Slave 之间的链接出现断连现象，Slave 可以自动重连 Master，但是在连接成功之后，一次完全同步将被自动执行。</p>
+<p><strong>主从复制配置</strong></p>
+<p>修改从节点的配置文件：slaveof masterip masterport<br>如果设置了密码，就要设置：masterauth master-password</p>
+<p>主从模式的优缺点</p>
+<p><strong>优点：</strong></p>
+<ul>
+<li>同一个 Master 可以同步多个 Slaves。</li>
+<li>Slave 同样可以接受其它 Slaves 的连接和同步请求，这样可以有效的分载 Master 的同步压力。因此我们可以将 Redis 的 Replication 架构视为图结构。</li>
+<li>Master Server 是以非阻塞的方式为 Slaves 提供服务。所以在 Master-Slave 同步期间，客户端仍然可以提交查询或修改请求。</li>
+<li>Slave Server 同样是以非阻塞的方式完成数据同步。在同步期间，如果有客户端提交查询请求，Redis 则返回同步之前的数据</li>
+<li>为了分载 Master 的读操作压力，Slave 服务器可以为客户端提供只读操作的服务，写服务仍然必须由 Master 来完成。即便如此，系统的伸缩性还是得到了很大的提高。</li>
+<li>Master 可以将数据保存操作交给 Slaves 完成，从而避免了在 Master 中要有独立的进程来完成此操作。<br>支持主从复制，主机会自动将数据同步到从机，可以进行读写分离。</li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li>Redis 不具备自动容错和恢复功能，主机从机的宕机都会导致前端部分读写请求失败，需要等待机器重启或者手动切换前端的 IP 才能恢复。</li>
+<li>主机宕机，宕机前有部分数据未能及时同步到从机，切换 IP 后还会引入数据不一致的问题，降低了系统的可用性。</li>
+<li>Redis 的主从复制采用全量复制，复制过程中主机会 fork 出一个子进程对内存做一份快照，并将子进程的内存快照保存为文件发送给从机，这一过程需要确保主机有足够多的空余内存。若快照文件较大，对集群的服务能力会产生较大的影响，而且复制过程是在从机新加入集群或者从机和主机网络断开重连时都会进行，也就是网络波动都会造成主机和从机间的一次全量的数据复制，这对实际的系统运营造成了不小的麻烦。</li>
+<li>Redis 较难支持在线扩容，在集群容量达到上限时在线扩容会变得很复杂。为避免这一问题，运维人员在系统上线时必须确保有足够的空间，这对资源造成了很大的浪费。</li>
+<li>其实 redis 的主从模式很简单，在实际的生产环境中是很少使用的，我也不建议在实际的生产环境中使用主从模式来提供系统的高可用性，之所以不建议使用都是由它的缺点造成的，在数据量非常大的情况，或者对系统的高可用性要求很高的情况下，主从模式也是不稳定的。</li>
+</ul>
+<h3 id="读写分离"><a href="#读写分离" class="headerlink" title="读写分离"></a>读写分离</h3><blockquote>
+<p>对于读占比较高的场景，可以通过把一部分流量分摊导出从节点(salve) 来减轻主节点（master）压力，同时需要主要只对主节点执行写操作。</p>
+</blockquote>
+<p>常见的应用场景下我觉得 redis 没必要进行读写分离。</p>
+<p>先来讨论一下为什么要读写分离：</p>
+<blockquote>
+<p>读写分离使用于大量读请求的情况，通过多个 slave 分摊了读的压力，从而增加了读的性能。过多的 select 会阻塞住数据库，使你增删改不能执行，而且到并发量过大时，数据库会拒绝服务。</p>
+</blockquote>
+<pre><code>因而通过读写分离，从而增加性能，避免拒绝服务的发生。
+
+
+我认为需要读写分离的应用场景是：写请求在可接受范围内，但读请求要远大于写请求的场景。
+</code></pre>
+<p>再来讨论一下 redis 常见的应用场景：</p>
+<ol>
+<li>缓存</li>
+<li>排名型的应用，访问计数型应用</li>
+<li>实时消息系统</li>
+</ol>
+<p>首先说一下缓存集群，这也是非常常见的应用场景：</p>
+<ol>
+<li>缓存主要解决的是用户访问时，怎么以更快的速度得到数据。</li>
+<li>单机的内存资源是很有限的，所以缓存集群会通过某种算法将不同的数据放入到不同的机器中。</li>
+<li>不同持久化数据库，一般来说，内存数据库单机可以支持大量的增删查改。</li>
+<li>如果一台机器支持不住，可以用主从复制，进行缓存的方法解决。</li>
+<li>综上，在这个场景下应用 redis 进行读写分离，完全就失去了读写分离的意义。</li>
+</ol>
+<blockquote>
+<p>当然，也有可能考虑不到的地方需要读写分离，毕竟“存在即合理”嘛，那么就来介绍一下这个读写分离吧。</p>
+</blockquote>
+<p><code>当使用从节点响应读请求时，业务端可能会遇到以下问题</code></p>
+<ul>
+<li>复制数据延迟</li>
+<li>读到过期数据</li>
+<li>从节点故障</li>
+</ul>
+<p><strong>数据延迟</strong></p>
+<blockquote>
+<p>Redis 复制数的延迟由于异步复制特性是无法避免的，延迟取决于网络带宽和命令阻塞情况，对于无法容忍大量延迟场景，可以编写外部监控程序监听主从节点的复制偏移量，当延迟较大时触发报警或者通知客户端避免读取延迟过高的从节点，实现逻辑如下：</p>
+</blockquote>
+<ol>
+<li>监控程序(monitor) 定期检查主从节点的偏移量，主节点偏移量在 info replication 的 master_repl_offset 指标记录，从节点 偏移量可以查询主节点的 slave0 字段的 offset 指标，它们的差值就是主从节点延迟的字节 量。</li>
+<li>当延迟字节量过高时，比如超过 10M。监控程序触发报警并通知客户端从节点延迟过高。可以采用 Zookeeper 的监听回调机制实现客户端通知。</li>
+<li>客户端接到具体的从节点高延迟通知后，修改读命令路由到其他从节点或主节点上。当延迟回复后，再次通知客户端，回复从节点的读命令请求。</li>
+</ol>
+<p>这种方案成本较高，需要单独修改适配 Redis 的客户端类库。</p>
+<p><strong>读到过期数据</strong></p>
+<p>当主节点存储大量设置超时的数据时，如缓存数据，Redis 内部需要维护过期数据删除策略，删除策略主要有两种：<code>惰性删除和定时删除</code>。</p>
+<p><code>惰性删除</code>：主节点每次处理读取命令时，都会检查键是否超时，如果超时则执行 del 命令删除键对象那个，之后 del 命令也会异步 发送给 从节点</p>
+<blockquote>
+<p>需要注意的是为了保证复制的一致性，从节点自身永远不会主动删除超时数据，</p>
+</blockquote>
+<p><code>定时删除</code>：</p>
+<p>Redis 主节点在内部定时任务会循环采样一定数量的键，当发现采样的键过期就执行 del 命令，之后再同步给从节点</p>
+<blockquote>
+<p>如果此时 数据的大量超时，主节点采样速度跟不上过期速度且主节点没有读取过期键的操作，那么从节点将无法收到 del 命令，这时在从节点 上可以读取到已经超时的数据。Redis 在 3.2 版本解决了这个问题，从节点 读取数据之前会检查键的过期时间来决定是否返回数据，可以升级到 3.2 版本来规避这个问题。</p>
+</blockquote>
+<h3 id="哨兵模式"><a href="#哨兵模式" class="headerlink" title="哨兵模式"></a><strong>哨兵模式</strong></h3><blockquote>
+<p>该模式是从 Redis 的 2.6 版本开始提供的，但是当时这个版本的模式是不稳定的，直到 Redis 的 2.8 版本以后，这个哨兵模式才稳定下来，无论是主从模式，还是哨兵模式，这两个模式都有一个问题，不能水平扩容，并且这两个模式的高可用特性都会受到 Master 主节点内存的限制。</p>
+</blockquote>
+<p>Sentinel(哨兵)进程是用于监控 redis 集群中 Master 主服务器工作的状态，在 Master 主服务器发生故障的时候，可以实现 Master 和 Slave 服务器的切换，保证系统的高可用。</p>
+<p><strong>Sentinel（哨兵）进程的作用</strong></p>
+<ul>
+<li><p>监控(Monitoring): 哨兵(sentinel) 会不断地检查你的 Master 和 Slave 是否运作正常。</p>
+</li>
+<li><p>提醒(Notification)：当被监控的某个 Redis 节点出现问题时, 哨兵(sentinel) 可以通过 API 向管理员或者其他应用程序发送通知。</p>
+</li>
+<li><p>自动故障迁移(Automatic failover)：</p>
+<blockquote>
+<p>当一个 Master 不能正常工作时，哨兵(sentinel) 会开始一次自动故障迁移操作，它会将失效 Master 的其中一个 Slave 升级为新的 Master, 并让失效 Master 的其他 Slave 改为复制新的 Master；当客户端试图连接失效的 Master 时，集群也会向客户端返回新 Master 的地址，使得集群可以使用现在的 Master 替换失效 Master。</p>
+</blockquote>
+<pre><code>Master和Slave服务器切换后，Master的redis.conf、Slave的redis.conf和sentinel.conf的配置文件的内容都会发生相应的改变，即，Master主服务器的redis.conf配置文件中会多一行slaveof的配置，sentinel.conf的监控目标会随之调换。
+</code></pre>
+</li>
+</ul>
+<p><strong>Sentinel（哨兵）进程的工作方式</strong></p>
+<ul>
+<li>每个 Sentinel（哨兵）进程以每秒钟一次的频率向整个集群中的 Master 主服务器，Slave 从服务器以及其他 Sentinel（哨兵）进程发送一个 PING 命令。</li>
+<li>如果一个实例（instance）距离最后一次有效回复 PING 命令的时间超过 down-after-milliseconds 选项所指定的值， 则这个实例会被 Sentinel（哨兵）进程标记为主观下线（SDOWN）</li>
+<li>如果一个 Master 主服务器被标记为主观下线（SDOWN），则正在监视这个 Master 主服务器的所有 Sentinel（哨兵）进程要以每秒一次的频率确认 Master 主服务器的确进入了主观下线状态</li>
+<li>当有足够数量的 Sentinel（哨兵）进程（大于等于配置文件指定的值）在指定的时间范围内确认 Master 主服务器进入了主观下线状态（SDOWN）， 则 Master 主服务器会被标记为客观下线（ODOWN）</li>
+<li>在一般情况下， 每个 Sentinel（哨兵）进程会以每 10 秒一次的频率向集群中的所有 Master 主服务器、Slave 从服务器发送 INFO 命令。</li>
+<li>当 Master 主服务器被 Sentinel（哨兵）进程标记为客观下线（ODOWN）时，Sentinel（哨兵）进程向下线的 Master 主服务器的所有 Slave 从服务器发送 INFO 命令的频率会从 10 秒一次改为每秒一次。</li>
+<li>若没有足够数量的 Sentinel（哨兵）进程同意 Master 主服务器下线， Master 主服务器的客观下线状态就会被移除。若 Master 主服务器重新向 Sentinel（哨兵）进程发送 PING 命令返回有效回复，Master 主服务器的主观下线状态就会被移除。<br>哨兵模式的优缺点</li>
+</ul>
+<p><strong>优点:</strong></p>
+<ul>
+<li>哨兵集群模式是基于主从模式的，所有主从的优点，哨兵模式同样具有。</li>
+<li>主从可以切换，故障可以转移，系统可用性更好。</li>
+<li>哨兵模式是主从模式的升级，系统更健壮，可用性更高。</li>
+</ul>
+<p><strong>缺点:</strong></p>
+<ul>
+<li><p>Redis 较难支持在线扩容，在集群容量达到上限时在线扩容会变得很复杂。为避免这一问题，运维人员在系统上线时必须确保有足够的空间，这对资源造成了很大的浪费。</p>
+</li>
+<li><p>配置复杂</p>
+<p><code>工作原理:</code></p>
+</li>
+</ul>
+<ol>
+<li>用户链接时先通过哨兵获取主机 Master 的信息</li>
+<li>获取 Master 的链接后实现 redis 的操作(set&#x2F;get)</li>
+<li>当 master 出现宕机时,哨兵的心跳检测发现主机长时间没有响应.这时哨兵会进行推选.推选出新的主机完成任务.</li>
+<li>当新的主机出现时,其余的全部机器都充当该主机的从机</li>
+</ol>
+<blockquote>
+<p>这就有一个问题，就是添加哨兵以后，所有的请求都会经过哨兵询问当前的主服务器是谁，所以如果哨兵部在主服务器上面的话可能会增加服务器的压力，所以最好是将哨兵单独放在一个服务器上面。以分解压力。</p>
+</blockquote>
+<pre><code>然后可能还有人担心哨兵服务器宕机了怎么办啊，首先哨兵服务器宕机的可能性很小，然后是如果哨兵服务器宕机了，使用人工干预重启即可，就会导致主从服务器监控的暂时不可用，不影响主从服务器的正常运行。
+</code></pre>
+<p>先配置服务器（本地）哨兵模式，直接从 redis 官网下载安装或者解压版，安装后的目录结构</p>
+<p><img src="https://images2018.cnblogs.com/blog/764785/201806/764785-20180629092443832-206225549.png"></p>
+<p>然后配置哨兵模式</p>
+<p>测试采用 3 个哨兵，1 个主 redis，2 个从 redis。</p>
+<p>复制 6 份 redis.windows.conf 文件并重命名如下（开发者可根据自己的开发习惯进行重命名）</p>
+<p><img src="https://images2018.cnblogs.com/blog/764785/201806/764785-20180629092420294-1751487154.png"></p>
+<p><strong>配置 master.6378.conf</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">port:6379</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#设置连接密码</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">requirepass:grs</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#连接密码</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">masterauth:grs</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>slave.6380.conf 配置</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">port:6380</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">dbfilename dump6380.rdb</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#配置master</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">slaveof 127.0.0.1 6379</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>slave.6381.conf 配置</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">port 6381</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">slaveof 127.0.0.1 6379</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">dbfilename &quot;dump.rdb&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>配置哨兵 sentinel.63791.conf（其他两个哨兵配置文件一致，只修改端口号码即可）</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">port 63791</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#主master，2个sentinel选举成功后才有效，这里的master-1是名称，在整合的时候需要一致，这里可以随便更改</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">sentinel monitor master-1 127.0.0.1 6379 2</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#判断主master的挂机时间（毫秒），超时未返回正确信息后标记为sdown状态</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">sentinel down-after-milliseconds master-1 5000</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#若sentinel在该配置值内未能完成failover操作（即故障时master/slave自动切换），则认为本次failover失败。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">sentinel failover-timeout master-1 18000</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#选项指定了在执行故障转移时， 最多可以有多少个从服务器同时对新的主服务器进行同步，这个数字越小，完成故障转移所需的时间就越长</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">sentinel config-epoch master-1 2</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>需要注意的地方</strong></p>
+<p>1、若通过 redis-cli -h 127.0.0.1 -p 6379 连接，无需改变配置文件，配置文件默认配置为 bind 127.0.0.1(只允许 127.0.0.1 连接访问）若通过 redis-cli -h 192.168.180.78 -p 6379 连接，需改变配置文件，配置信息为 bind 127.0.0.1 192.168.180.78（只允许 127.0.0.1 和 192.168.180.78 访问）或者将 bind 127.0.0.1 注释掉（允许所有远程访问）</p>
+<p>2、masterauth 为所要连接的 master 服务器的 requirepass,如果一个 redis 集群中有一个 master 服务器，两个 slave 服务器，当 master 服务器挂掉时，sentinel 哨兵会随机选择一个 slave 服务器充当 master 服务器，鉴于这种机制，解决办法是将所有的主从服务器的 requirepass 和 masterauth 都设置为一样。</p>
+<p>3、sentinel monitor master-1 127.0.0.1 6379 2 行尾最后的一个 2 代表什么意思呢？我们知道，网络是不可靠的，有时候一个 sentinel 会因为网络堵塞而误以为一个 master redis 已经死掉了，当 sentinel 集群式，解决这个问题的方法就变得很简单，只需要多个 sentinel 互相沟通来确认某个 master 是否真的死了，这个 2 代表，当集群中有 2 个 sentinel 认为 master 死了时，才能真正认为该 master 已经不可用了。（sentinel 集群中各个 sentinel 也有互相通信，通过 gossip 协议）。</p>
+<p><strong>依次启动 redis</strong></p>
+<p>redis-server master.6379.conf</p>
+<p><img src="https://images2018.cnblogs.com/blog/764785/201806/764785-20180629094553158-1599779576.png"></p>
+<p>redis-server slave.6380.conf</p>
+<p><img src="https://images2018.cnblogs.com/blog/764785/201806/764785-20180629094725047-214223016.png"></p>
+<p>redis-server slave.6381.conf</p>
+<p><img src="https://images2018.cnblogs.com/blog/764785/201806/764785-20180629094815575-184254002.png"></p>
+<p>redis-server sentinel.63791.conf –sentinel（linux:redis-sentinel sentinel.63791.conf）<strong>其他两个哨兵也这样启动</strong></p>
+<p><img src="https://images2018.cnblogs.com/blog/764785/201806/764785-20180629095126662-1063517024.png"></p>
+<p>使用客户端查看一下 master 状态</p>
+<p><img src="https://images2018.cnblogs.com/blog/764785/201806/764785-20180629095541491-1901809546.png"></p>
+<p>查看一下哨兵状态</p>
+<p><img src="https://images2018.cnblogs.com/blog/764785/201806/764785-20180629095632770-302235804.png"></p>
+<p>现在就可以在 master 插入数据，所有的 redis 服务都可以获取到，slave 只能读</p>
+<p><strong>整合 spring，导入依赖</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">        &lt;groupId&gt;redis.clients&lt;/groupId&gt;</span><br><span class="line">        &lt;artifactId&gt;jedis&lt;/artifactId&gt;</span><br><span class="line">        &lt;version&gt;2.8.0&lt;/version&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br><span class="line">    &lt;!-- spring-redis --&gt;</span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">        &lt;groupId&gt;org.springframework.data&lt;/groupId&gt;</span><br><span class="line">        &lt;artifactId&gt;spring-data-redis&lt;/artifactId&gt;</span><br><span class="line">        &lt;version&gt;1.6.4.RELEASE&lt;/version&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.apache.commons&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;commons-pool2&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;2.4.2&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>redis.properties</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">#redis中心</span><br><span class="line">redis.host=127.0.0.1</span><br><span class="line">#redis.host=10.75.202.11</span><br><span class="line">redis.port=6379</span><br><span class="line">redis.password=</span><br><span class="line">#redis.password=123456</span><br><span class="line">redis.maxTotal=200</span><br><span class="line">redis.maxIdle=100</span><br><span class="line">redis.minIdle=8</span><br><span class="line">redis.maxWaitMillis=100000</span><br><span class="line">redis.maxActive=300</span><br><span class="line">redis.testOnBorrow=true</span><br><span class="line">redis.testOnReturn=true</span><br><span class="line">#Idle时进行连接扫描</span><br><span class="line">redis.testWhileIdle=true</span><br><span class="line">#表示idle object evitor两次扫描之间要sleep的毫秒数</span><br><span class="line">redis.timeBetweenEvictionRunsMillis=30000</span><br><span class="line">#表示idle object evitor每次扫描的最多的对象数</span><br><span class="line">redis.numTestsPerEvictionRun=10</span><br><span class="line">#表示一个对象至少停留在idle状态的最短时间，然后才能被idle object evitor扫描并驱逐；这一项只有在timeBetweenEvictionRunsMillis大于0时才有意义</span><br><span class="line">redis.minEvictableIdleTimeMillis=60000</span><br><span class="line">redis.timeout=100000</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="Cluster"><a href="#Cluster" class="headerlink" title="Cluster"></a>Cluster</h3><blockquote>
+<p>Redis3.0 版本之后支持 Cluster.</p>
+</blockquote>
+<p><strong>redis cluster 的现状</strong></p>
+<p>目前 redis 支持的 cluster 特性：</p>
+<p>1):节点自动发现</p>
+<p>2):slave-&gt;master 选举,集群容错</p>
+<p>3):Hot resharding:在线分片</p>
+<p>4):进群管理:cluster xxx</p>
+<p>5):基于配置(nodes-port.conf)的集群管理</p>
+<p>6):ASK 转向&#x2F;MOVED 转向机制.</p>
+<p><strong>redis cluster 架构</strong></p>
+<p>1)redis-cluster 架构图</p>
+<p><img src="https://images2015.cnblogs.com/blog/17405/201607/17405-20160729120110388-883077606.jpg"></p>
+<p>在这个图中，每一个蓝色的圈都代表着一个 redis 的服务器节点。它们任何两个节点之间都是相互连通的。客户端可以与任何一个节点相连接，然后就可以访问集群中的任何一个节点。对其进行存取和其他操作。</p>
+<p><strong>架构细节:</strong></p>
+<ul>
+<li><p>所有的 redis 节点彼此互联(PING-PONG 机制),内部使用二进制协议优化传输速度和带宽.</p>
+</li>
+<li><p>节点的 fail 是通过集群中超过半数的节点检测失效时才生效.</p>
+</li>
+<li><p>客户端与 redis 节点直连,不需要中间 proxy 层.客户端不需要连接集群所有节点,连接集群中任何一个可用节点即可</p>
+</li>
+<li><p>redis-cluster 把所有的物理节点映射到[0-16383]slot 上,cluster 负责维护 node&lt;-&gt;slot&lt;-&gt;value</p>
+<p><strong>redis-cluster 选举:容错</strong></p>
+</li>
+</ul>
+<p><img src="https://images2015.cnblogs.com/blog/17405/201607/17405-20160729120154169-1347608301.jpg"></p>
+<ul>
+<li>领着选举过程是集群中所有 master 参与,如果半数以上 master 节点与 master 节点通信超过(cluster-node-timeout),认为当前 master 节点挂掉.</li>
+<li>什么时候整个集群不可用(cluster_state:fail),当集群不可用时,所有对集群的操作做都不可用，收到((error) CLUSTERDOWN The cluster is down)错误</li>
+<li>如果集群任意 master 挂掉,且当前 master 没有 slave.集群进入 fail 状态,也可以理解成进群的 slot 映射[0-16383]不完成时进入 fail 状态.</li>
+<li>如果进群超过半数以上 master 挂掉，无论是否有 slave 集群进入 fail 状态.</li>
+</ul>
+<blockquote>
+<p>它们之间通过互相的 ping-pong 判断是否节点可以连接上。如果有一半以上的节点去 ping 一个节点的时候没有回应，集群就认为这个节点宕机了，然后去连接它的备用节点。</p>
+</blockquote>
+<pre><code>如果某个节点和所有从节点全部挂掉，我们集群就进入faill状态。还有就是如果有一半以上的主节点宕机，那么我们集群同样进入发力了状态。这就是我们的redis的投票机制
+</code></pre>
+<p><strong>Redis 3.0 的集群方案有以下两个问题。</strong></p>
+<p><code>一个Redis实例具备了“数据存储”和“路由重定向”，完全去中心化的设计。</code></p>
+<blockquote>
+<p>这带来的好处是部署非常简单，直接部署 Redis 就行，不像 Codis 有那么多的组件和依赖。但带来的问题是很难对业务进行无痛的升级，如果哪天 Redis 集群出了什么严重的 Bug，就只能回滚整个 Redis 集群。<br>对协议进行了较大的修改，对应的 Redis 客户端也需要升级。升级 Redis 客户端后谁能确保没有 Bug？而且对于线上已经大规模运行的业务，升级代码中的 Redis 客户端也是一个很麻烦的事情。<br>Redis Cluster 是 Redis 3.0 以后才正式推出，时间较晚，目前能证明在大规模生产环境下成功的案例还不是很多，需要时间检验。</p>
+</blockquote>
+<h3 id="Jedis-sharding"><a href="#Jedis-sharding" class="headerlink" title="Jedis sharding"></a>Jedis sharding</h3><blockquote>
+<p>Redis Sharding 可以说是在 Redis cluster 出来之前业界普遍的采用方式，其主要思想是采用 hash 算法将存储数据的 key 进行 hash 散列，这样特定的 key 会被定为到特定的节点上。</p>
+</blockquote>
+<p><strong>庆幸的是，Java Redis 客户端驱动 Jedis 已支持 Redis Sharding 功能，即 ShardedJedis 以及结合缓存池的 ShardedJedisPool</strong></p>
+<p><code>Jedis的Redis Sharding实现具有如下特点：</code></p>
+<ol>
+<li>采用一致性哈希算法，将 key 和节点 name 同时 hashing，然后进行映射匹配，采用的算法是 MURMUR_HASH。采用一致性哈希而不是采用简单类似哈希求模映射的主要原因是当增加或减少节点时，不会产生由于重新匹配造成的 rehashing。一致性哈希只影响相邻节点 key 分配，影响量小。</li>
+<li>为了避免一致性哈希只影响相邻节点造成节点分配压力，ShardedJedis 会对每个 Redis 节点根据名字(没有，Jedis 会赋予缺省名字)会虚拟化出 160 个虚拟节点进行散列。根据权重 weight，也可虚拟化出 160 倍数的虚拟节点。用虚拟节点做映射匹配，可以在增加或减少 Redis 节点时，key 在各 Redis 节点移动再分配更均匀，而不是只有相邻节点受影响。</li>
+<li>ShardedJedis 支持 keyTagPattern 模式，即抽取 key 的一部分 keyTag 做 sharding，这样通过合理命名 key，可以将一组相关联的 key 放入同一个 Redis 节点，这在避免跨节点访问相关数据时很重要。</li>
+</ol>
+<blockquote>
+<p>当然，Redis Sharding 这种轻量灵活方式必然在集群其它能力方面做出妥协。比如扩容，当想要增加 Redis 节点时，尽管采用一致性哈希，毕竟还是会有 key 匹配不到而丢失，这时需要键值迁移。<br>作为轻量级客户端 sharding，处理 Redis 键值迁移是不现实的，这就要求应用层面允许 Redis 中数据丢失或从后端数据库重新加载数据。但有些时候，击穿缓存层，直接访问数据库层，会对系统访问造成很大压力。</p>
+</blockquote>
+<h3 id="利用中间件代理"><a href="#利用中间件代理" class="headerlink" title="利用中间件代理"></a>利用中间件代理</h3><p>中间件的作用是将我们需要存入 redis 中的数据的 key 通过一套算法计算得出一个值。然后根据这个值找到对应的 redis 节点，将这些数据存在这个 redis 的节点中。</p>
+<p>常用的中间件有这几种</p>
+<ul>
+<li>Twemproxy</li>
+<li>Codis</li>
+<li>nginx</li>
+</ul>
+<p>具体用法就不赘述了，可以自行百度。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ol>
+<li>客户端分片（sharding）需要客户端维护分片算法，这是一种静态的分片方案，需要增加或者减少 Redis 实例的数量，需要手工调整分片的程序。</li>
+<li>利用中间件的情况则会影响到 redis 的性能，具体看中间件而定，毕竟所有请求都要经过中间件一层过滤</li>
+<li>官方提供方案 （Cluster），现时点成功案例不多。</li>
+</ol>
+<h2 id="Redis-分片"><a href="#Redis-分片" class="headerlink" title="Redis 分片"></a>Redis 分片</h2><p>Redis 的分片承担着两个主要目标：</p>
+<ol>
+<li>允许使用很多电脑的内存总和来支持更大的数据库。没有分片，你就被局限于单机能支持的内存容量</li>
+<li>允许伸缩计算能力到多核或多服务器，伸缩网络带宽到多服务器或多网络适配器<br>范围分片的替代方案是哈希分片(hash partitioning)。这种模式适用于任何键<br>哈希槽设置<br>key–&gt;hashcode–&gt;16384</li>
+</ol>
+<blockquote>
+<p>在 redis 的每一个节点上，都有这么两个东西</p>
+</blockquote>
+<pre><code>     一个是插槽（slot）可以理解为是一个可以存储两个数值的一个变量这个变量的取值范围是：0-16383。
+
+
+    还有一个就是cluster我个人把这个cluster理解为是一个集群管理的插件。
+
+
+当我们的存取的key到达的时候，redis会根据crc16的算法得出一个结果，然后把结果对 16384 求余数，这样每个 key 都会对应一个编号在 0-16383 之间的哈希槽，通过这个值，去找到对应的插槽所对应的节点，然后直接自动跳转到这个对应的节点上进行存取操作。
+
+
+还有就是因为如果集群的话，是有好多个redis一起工作的，那么，就需要这个集群不是那么容易挂掉，所以呢，理论上就应该给集群中的每个节点至少一个备用的redis服务。这个备用的redis称为从节点（slave）。那么这个集群是如何判断是否有某个节点挂掉了呢？
+</code></pre>
+<p>首先要说的是，每一个节点都存有这个集群所有主节点以及从节点的信息。</p>
+<h2 id="Redis-持久化"><a href="#Redis-持久化" class="headerlink" title="Redis 持久化"></a><strong>Redis 持久化</strong></h2><h3 id="RDB"><a href="#RDB" class="headerlink" title="RDB"></a>RDB</h3><blockquote>
+<p>Redis Database，就是快照 snapshots。缺省情况情况下，Redis 把数据快照存放在磁盘上的二进制文件中，文件名为 dump.rdb。可以配置 Redis 的持久化策略，例如数据集中每 N 秒钟有超过 M 次更新，就将数据写入磁盘；或者你可以手工调用命令 SAVE 或 BGSAVE。</p>
+</blockquote>
+<p>Redis 是使用 fork 函数复制一份当前进程(父进程)的副本(子进程) 子进程开始将数据写到临时 RDB 文件中 当子进程完成写 RDB 文件，用新文件替换老文件 这种方式可以使 Redis 使用 copy-on-write 技术。</p>
+<h3 id="AOF"><a href="#AOF" class="headerlink" title="AOF"></a>AOF</h3><blockquote>
+<p>Append Only File。快照模式并不十分健壮，当系统停止或者无意中 Redis 被 kill 掉，最后写入 Redis 的数据就会丢失。这对某些应用也许不是大问题，但对于要求高可靠性的应用来说，Redis 就不是一个合适的选择。Append-only 文件模式是另一种选择。可以在配置文件中打开 AOF 模式<br>Redis 中提供了 3 中同步策略，即每秒同步、每修改同步和不同步。事实上每秒同步也是异步完成的，其效率也是非常高的，所差的是一旦系统出现宕机现象，那么这一秒钟之内修改的数据将会丢失。</p>
+</blockquote>
+<ol>
+<li>appendfsync always 每次有数据修改发生时都会写入 AOF 文件</li>
+<li>appendfsync everysec 每秒钟同步一次，该策略为 AOF 的缺省策略。在性能和持久化方面作了很好的折中</li>
+<li>appendfsync no 从不同步。高效但是数据不会被持久化。</li>
+</ol>
+<h3 id="虚拟内存方式"><a href="#虚拟内存方式" class="headerlink" title="虚拟内存方式"></a>虚拟内存方式</h3><blockquote>
+<p>当 key 很小而 value 很大时，使用 VM 的效果会比较好，因为这样节约的内存比较大。当 key 不小时可以考虑使用一些非常方法将很大的 key 变成很大的 value，如可以考虑将 key&#x2F;value 组合成一个新 value.<br>vm-max-threads 这个参数,可以设置访问 swap 文件的线程数,设置最好不要超过机器的核数,如果设置为 0,那么所有对 swap 文件的操作都是串行的.可能会造成比较长时间的延迟,但是对数据完整性有很好的保证.用虚拟内存性能也不错。如果数据量很大，可以考虑分布式或者其他数据库</p>
+</blockquote>
+<p>redis.windows.conf<br>daemonize no 默认情况下 redis 不是作为守护进程运行的，如果想让它在后台运行，就把它改成 yes。当 redis 作为守护进程运行的时候，它会写一个 pid 到&#x2F;var&#x2F;run&#x2F;redis.pid 文件里面</p>
+<h3 id="建议"><a href="#建议" class="headerlink" title="建议"></a>建议</h3><ul>
+<li>更新频繁: 一致性要求比较高，AOF 策略为主</li>
+<li>更新不频繁: 可以容忍少量数据丢失或错误，snapshot（快照）策略为主</li>
+</ul>
+<h2 id="Redis-事务"><a href="#Redis-事务" class="headerlink" title="Redis 事务"></a><strong>Redis 事务</strong></h2><p>redis 事务是通过 MULTI，EXEC，DISCARD 和 WATCH 四个原语实现的。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">MULTI命令用于开启一个事务，它总是返回OK。</span><br><span class="line">		MULTI执行之后，客户端可以继续向服务器发送任意多条命令，这些命令不会立即被执行，而是被放到一个队列中，当EXEC命令被调用时，所有队列中的命令才会被执行。</span><br><span class="line">		另一方面，通过调用DISCARD，客户端可以清空事务队列，并放弃执行事务。</span><br><span class="line"></span><br><span class="line">redis事务范围</span><br><span class="line">	从multi命令开始，到exec或者discard为止，整个操作过程是原子性的，不能打乱顺序，也不能插入操作</span><br><span class="line">	但是出错之前的操作会正常提交</span><br><span class="line"></span><br><span class="line">WATCH 命令可以为 Redis 事务提供 check-and-set （CAS）行为。</span><br><span class="line">	被 WATCH 的键会被监视，并会发觉这些键是否被改动过了。 如果有至少一个被监视的键在 EXEC 执行之前</span><br><span class="line">被修改了， 那么整个事务都会被取消， EXEC 返回空多条批量回复（null multi-bulk reply）来表示事务已</span><br><span class="line">经失败。</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="使用-Redis-实现分布式锁"><a href="#使用-Redis-实现分布式锁" class="headerlink" title="使用 Redis 实现分布式锁"></a><strong>使用 Redis 实现分布式锁</strong></h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">1、向Redis中存放固定key的值，如果key不存在则实现存放并获取锁；如果key已经存在则不能获取锁</span><br><span class="line">			（依靠Redis中的原子操作进行CAS比对，实现锁的互斥）</span><br><span class="line">2、获取key所对应的时间，时间是锁预期的实效时间，如果已经实效，则存储新值，并获取锁</span><br><span class="line">3、否则获取锁失败</span><br><span class="line"></span><br><span class="line">解锁：</span><br><span class="line">	删除指定key的redis列</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>抢购、秒杀是如今很常见的一个应用场景，主要需要解决的问题有两个：</p>
+<ol>
+<li>高并发对数据库产生的压力</li>
+<li>竞争状态下如何解决库存的正确减少（”超卖”问题）</li>
+</ol>
+<p>对于第一个问题，已经很容易想到用缓存来处理抢购，避免直接操作数据库，例如使用 Redis。</p>
+<h3 id="Redis-使用-watch-完成秒杀抢购功能："><a href="#Redis-使用-watch-完成秒杀抢购功能：" class="headerlink" title="Redis 使用 watch 完成秒杀抢购功能："></a><strong>Redis 使用 watch 完成秒杀抢购功能：</strong></h3><p>使用 redis 中两个 key 完成秒杀抢购功能，mywatchkey 用于存储抢购数量和 mywatchlist 用户存储抢购列表。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">优点：</span><br><span class="line">	1、首先选用内存数据库来抢购速度极快</span><br><span class="line">	2、速度快并发自然没不是问题</span><br><span class="line">	3、使用悲观锁，会迅速增加系统资源</span><br><span class="line">	4、比队列强的多，队列会使内存数据库资源瞬间爆棚</span><br><span class="line">	5、使用乐观锁，达到综合需求</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="与关系型数据库的区别"><a href="#与关系型数据库的区别" class="headerlink" title="与关系型数据库的区别"></a>与关系型数据库的区别</h2><h3 id="数据-bai-存储方式不同。"><a href="#数据-bai-存储方式不同。" class="headerlink" title="数据 bai 存储方式不同。"></a>数据 bai 存储方式不同。</h3><p>关系型和非关系型数据库的主要差异是数据存储的方式。关系型数据天然就是表格式的，因此存储在数据表的行和列中。数据表可以彼此关联协作存储，也很容易提取数据。</p>
+<p>与其相反，非关系型数据不适合存储在数据表的行和列中，而是大块组合在一起。非关系型数据通常存储在数据集中，就像文档、键值对或者图结构。你的数据及其特性是选择数据存储和提取方式的首要影响因素。</p>
+<h3 id="扩展方式不同。"><a href="#扩展方式不同。" class="headerlink" title="扩展方式不同。"></a>扩展方式不同。</h3><p>SQL 和 NoSQL 数据库最大的差别可能是在扩展方式上，要支持日益增长的需求当然要扩展。</p>
+<p>要支持更多并发量，SQL 数据库是纵向扩展，也就是说提高处理能力，使用速度更快速的计算机，这样处理相同的数据集就更快了。</p>
+<p>因为数据存储在关系表中，操作的性能瓶颈可能涉及很多个表，这都需要通过提高计算机性能来客服。虽然 SQL 数据库有很大扩展空间，但最终肯定会达到纵向扩展的上限。而 NoSQL 数据库是横向扩展的。</p>
+<p>而非关系型数据存储天然就是分布式的，NoSQL 数据库的扩展可以通过给资源池添加更多普通的数据库服务器(节点)来分担负载。</p>
+<h3 id="对事务性的支持不同。"><a href="#对事务性的支持不同。" class="headerlink" title="对事务性的支持不同。"></a>对事务性的支持不同。</h3><p>如果数据操作需要高事务性或者复杂数据查询需要控制执行计划，那么传统的 SQL 数据库从性能和稳定性方面考虑是你的最佳选择。SQL 数据库支持对事务原子性细粒度控制，并且易于回滚事务。</p>
+<p>虽然 NoSQL 数据库也可以使用事务操作，但稳定性方面没法和关系型数据库比较，所以它们真正闪亮的价值是在操作的扩展性和大数据量处理方面。</p>
+<h3 id="关系型"><a href="#关系型" class="headerlink" title="关系型"></a>关系型</h3><p><strong>优点：</strong></p>
+<ol>
+<li>易于维护：都是使用表结构，格式一致；</li>
+<li>使用方便：SQL 语言通用，可用于复杂查询；</li>
+<li>复杂操作：支持 SQL，可用于一个表以及多个表之间非常复杂的查询。</li>
+</ol>
+<p><strong>缺点：</strong></p>
+<ol>
+<li>读写性能比较差，尤其是海量数据的高效率读写；</li>
+<li>固定的表结构，灵活度稍欠；</li>
+<li>高并发读写需求，传统关系型数据库来说，硬盘 I&#x2F;O 是一个很大的瓶颈。</li>
+</ol>
+<h3 id="非关系型"><a href="#非关系型" class="headerlink" title="非关系型"></a>非关系型</h3><p>非关系型数据库严格上不是一种数据库，应该是一种数据结构化存储方法的集合，可以是文档或者键值对等。</p>
+<p><strong>优点：</strong></p>
+<ol>
+<li>格式灵活：存储数据的格式可以是 key,value 形式、文档形式、图片形式等等，文档形式、图片形式等等，使用灵活，应用场景广泛，而关系型数据库则只支持基础类型。</li>
+<li>速度快：nosql 可以使用硬盘或者随机存储器作为载体，而关系型数据库只能使用硬盘；</li>
+<li>高扩展性；</li>
+<li>成本低：nosql 数据库部署简单，基本都是开源软件。</li>
+</ol>
+<p><strong>缺点：</strong></p>
+<ol>
+<li>不提供 sql 支持，学习和使用成本较高；</li>
+<li>无事务处理；</li>
+<li>数据结构相对复杂，复杂查询方面稍欠。</li>
+</ol>
+
+    <p><img src="https://i.dawnlab.me/53a8c7cf3ad77a0f0a456ce2c6afe88a.png" loading="lazy"></p>
+
+  </article>
+
+  
+      
+    <div class="nexmoe-post-copyright">
+        <strong>本文作者：</strong>Honesty<br>
+        <strong>本文链接：</strong><a href="https://docs.hehouhui.cn/archives/23.html" title="https:&#x2F;&#x2F;docs.hehouhui.cn&#x2F;archives&#x2F;23.html" target="_blank" rel="noopener">https:&#x2F;&#x2F;docs.hehouhui.cn&#x2F;archives&#x2F;23.html</a><br>
+        
+            <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
+
+        
+    </div>
+
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/Redis/" rel="tag">Redis</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag">分布式</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" rel="tag">微服务</a>
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1698751493268"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          <script src="https://giscus.app/client.js"
+       data-repo="listener-He/NotionNext"
+       data-repo-id="R_kgDOJI1XUA"
+       data-category="General"
+       data-category-id="R_kgDOJOsY1g"
+       data-mapping="pathname"
+       data-strict="0"
+       data-reactions-enabled="1"
+       data-emit-metadata="0"
+       data-input-position="top"
+       data-theme="preferred_color_scheme"
+       data-lang="zh-CN"
+       data-loading="lazy"
+       crossorigin="anonymous"
+       async>
+ </script>
+
+      </div>
+  
+</div></div><div class="nexmoe-post-right">    <div class="nexmoe-fixed">
+        <div class="nexmoe-tool">
+
+            
+
+            
+            
+            <button class="mdui-fab catalog" style="overflow:unset;">
+                <i class="nexmoefont icon-i-catalog"></i>
+                <div class="nexmoe-toc">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E8%87%B4%E6%80%A7-hash"><span class="toc-number">1.</span> <span class="toc-text">一致性 hash</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Hash-%E7%AE%97%E6%B3%95%E7%9A%84%E5%AE%B9%E9%94%99%E6%80%A7%E5%92%8C%E5%8F%AF%E6%89%A9%E5%B1%95%E6%80%A7"><span class="toc-number">1.1.</span> <span class="toc-text">Hash 算法的容错性和可扩展性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%80%BE%E6%96%9C%E9%97%AE%E9%A2%98"><span class="toc-number">1.2.</span> <span class="toc-text">数据倾斜问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9B%86%E7%BE%A4%E6%83%85%E5%86%B5%E4%B8%8B%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E4%B8%8D%E5%8F%AF%E7%94%A8"><span class="toc-number">2.</span> <span class="toc-text">集群情况下什么时候不可用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%85%E9%9A%9C%E7%9A%84%E5%A4%84%E7%90%86%E8%BF%87%E7%A8%8B"><span class="toc-number">3.</span> <span class="toc-text">故障的处理过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9B%86%E7%BE%A4"><span class="toc-number">4.</span> <span class="toc-text">集群</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%95%E7%82%B9%E4%B8%BB%E4%BB%8E"><span class="toc-number">4.1.</span> <span class="toc-text">单点主从</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E5%86%99%E5%88%86%E7%A6%BB"><span class="toc-number">4.2.</span> <span class="toc-text">读写分离</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F"><span class="toc-number">4.3.</span> <span class="toc-text">哨兵模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cluster"><span class="toc-number">4.4.</span> <span class="toc-text">Cluster</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Jedis-sharding"><span class="toc-number">4.5.</span> <span class="toc-text">Jedis sharding</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E4%B8%AD%E9%97%B4%E4%BB%B6%E4%BB%A3%E7%90%86"><span class="toc-number">4.6.</span> <span class="toc-text">利用中间件代理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">4.7.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis-%E5%88%86%E7%89%87"><span class="toc-number">5.</span> <span class="toc-text">Redis 分片</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis-%E6%8C%81%E4%B9%85%E5%8C%96"><span class="toc-number">6.</span> <span class="toc-text">Redis 持久化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#RDB"><span class="toc-number">6.1.</span> <span class="toc-text">RDB</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AOF"><span class="toc-number">6.2.</span> <span class="toc-text">AOF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E6%96%B9%E5%BC%8F"><span class="toc-number">6.3.</span> <span class="toc-text">虚拟内存方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BB%BA%E8%AE%AE"><span class="toc-number">6.4.</span> <span class="toc-text">建议</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis-%E4%BA%8B%E5%8A%A1"><span class="toc-number">7.</span> <span class="toc-text">Redis 事务</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-Redis-%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81"><span class="toc-number">7.1.</span> <span class="toc-text">使用 Redis 实现分布式锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Redis-%E4%BD%BF%E7%94%A8-watch-%E5%AE%8C%E6%88%90%E7%A7%92%E6%9D%80%E6%8A%A2%E8%B4%AD%E5%8A%9F%E8%83%BD%EF%BC%9A"><span class="toc-number">7.2.</span> <span class="toc-text">Redis 使用 watch 完成秒杀抢购功能：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8E%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">8.</span> <span class="toc-text">与关系型数据库的区别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE-bai-%E5%AD%98%E5%82%A8%E6%96%B9%E5%BC%8F%E4%B8%8D%E5%90%8C%E3%80%82"><span class="toc-number">8.1.</span> <span class="toc-text">数据 bai 存储方式不同。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E6%96%B9%E5%BC%8F%E4%B8%8D%E5%90%8C%E3%80%82"><span class="toc-number">8.2.</span> <span class="toc-text">扩展方式不同。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E4%BA%8B%E5%8A%A1%E6%80%A7%E7%9A%84%E6%94%AF%E6%8C%81%E4%B8%8D%E5%90%8C%E3%80%82"><span class="toc-number">8.3.</span> <span class="toc-text">对事务性的支持不同。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E7%B3%BB%E5%9E%8B"><span class="toc-number">8.4.</span> <span class="toc-text">关系型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%9E%E5%85%B3%E7%B3%BB%E5%9E%8B"><span class="toc-number">8.5.</span> <span class="toc-text">非关系型</span></a></li></ol></li></ol>
+                </div>
+            </button>
+            
+
+            
+
+            <a href="#nexmoe-content" class="backtop toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+        </div>
+    </div>
+</div></div><div id="nexmoe-footer"><!--!--></div><div><div id="nexmoe-search-space">
+	<div class="search-container">
+		<div class="search-header">
+			<div class="search-input-container">
+				<input
+					class="search-input"
+					type="text"
+					placeholder="搜索"
+					oninput="sinput();"
+				/>
+			</div>
+			<a class="search-close" onclick="sclose();">×</a>
+		</div>
+		<div class="search-body"></div>
+	</div>
+</div>
+</div><div><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1623991949842711" crossorigin="anonymous"></script>
+</div></body></html>
