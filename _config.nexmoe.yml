@@ -4,7 +4,7 @@ background: # 既是博客的背景，又是文章默认头图
     width: 1280
     height: 726
 favicon:
-  href: /favicon.ico # 网站图标
+  href: https://www.make.com/en/favicon.ico # 网站图标
   type: image/x-icon # 图标类型，可能的值有(image/png, image/vnd.microsoft.icon, image/x-icon, image/gif)
 
 function: # 功能开关，可选值（true,false）
@@ -29,10 +29,10 @@ menu:
         - /
         - icon-home
     文章归档:
-        - /archive.html
+        - /history.html
         - icon-container
     我的朋友:
-        - /PY.html
+        - /friend.html
     给我赞助:
         - /donate.html
         - icon-coffee
@@ -84,7 +84,7 @@ widgets:
       options: 
         maxTagcloud: 17  # 标签云组件显示的标签数量，0 表示不限制
     - name: hitokoto # 一言 widget
-      enable: true
+      enable: false
       options: 
         widgetHitokoto: # 一言组件
             loading_placeholder: '🚀 获取中...' # 正在一言时的占位符
@@ -152,5 +152,4 @@ slotComment: |
 slotCopyright: | 
   <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
 
-slotArticleEnd: | 
-  <p><img src="https://i.dawnlab.me/53a8c7cf3ad77a0f0a456ce2c6afe88a.png" loading="lazy"></p>
+slotArticleEnd:

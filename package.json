@@ -4,9 +4,12 @@
   "private": true,
   "scripts": {
     "build": "hexo generate",
-    "clean": "hexo clean",
+    "clean": "hexo clean & elog clean",
     "deploy": "hexo deploy",
-    "server": "hexo server"
+    "server": "hexo server",
+    "elog:init": "elog init",
+    "sync:local": "elog sync -e .elog.env", 
+    "sync": "elog sync" 
   },
   "hexo": {
     "version": "6.3.0"
