@@ -8,13 +8,14 @@
     "deploy": "hexo deploy",
     "server": "hexo server",
     "elog:init": "elog init",
-    "sync:local": "elog sync -e .elog.env", 
-    "sync": "elog sync" 
+    "sync:local": "elog sync -e .elog.env",
+    "sync": "elog sync"
   },
   "hexo": {
     "version": "6.3.0"
   },
   "dependencies": {
+    "@elog/cli": "^0.9.1",
     "@nexmoe/hexo-renderer-inferno": "^0.2.1",
     "front-matter": "^4.0.2",
     "hexo": "^6.3.0",
