@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "hexo generate",
-    "clean": "hexo clean & elog clean",
+    "build": "hexo clean && hexo g && hexo d",
+    "clean": "hexo clean && elog clean",
     "deploy": "hexo deploy",
     "server": "hexo server",
     "elog:init": "elog init",
