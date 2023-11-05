@@ -1,16 +1,16 @@
 <!doctype html>
 <html lang="zh"><head>
-<title>Java基础-锁 - Honesty wiki</title>
+<title>Java基础-锁 - Honesty Wiki</title>
 <meta charset="UTF-8">
 <meta name="keywords" content="Honesty 知识库,Honesty Wiki, Honesty blog,hehouhui 知识库,hehouhui Wiki, hehouhui blog">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
 
-<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+<link rel="shortcut icon" href="https://www.make.com/en/favicon.ico" type="image/x-icon" />
 <meta name="description" content="synchronizedsynchronized 关键字解决的是多个线程之间访问资源的同步性，**synchronized**关键字可以保证被它修饰的方法或者代码块在任意时刻只能有一个线程执行。 另外，在 Java 早期版本中，synchronized 属于 重量级锁，效率低下。 为什么呢？ 因为监视器锁（monitor）是依赖于底层的操作系统的 Mutex Lock 来实现的，Java 的线程是">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java基础-锁">
 <meta property="og:url" content="https://docs.hehouhui.cn/archives/37.html">
-<meta property="og:site_name" content="Honesty wiki">
+<meta property="og:site_name" content="Honesty Wiki">
 <meta property="og:description" content="synchronizedsynchronized 关键字解决的是多个线程之间访问资源的同步性，**synchronized**关键字可以保证被它修饰的方法或者代码块在任意时刻只能有一个线程执行。 另外，在 Java 早期版本中，synchronized 属于 重量级锁，效率低下。 为什么呢？ 因为监视器锁（monitor）是依赖于底层的操作系统的 Mutex Lock 来实现的，Java 的线程是">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://blog-file.hehouhui.cn/202203222203508.png">
@@ -28,15 +28,15 @@
 <link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
 
 
-<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1698751493495">
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1699195160061">
 
-<link rel="stylesheet" href="/css/style.css?v=1698751493495">
+<link rel="stylesheet" href="/css/style.css?v=1699195160061">
 
 
 
 
     
-        <link rel="stylesheet" href="/custom.css?v=1698751493495">
+        <link rel="stylesheet" href="/custom.css?v=1699195160061">
     
 
 
@@ -46,7 +46,7 @@
 <script src="/lib/lax.min.js" async></script>
 
 
-<script async src="/js/app.js?v=1698751493495"></script>
+<script async src="/js/app.js?v=1699195160061"></script>
 
  
 
@@ -80,14 +80,14 @@
             </div>
         </a>
         
-        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archive.html" title="文章归档">
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/history.html" title="文章归档">
             <i class="mdui-list-item-icon nexmoefont icon-container"></i>
             <div class="mdui-list-item-content">
                 文章归档
             </div>
         </a>
         
-        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/PY.html" title="我的朋友">
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/friend.html" title="我的朋友">
             <i class="mdui-list-item-icon nexmoefont icon-unorderedlist"></i>
             <div class="mdui-list-item-content">
                 我的朋友
@@ -275,48 +275,6 @@
 
     
         
-        <!-- 一言 -->
-<div class="nexmoe-widget-wrap">
-  <h3 class="nexmoe-widget-title">
-    一言
-  </h3>
-  <div class="nexmoe-widget">
-    <ul class="hitokoto-box">
-      <li id="hitokoto_text_parent" class="hitokoto-text" hitokotoCategory="">
-        <a href="#" id="hitokoto_text">
-          
-        </a>
-        <a href="#" id="hitokoto_error_text" style="display: none;">
-          
-        </a>
-      </li>
-    </ul>
-  </div>
-</div>
-
-<script>
-  let hitokotoText = document.getElementById('hitokoto_text')
-  let hitokotoErroText = document.getElementById('hitokoto_error_text')
-  let hitokotoCategory = document.getElementById('hitokoto_text_parent').getAttribute('hitokotoCategory')
-  window.addEventListener('load', function () {
-    let url = 'https://v1.hitokoto.cn'
-    if (hitokotoCategory) {
-      url += '?c=' + hitokotoCategory
-    }
-    fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        hitokotoText.innerText = "「 " + data.hitokoto + " 」 from " + data.from
-        hitokotoText.href = 'https://hitokoto.cn/?uuid=' + data.uuid
-      })
-      .catch((reason) => {
-        console.error(11, reason)
-        hitokotoText.style.display = 'none'
-        hitokotoErroText.style.display = 'block'
-      })
-  })
-</script>
-    
         
         
   <div class="nexmoe-widget-wrap">
@@ -403,13 +361,22 @@
 <p>所以，你会发现目前的话，不论是各种开源框架还是 JDK 源码都大量使用了 <code>synchronized</code> 关键字。</p>
 <h3 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h3><p><strong>synchronized 关键字最主要的三种使用方式：</strong></p>
 <p><strong>1.修饰实例方法:</strong> 作用于当前对象实例加锁，进入同步代码前要获得 <strong>当前对象实例的锁</strong></p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">synchronized void method() &#123;</span><br><span class="line">  //业务代码</span><br><span class="line">&#125;Copy to clipboardErrorCopied</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">synchronized void method() &#123;
+  //业务代码
+&#125;Copy to clipboardErrorCopied
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 
 <p><strong>2.修饰静态方法:</strong> 也就是给当前类加锁，会作用于类的所有对象实例 ，进入同步代码前要获得 <strong>当前 class 的锁</strong>。因为静态成员不属于任何一个实例对象，是类成员（ _static 表明这是该类的一个静态资源，不管 new 了多少个对象，只有一份_）。所以，如果一个线程 A 调用一个实例对象的非静态 <code>synchronized</code> 方法，而线程 B 需要调用这个实例对象所属类的静态 <code>synchronized</code> 方法，是允许的，不会发生互斥现象，<strong>因为访问静态</strong> <strong><code>synchronized</code></strong> <strong>方法占用的锁是当前类的锁，而访问非静态</strong> <strong><code>synchronized</code></strong> <strong>方法占用的锁是当前实例对象锁</strong>。</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">synchronized void staic method() &#123;</span><br><span class="line">  //业务代码</span><br><span class="line">&#125;Copy to clipboardErrorCopied</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">synchronized void staic method() &#123;
+  //业务代码
+&#125;Copy to clipboardErrorCopied
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 
 <p><strong>3.修饰代码块</strong> ：指定加锁对象，对给定对象&#x2F;类加锁。<code>synchronized(this|object)</code> 表示进入同步代码库前要获得<strong>给定对象的锁</strong>。<code>synchronized(类.class)</code> 表示进入同步代码前要获得 <strong>当前 class 的锁</strong></p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">synchronized(this) &#123;</span><br><span class="line">  //业务代码</span><br><span class="line">&#125;Copy to clipboardErrorCopied</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">synchronized(this) &#123;
+  //业务代码
+&#125;Copy to clipboardErrorCopied
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 
 <p><strong>总结：</strong></p>
 <ul>
@@ -420,7 +387,27 @@
 <p>下面我以一个常见的面试题为例讲解一下 <code>synchronized</code> 关键字的具体使用。</p>
 <p>面试中面试官经常会说：“单例模式了解吗？来给我手写一下！给我解释一下双重检验锁方式实现单例模式的原理呗！”</p>
 <p><strong>双重校验锁实现对象单例（线程安全）</strong></p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public class Singleton &#123;</span><br><span class="line"></span><br><span class="line">    private volatile static Singleton uniqueInstance;</span><br><span class="line"></span><br><span class="line">    private Singleton() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public  static Singleton getUniqueInstance() &#123;</span><br><span class="line">       //先判断对象是否已经实例过，没有实例化过才进入加锁代码</span><br><span class="line">        if (uniqueInstance == null) &#123;</span><br><span class="line">            //类对象加锁</span><br><span class="line">            synchronized (Singleton.class) &#123;</span><br><span class="line">                if (uniqueInstance == null) &#123;</span><br><span class="line">                    uniqueInstance = new Singleton();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return uniqueInstance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;Copy to clipboardErrorCopied</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">public class Singleton &#123;
+
+    private volatile static Singleton uniqueInstance;
+
+    private Singleton() &#123;
+    &#125;
+
+    public  static Singleton getUniqueInstance() &#123;
+       //先判断对象是否已经实例过，没有实例化过才进入加锁代码
+        if (uniqueInstance == null) &#123;
+            //类对象加锁
+            synchronized (Singleton.class) &#123;
+                if (uniqueInstance == null) &#123;
+                    uniqueInstance = new Singleton();
+                &#125;
+            &#125;
+        &#125;
+        return uniqueInstance;
+    &#125;
+&#125;Copy to clipboardErrorCopied
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>另外，需要注意 <code>uniqueInstance</code> 采用 <code>volatile</code> 关键字修饰也是很有必要。</p>
 <p><code>uniqueInstance</code> 采用 <code>volatile</code> 关键字修饰也是很有必要的， <code>uniqueInstance = new Singleton();</code> 这段代码其实是分为三步执行：</p>
@@ -433,7 +420,14 @@
 <p>使用 <code>volatile</code> 可以禁止 JVM 的指令重排，保证在多线程环境下也能正常运行。</p>
 <h3 id="底层原理"><a href="#底层原理" class="headerlink" title="底层原理"></a>底层原理</h3><p><strong>synchronized 关键字底层原理属于 JVM 层面。</strong></p>
 <p><strong><code>代码块</code></strong></p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public class SynchronizedDemo &#123;</span><br><span class="line">    public void method() &#123;</span><br><span class="line">        synchronized (this) &#123;</span><br><span class="line">            System.out.println(&quot;synchronized 代码块&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">public class SynchronizedDemo &#123;
+    public void method() &#123;
+        synchronized (this) &#123;
+            System.out.println("synchronized 代码块");
+        &#125;
+    &#125;
+&#125;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>通过 JDK 自带的 <code>javap</code> 命令查看 <code>SynchronizedDemo</code> 类的相关字节码信息：首先切换到类的对应目录执行 <code>javac SynchronizedDemo.java</code> 命令生成编译后的 .class 文件，然后执行<code>javap -c -s -v -l SynchronizedDemo.class</code>。</p>
 <p><img src="https://blog-file.hehouhui.cn/202203222203508.png"></p>
@@ -448,7 +442,13 @@
 <p>在执行<code>monitorenter</code>时，会尝试获取对象的锁，如果锁的计数器为 0 则表示锁可以被获取，获取后将锁计数器设为 1 也就是加 1。</p>
 <p>在执行 <code>monitorexit</code> 指令后，将锁计数器设为 0，表明锁被释放。如果获取对象锁失败，那当前线程就要阻塞等待，直到锁被另外一个线程释放为止。</p>
 <p><strong>修饰方法</strong></p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public class SynchronizedDemo2 &#123;</span><br><span class="line">    public synchronized void method() &#123;</span><br><span class="line">        System.out.println(&quot;synchronized 方法&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">Copy to clipboardErrorCopied</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">public class SynchronizedDemo2 &#123;
+    public synchronized void method() &#123;
+        System.out.println("synchronized 方法");
+    &#125;
+&#125;
+Copy to clipboardErrorCopied
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p><img src="https://blog-file.hehouhui.cn/202203222128189.png"></p>
 <p><code>synchronized</code> 修饰的方法并没有 <code>monitorenter</code> 指令和 <code>monitorexit</code> 指令，取得代之的确实是 <code>ACC_SYNCHRONIZED</code> 标识，该标识指明了该方法是一个同步方法。JVM 通过该 <code>ACC_SYNCHRONIZED</code> 访问标志来辨别一个方法是否声明为同步方法，从而执行相应的同步调用。</p>
@@ -528,10 +528,23 @@
 <p>看个 AQS(AbstractQueuedSynchronizer)原理图：</p>
 <p><img src="https://blog-file.hehouhui.cn/image-1648381455274.png"></p>
 <p>AQS 使用一个 int 成员变量来表示同步状态，通过内置的 FIFO 队列来完成获取资源线程的排队工作。AQS 使用 CAS 对该同步状态进行原子操作实现对其值的修改。</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">private volatile int state;//共享变量，使用volatile修饰保证线程可见性Copy to clipboardErrorCopied</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">private volatile int state;//共享变量，使用volatile修饰保证线程可见性Copy to clipboardErrorCopied
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p>状态信息通过 protected 类型的<code>getState</code>，<code>setState</code>，<code>compareAndSetState</code>进行操作</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">//返回同步状态的当前值</span><br><span class="line">protected final int getState() &#123;</span><br><span class="line">        return state;</span><br><span class="line">&#125;</span><br><span class="line"> // 设置同步状态的值</span><br><span class="line">protected final void setState(int newState) &#123;</span><br><span class="line">        state = newState;</span><br><span class="line">&#125;</span><br><span class="line">//原子地（CAS操作）将同步状态值设置为给定值update如果当前同步状态的值等于expect（期望值）</span><br><span class="line">protected final boolean compareAndSetState(int expect, int update) &#123;</span><br><span class="line">        return unsafe.compareAndSwapInt(this, stateOffset, expect, update);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">//返回同步状态的当前值
+protected final int getState() &#123;
+        return state;
+&#125;
+ // 设置同步状态的值
+protected final void setState(int newState) &#123;
+        state = newState;
+&#125;
+//原子地（CAS操作）将同步状态值设置为给定值update如果当前同步状态的值等于expect（期望值）
+protected final boolean compareAndSetState(int expect, int update) &#123;
+        return unsafe.compareAndSwapInt(this, stateOffset, expect, update);
+&#125;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><blockquote>
 <p>AQS 解决了在实现同步器时涉及当的大量细节问题，例如获取同步状态、FIFO 同步队列。基于 AQS 来构建同步器可以带来很多好处。它不仅能够极大地减少实现工作，而且也不必处理在多个位置上发生的竞争问题。</p>
@@ -567,13 +580,94 @@
 </blockquote>
 <p><strong>下面来看 ReentrantLock 中相关的源代码：</strong></p>
 <p>ReentrantLock 默认采用非公平锁，因为考虑获得更好的性能，通过 boolean 来决定是否用公平锁（传入 true 用公平锁）。</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">/** Synchronizer providing all implementation mechanics */</span><br><span class="line">private final Sync sync;</span><br><span class="line">public ReentrantLock() &#123;</span><br><span class="line">    // 默认非公平锁</span><br><span class="line">    sync = new NonfairSync();</span><br><span class="line">&#125;</span><br><span class="line">public ReentrantLock(boolean fair) &#123;</span><br><span class="line">    sync = fair ? new FairSync() : new NonfairSync();</span><br><span class="line">&#125;Copy to clipboardErrorCopied</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">/** Synchronizer providing all implementation mechanics */
+private final Sync sync;
+public ReentrantLock() &#123;
+    // 默认非公平锁
+    sync = new NonfairSync();
+&#125;
+public ReentrantLock(boolean fair) &#123;
+    sync = fair ? new FairSync() : new NonfairSync();
+&#125;Copy to clipboardErrorCopied
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>ReentrantLock 中公平锁的 <code>lock</code> 方法</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">static final class FairSync extends Sync &#123;</span><br><span class="line">    final void lock() &#123;</span><br><span class="line">        acquire(1);</span><br><span class="line">    &#125;</span><br><span class="line">    // AbstractQueuedSynchronizer.acquire(int arg)</span><br><span class="line">    public final void acquire(int arg) &#123;</span><br><span class="line">        if (!tryAcquire(arg) &amp;&amp;</span><br><span class="line">            acquireQueued(addWaiter(Node.EXCLUSIVE), arg))</span><br><span class="line">            selfInterrupt();</span><br><span class="line">    &#125;</span><br><span class="line">    protected final boolean tryAcquire(int acquires) &#123;</span><br><span class="line">        final Thread current = Thread.currentThread();</span><br><span class="line">        int c = getState();</span><br><span class="line">        if (c == 0) &#123;</span><br><span class="line">            // 1. 和非公平锁相比，这里多了一个判断：是否有线程在等待</span><br><span class="line">            if (!hasQueuedPredecessors() &amp;&amp;</span><br><span class="line">                compareAndSetState(0, acquires)) &#123;</span><br><span class="line">                setExclusiveOwnerThread(current);</span><br><span class="line">                return true;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        else if (current == getExclusiveOwnerThread()) &#123;</span><br><span class="line">            int nextc = c + acquires;</span><br><span class="line">            if (nextc &lt; 0)</span><br><span class="line">                throw new Error(&quot;Maximum lock count exceeded&quot;);</span><br><span class="line">            setState(nextc);</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;Copy to clipboardErrorCopied</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">static final class FairSync extends Sync &#123;
+    final void lock() &#123;
+        acquire(1);
+    &#125;
+    // AbstractQueuedSynchronizer.acquire(int arg)
+    public final void acquire(int arg) &#123;
+        if (!tryAcquire(arg) &amp;&amp;
+            acquireQueued(addWaiter(Node.EXCLUSIVE), arg))
+            selfInterrupt();
+    &#125;
+    protected final boolean tryAcquire(int acquires) &#123;
+        final Thread current = Thread.currentThread();
+        int c = getState();
+        if (c == 0) &#123;
+            // 1. 和非公平锁相比，这里多了一个判断：是否有线程在等待
+            if (!hasQueuedPredecessors() &amp;&amp;
+                compareAndSetState(0, acquires)) &#123;
+                setExclusiveOwnerThread(current);
+                return true;
+            &#125;
+        &#125;
+        else if (current == getExclusiveOwnerThread()) &#123;
+            int nextc = c + acquires;
+            if (nextc &lt; 0)
+                throw new Error("Maximum lock count exceeded");
+            setState(nextc);
+            return true;
+        &#125;
+        return false;
+    &#125;
+&#125;Copy to clipboardErrorCopied
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>非公平锁的 lock 方法：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">static final class NonfairSync extends Sync &#123;</span><br><span class="line">    final void lock() &#123;</span><br><span class="line">        // 2. 和公平锁相比，这里会直接先进行一次CAS，成功就返回了</span><br><span class="line">        if (compareAndSetState(0, 1))</span><br><span class="line">            setExclusiveOwnerThread(Thread.currentThread());</span><br><span class="line">        else</span><br><span class="line">            acquire(1);</span><br><span class="line">    &#125;</span><br><span class="line">    // AbstractQueuedSynchronizer.acquire(int arg)</span><br><span class="line">    public final void acquire(int arg) &#123;</span><br><span class="line">        if (!tryAcquire(arg) &amp;&amp;</span><br><span class="line">            acquireQueued(addWaiter(Node.EXCLUSIVE), arg))</span><br><span class="line">            selfInterrupt();</span><br><span class="line">    &#125;</span><br><span class="line">    protected final boolean tryAcquire(int acquires) &#123;</span><br><span class="line">        return nonfairTryAcquire(acquires);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">/**</span><br><span class="line"> * Performs non-fair tryLock.  tryAcquire is implemented in</span><br><span class="line"> * subclasses, but both need nonfair try for trylock method.</span><br><span class="line"> */</span><br><span class="line">final boolean nonfairTryAcquire(int acquires) &#123;</span><br><span class="line">    final Thread current = Thread.currentThread();</span><br><span class="line">    int c = getState();</span><br><span class="line">    if (c == 0) &#123;</span><br><span class="line">        // 这里没有对阻塞队列进行判断</span><br><span class="line">        if (compareAndSetState(0, acquires)) &#123;</span><br><span class="line">            setExclusiveOwnerThread(current);</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    else if (current == getExclusiveOwnerThread()) &#123;</span><br><span class="line">        int nextc = c + acquires;</span><br><span class="line">        if (nextc &lt; 0) // overflow</span><br><span class="line">            throw new Error(&quot;Maximum lock count exceeded&quot;);</span><br><span class="line">        setState(nextc);</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line">    return false;</span><br><span class="line">&#125;Copy to clipboardErrorCopied</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">static final class NonfairSync extends Sync &#123;
+    final void lock() &#123;
+        // 2. 和公平锁相比，这里会直接先进行一次CAS，成功就返回了
+        if (compareAndSetState(0, 1))
+            setExclusiveOwnerThread(Thread.currentThread());
+        else
+            acquire(1);
+    &#125;
+    // AbstractQueuedSynchronizer.acquire(int arg)
+    public final void acquire(int arg) &#123;
+        if (!tryAcquire(arg) &amp;&amp;
+            acquireQueued(addWaiter(Node.EXCLUSIVE), arg))
+            selfInterrupt();
+    &#125;
+    protected final boolean tryAcquire(int acquires) &#123;
+        return nonfairTryAcquire(acquires);
+    &#125;
+&#125;
+/**
+ * Performs non-fair tryLock.  tryAcquire is implemented in
+ * subclasses, but both need nonfair try for trylock method.
+ */
+final boolean nonfairTryAcquire(int acquires) &#123;
+    final Thread current = Thread.currentThread();
+    int c = getState();
+    if (c == 0) &#123;
+        // 这里没有对阻塞队列进行判断
+        if (compareAndSetState(0, acquires)) &#123;
+            setExclusiveOwnerThread(current);
+            return true;
+        &#125;
+    &#125;
+    else if (current == getExclusiveOwnerThread()) &#123;
+        int nextc = c + acquires;
+        if (nextc &lt; 0) // overflow
+            throw new Error("Maximum lock count exceeded");
+        setState(nextc);
+        return true;
+    &#125;
+    return false;
+&#125;Copy to clipboardErrorCopied
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>总结：公平锁和非公平锁只有两处不同：</p>
 <ol>
@@ -596,7 +690,13 @@
 <p>模板方法模式是基于”继承“的，主要是为了在不改变模板结构的前提下在子类中重新定义模板中的内容以实现复用代码。举个很简单的例子假如我们要去一个地方的步骤是：购票 buyTicket()-&gt;安检 securityCheck()-&gt;乘坐某某工具回家 ride()-&gt;到达目的地 arrive()。我们可能乘坐不同的交通工具回家比如飞机或者火车，所以除了 ride()方法，其他方法的实现几乎相同。我们可以定义一个包含了这些方法的抽象类，然后用户根据自己的需要继承该抽象类然后修改 ride()方法。</p>
 </blockquote>
 <p><strong>AQS 使用了模板方法模式，自定义同步器时需要重写下面几个 AQS 提供的模板方法：</strong></p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">isHeldExclusively()//该线程是否正在独占资源。只有用到condition才需要去实现它。</span><br><span class="line">tryAcquire(int)//独占方式。尝试获取资源，成功则返回true，失败则返回false。</span><br><span class="line">tryRelease(int)//独占方式。尝试释放资源，成功则返回true，失败则返回false。</span><br><span class="line">tryAcquireShared(int)//共享方式。尝试获取资源。负数表示失败；0表示成功，但没有剩余可用资源；正数表示成功，且有剩余资源。</span><br><span class="line">tryReleaseShared(int)//共享方式。尝试释放资源，成功则返回true，失败则返回false。</span><br><span class="line">Copy to clipboardErrorCopied</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">isHeldExclusively()//该线程是否正在独占资源。只有用到condition才需要去实现它。
+tryAcquire(int)//独占方式。尝试获取资源，成功则返回true，失败则返回false。
+tryRelease(int)//独占方式。尝试释放资源，成功则返回true，失败则返回false。
+tryAcquireShared(int)//共享方式。尝试获取资源。负数表示失败；0表示成功，但没有剩余可用资源；正数表示成功，且有剩余资源。
+tryReleaseShared(int)//共享方式。尝试释放资源，成功则返回true，失败则返回false。
+Copy to clipboardErrorCopied
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>默认情况下，每个方法都抛出 <code>UnsupportedOperationException</code>。 这些方法的实现必须是内部线程安全的，并且通常应该简短而不是阻塞。AQS 类中的其他方法都是 final ，所以无法被其他类使用，只有这几个方法可以被其他类使用。</p>
 <p>以 ReentrantLock 为例，state 初始化为 0，表示未锁定状态。A 线程 lock()时，会调用 tryAcquire()独占该锁并将 state+1。此后，其他线程再 tryAcquire()时就会失败，直到 A 线程 unlock()到 state&#x3D;0（即释放锁）为止，其它线程才有机会获取该锁。当然，释放锁之前，A 线程自己是可以重复获取此锁的（state 会累加），这就是可重入的概念。但要注意，获取多少次就要释放多么次，这样才能保证 state 是能回到零态的。</p>
@@ -609,11 +709,54 @@
 </ul>
 <h3 id="信号量（允许多个线程同时访问）"><a href="#信号量（允许多个线程同时访问）" class="headerlink" title="信号量（允许多个线程同时访问）"></a>信号量（允许多个线程同时访问）</h3><p><strong>synchronized 和 ReentrantLock 都是一次只允许一个线程访问某个资源，Semaphore(信号量)可以指定多个线程同时访问某个资源。</strong></p>
 <p>示例代码如下：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> *</span><br><span class="line"> * @author Snailclimb</span><br><span class="line"> * @date 2018年9月30日</span><br><span class="line"> * @Description: 需要一次性拿一个许可的情况</span><br><span class="line"> */</span><br><span class="line">public class SemaphoreExample1 &#123;</span><br><span class="line">  // 请求的数量</span><br><span class="line">  private static final int threadCount = 550;</span><br><span class="line"></span><br><span class="line">  public static void main(String[] args) throws InterruptedException &#123;</span><br><span class="line">    // 创建一个具有固定线程数量的线程池对象（如果这里线程池的线程数量给太少的话你会发现执行的很慢）</span><br><span class="line">    ExecutorService threadPool = Executors.newFixedThreadPool(300);</span><br><span class="line">    // 一次只能允许执行的线程数量。</span><br><span class="line">    final Semaphore semaphore = new Semaphore(20);</span><br><span class="line"></span><br><span class="line">    for (int i = 0; i &lt; threadCount; i++) &#123;</span><br><span class="line">      final int threadnum = i;</span><br><span class="line">      threadPool.execute(() -&gt; &#123;// Lambda 表达式的运用</span><br><span class="line">        try &#123;</span><br><span class="line">          semaphore.acquire();// 获取一个许可，所以可运行线程数量为20/1=20</span><br><span class="line">          test(threadnum);</span><br><span class="line">          semaphore.release();// 释放一个许可</span><br><span class="line">        &#125; catch (InterruptedException e) &#123;</span><br><span class="line">          // TODO Auto-generated catch block</span><br><span class="line">          e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    threadPool.shutdown();</span><br><span class="line">    System.out.println(&quot;finish&quot;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  public static void test(int threadnum) throws InterruptedException &#123;</span><br><span class="line">    Thread.sleep(1000);// 模拟请求的耗时操作</span><br><span class="line">    System.out.println(&quot;threadnum:&quot; + threadnum);</span><br><span class="line">    Thread.sleep(1000);// 模拟请求的耗时操作</span><br><span class="line">  &#125;</span><br><span class="line">&#125;Copy to clipboardErrorCopied</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">/**
+ *
+ * @author Snailclimb
+ * @date 2018年9月30日
+ * @Description: 需要一次性拿一个许可的情况
+ */
+public class SemaphoreExample1 &#123;
+  // 请求的数量
+  private static final int threadCount = 550;
+
+  public static void main(String[] args) throws InterruptedException &#123;
+    // 创建一个具有固定线程数量的线程池对象（如果这里线程池的线程数量给太少的话你会发现执行的很慢）
+    ExecutorService threadPool = Executors.newFixedThreadPool(300);
+    // 一次只能允许执行的线程数量。
+    final Semaphore semaphore = new Semaphore(20);
+
+    for (int i = 0; i &lt; threadCount; i++) &#123;
+      final int threadnum = i;
+      threadPool.execute(() -> &#123;// Lambda 表达式的运用
+        try &#123;
+          semaphore.acquire();// 获取一个许可，所以可运行线程数量为20/1=20
+          test(threadnum);
+          semaphore.release();// 释放一个许可
+        &#125; catch (InterruptedException e) &#123;
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        &#125;
+
+      &#125;);
+    &#125;
+    threadPool.shutdown();
+    System.out.println("finish");
+  &#125;
+
+  public static void test(int threadnum) throws InterruptedException &#123;
+    Thread.sleep(1000);// 模拟请求的耗时操作
+    System.out.println("threadnum:" + threadnum);
+    Thread.sleep(1000);// 模拟请求的耗时操作
+  &#125;
+&#125;Copy to clipboardErrorCopied
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>执行 <code>acquire</code> 方法阻塞，直到有一个许可证可以获得然后拿走一个许可证；每个 <code>release</code> 方法增加一个许可证，这可能会释放一个阻塞的 acquire 方法。然而，其实并没有实际的许可证这个对象，Semaphore 只是维持了一个可获得许可证的数量。 Semaphore 经常用于限制获取某种资源的线程数量。</p>
 <p>当然一次也可以一次拿取和释放多个许可，不过一般没有必要这样做：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">semaphore.acquire(5);// 获取5个许可，所以可运行线程数量为20/5=4</span><br><span class="line">test(threadnum);</span><br><span class="line">semaphore.release(5);// 获取5个许可，所以可运行线程数量为20/5=4Copy to clipboardErrorCopied</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">semaphore.acquire(5);// 获取5个许可，所以可运行线程数量为20/5=4
+test(threadnum);
+semaphore.release(5);// 获取5个许可，所以可运行线程数量为20/5=4Copy to clipboardErrorCopied
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 
 <p>除了 <code>acquire</code>方法之外，另一个比较常用的与之对应的方法是<code>tryAcquire</code>方法，该方法如果获取不到许可就立即返回 false。</p>
 <p>Semaphore 有两种模式，公平模式和非公平模式。</p>
@@ -622,7 +765,14 @@
 <li><strong>非公平模式：</strong> 抢占式的。</li>
 </ul>
 <p><strong>Semaphore 对应的两个构造方法如下：</strong></p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public Semaphore(int permits) &#123;</span><br><span class="line">     sync = new NonfairSync(permits);</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> public Semaphore(int permits, boolean fair) &#123;</span><br><span class="line">     sync = fair ? new FairSync(permits) : new NonfairSync(permits);</span><br><span class="line"> &#125;Copy to clipboardErrorCopied</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">public Semaphore(int permits) &#123;
+     sync = new NonfairSync(permits);
+ &#125;
+
+ public Semaphore(int permits, boolean fair) &#123;
+     sync = fair ? new FairSync(permits) : new NonfairSync(permits);
+ &#125;Copy to clipboardErrorCopied
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p><strong>这两个构造方法，都必须提供许可的数量，第二个构造方法可以指定是公平模式还是非公平模式，默认非公平模式。</strong></p>
 <p><a target="_blank" rel="noopener" href="https://github.com/Snailclimb/JavaGuide/issues/645">issue645 补充内容</a> ：Semaphore 与 CountDownLatch 一样，也是共享锁的一种实现。它默认构造 AQS 的 state 为 permits。当执行任务的线程数量超出 permits,那么多余的线程将会被放入阻塞队列 Park,并自旋判断 state 是否大于 0。只有当 state 大于 0 的时候，阻塞的线程才能继续执行,此时先前执行任务的线程继续执行 release 方法，release 方法使得 state 的变量会加 1，那么自旋的线程便会判断成功。 如此，每次只有最多不超过 permits 数量的线程能自旋成功，便限制了执行任务线程的数量。</p>
@@ -635,19 +785,61 @@
 <li>实现多个线程开始执行任务的最大并行性。注意是并行性，不是并发，强调的是多个线程在某一时刻同时开始执行。类似于赛跑，将多个线程放到起点，等待发令枪响，然后同时开跑。做法是初始化一个共享的 <code>CountDownLatch</code> 对象，将其计数器初始化为 1 ：<code>new CountDownLatch(1)</code>，多个线程在开始执行任务前首先 <code>coundownlatch.await()</code>，当主线程调用 countDown() 时，计数器变为 0，多个线程同时被唤醒。</li>
 </ol>
 <p><strong>使用示范</strong></p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> *</span><br><span class="line"> * @author SnailClimb</span><br><span class="line"> * @date 2018年10月1日</span><br><span class="line"> * @Description: CountDownLatch 使用方法示例</span><br><span class="line"> */</span><br><span class="line">public class CountDownLatchExample1 &#123;</span><br><span class="line">  // 请求的数量</span><br><span class="line">  private static final int threadCount = 550;</span><br><span class="line"></span><br><span class="line">  public static void main(String[] args) throws InterruptedException &#123;</span><br><span class="line">    // 创建一个具有固定线程数量的线程池对象（如果这里线程池的线程数量给太少的话你会发现执行的很慢）</span><br><span class="line">    ExecutorService threadPool = Executors.newFixedThreadPool(300);</span><br><span class="line">    final CountDownLatch countDownLatch = new CountDownLatch(threadCount);</span><br><span class="line">    for (int i = 0; i &lt; threadCount; i++) &#123;</span><br><span class="line">      final int threadnum = i;</span><br><span class="line">      threadPool.execute(() -&gt; &#123;// Lambda 表达式的运用</span><br><span class="line">        try &#123;</span><br><span class="line">          test(threadnum);</span><br><span class="line">        &#125; catch (InterruptedException e) &#123;</span><br><span class="line">          // TODO Auto-generated catch block</span><br><span class="line">          e.printStackTrace();</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">          countDownLatch.countDown();// 表示一个请求已经被完成</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    countDownLatch.await();</span><br><span class="line">    threadPool.shutdown();</span><br><span class="line">    System.out.println(&quot;finish&quot;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  public static void test(int threadnum) throws InterruptedException &#123;</span><br><span class="line">    Thread.sleep(1000);// 模拟请求的耗时操作</span><br><span class="line">    System.out.println(&quot;threadnum:&quot; + threadnum);</span><br><span class="line">    Thread.sleep(1000);// 模拟请求的耗时操作</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">Copy to clipboardErrorCopied</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">/**
+ *
+ * @author SnailClimb
+ * @date 2018年10月1日
+ * @Description: CountDownLatch 使用方法示例
+ */
+public class CountDownLatchExample1 &#123;
+  // 请求的数量
+  private static final int threadCount = 550;
+
+  public static void main(String[] args) throws InterruptedException &#123;
+    // 创建一个具有固定线程数量的线程池对象（如果这里线程池的线程数量给太少的话你会发现执行的很慢）
+    ExecutorService threadPool = Executors.newFixedThreadPool(300);
+    final CountDownLatch countDownLatch = new CountDownLatch(threadCount);
+    for (int i = 0; i &lt; threadCount; i++) &#123;
+      final int threadnum = i;
+      threadPool.execute(() -> &#123;// Lambda 表达式的运用
+        try &#123;
+          test(threadnum);
+        &#125; catch (InterruptedException e) &#123;
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        &#125; finally &#123;
+          countDownLatch.countDown();// 表示一个请求已经被完成
+        &#125;
+
+      &#125;);
+    &#125;
+    countDownLatch.await();
+    threadPool.shutdown();
+    System.out.println("finish");
+  &#125;
+
+  public static void test(int threadnum) throws InterruptedException &#123;
+    Thread.sleep(1000);// 模拟请求的耗时操作
+    System.out.println("threadnum:" + threadnum);
+    Thread.sleep(1000);// 模拟请求的耗时操作
+  &#125;
+&#125;
+Copy to clipboardErrorCopied
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>上面的代码中，我们定义了请求的数量为 550，当这 550 个请求被处理完成之后，才会执行<code>System.out.println(&quot;finish&quot;);</code>。</p>
 <p>与 CountDownLatch 的第一次交互是主线程等待其他线程。主线程必须在启动其他线程后立即调用 <code>CountDownLatch.await()</code> 方法。这样主线程的操作就会在这个方法上阻塞，直到其他线程完成各自的任务。</p>
 <p>其他 N 个线程必须引用闭锁对象，因为他们需要通知 <code>CountDownLatch</code> 对象，他们已经完成了各自的任务。这种通知机制是通过 <code>CountDownLatch.countDown()</code>方法来完成的；每调用一次这个方法，在构造函数中初始化的 count 值就减 1。所以当 N 个线程都调 用了这个方法，count 的值等于 0，然后主线程就能通过 <code>await()</code>方法，恢复执行自己的任务。</p>
 <p>再插一嘴：<code>CountDownLatch</code> 的 <code>await()</code> 方法使用不当很容易产生死锁，比如我们上面代码中的 for 循环改为：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">for (int i = 0; i &lt; threadCount-1; i++) &#123;</span><br><span class="line">.......</span><br><span class="line">&#125;Copy to clipboardErrorCopied</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">for (int i = 0; i &lt; threadCount-1; i++) &#123;
+.......
+&#125;Copy to clipboardErrorCopied
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 
 <p>这样就导致 <code>count</code> 的值没办法等于 0，然后就会导致一直等待。</p>
 <p>如果对 CountDownLatch 源码感兴趣的朋友，可以查看： <a target="_blank" rel="noopener" href="https://www.cnblogs.com/leesf456/p/5406191.html">【JUC】JDK1.8 源码分析之 CountDownLatch（五）</a></p>
 
-    <p><img src="https://i.dawnlab.me/53a8c7cf3ad77a0f0a456ce2c6afe88a.png" loading="lazy"></p>
-
+    
   </article>
 
   
@@ -672,7 +864,7 @@
 </div>
   
   
-    <script async src="/js/copy-codeblock.js?v=1698751493254"></script>
+    <script async src="/js/copy-codeblock.js?v=1699195159863"></script>
   
 
   

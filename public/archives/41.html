@@ -1,16 +1,16 @@
 <!doctype html>
 <html lang="zh"><head>
-<title>silk-v3-decoder 一款微信音频转码的工具 - Honesty wiki</title>
+<title>silk-v3-decoder 一款微信音频转码的工具 - Honesty Wiki</title>
 <meta charset="UTF-8">
 <meta name="keywords" content="Honesty 知识库,Honesty Wiki, Honesty blog,hehouhui 知识库,hehouhui Wiki, hehouhui blog">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
 
-<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+<link rel="shortcut icon" href="https://www.make.com/en/favicon.ico" type="image/x-icon" />
 <meta name="description" content="SILK v3 编码是 Skype 向第三方开发人员和硬件制造商提供免版税认证(RF)的 Silk 宽带音频编码器，Skype 后来将其开源。具体可见 Wikipedia。  之前一直使用 ffmpeg 来进行格式转换，但是将微信的 amr 转为 mp3 后语音质量不理想（也可能是我参数没有调正确 🤪）。于是就继续想解决办法，后来在 github 瞎逛时看到可以使用 silk-v3-decode">
 <meta property="og:type" content="article">
 <meta property="og:title" content="silk-v3-decoder 一款微信音频转码的工具">
 <meta property="og:url" content="https://docs.hehouhui.cn/archives/41.html">
-<meta property="og:site_name" content="Honesty wiki">
+<meta property="og:site_name" content="Honesty Wiki">
 <meta property="og:description" content="SILK v3 编码是 Skype 向第三方开发人员和硬件制造商提供免版税认证(RF)的 Silk 宽带音频编码器，Skype 后来将其开源。具体可见 Wikipedia。  之前一直使用 ffmpeg 来进行格式转换，但是将微信的 amr 转为 mp3 后语音质量不理想（也可能是我参数没有调正确 🤪）。于是就继续想解决办法，后来在 github 瞎逛时看到可以使用 silk-v3-decode">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://blog-file.hehouhui.cn/202203172321911.png">
@@ -29,15 +29,15 @@
 <link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
 
 
-<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1698751493472">
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1699195160042">
 
-<link rel="stylesheet" href="/css/style.css?v=1698751493472">
+<link rel="stylesheet" href="/css/style.css?v=1699195160042">
 
 
 
 
     
-        <link rel="stylesheet" href="/custom.css?v=1698751493472">
+        <link rel="stylesheet" href="/custom.css?v=1699195160042">
     
 
 
@@ -47,7 +47,7 @@
 <script src="/lib/lax.min.js" async></script>
 
 
-<script async src="/js/app.js?v=1698751493472"></script>
+<script async src="/js/app.js?v=1699195160042"></script>
 
  
 
@@ -81,14 +81,14 @@
             </div>
         </a>
         
-        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archive.html" title="文章归档">
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/history.html" title="文章归档">
             <i class="mdui-list-item-icon nexmoefont icon-container"></i>
             <div class="mdui-list-item-content">
                 文章归档
             </div>
         </a>
         
-        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/PY.html" title="我的朋友">
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/friend.html" title="我的朋友">
             <i class="mdui-list-item-icon nexmoefont icon-unorderedlist"></i>
             <div class="mdui-list-item-content">
                 我的朋友
@@ -276,48 +276,6 @@
 
     
         
-        <!-- 一言 -->
-<div class="nexmoe-widget-wrap">
-  <h3 class="nexmoe-widget-title">
-    一言
-  </h3>
-  <div class="nexmoe-widget">
-    <ul class="hitokoto-box">
-      <li id="hitokoto_text_parent" class="hitokoto-text" hitokotoCategory="">
-        <a href="#" id="hitokoto_text">
-          
-        </a>
-        <a href="#" id="hitokoto_error_text" style="display: none;">
-          
-        </a>
-      </li>
-    </ul>
-  </div>
-</div>
-
-<script>
-  let hitokotoText = document.getElementById('hitokoto_text')
-  let hitokotoErroText = document.getElementById('hitokoto_error_text')
-  let hitokotoCategory = document.getElementById('hitokoto_text_parent').getAttribute('hitokotoCategory')
-  window.addEventListener('load', function () {
-    let url = 'https://v1.hitokoto.cn'
-    if (hitokotoCategory) {
-      url += '?c=' + hitokotoCategory
-    }
-    fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        hitokotoText.innerText = "「 " + data.hitokoto + " 」 from " + data.from
-        hitokotoText.href = 'https://hitokoto.cn/?uuid=' + data.uuid
-      })
-      .catch((reason) => {
-        console.error(11, reason)
-        hitokotoText.style.display = 'none'
-        hitokotoErroText.style.display = 'block'
-      })
-  })
-</script>
-    
         
         
   <div class="nexmoe-widget-wrap">
@@ -402,14 +360,25 @@
 </blockquote>
 <p>(<a target="_blank" rel="noopener" href="https://github.com/kn007/silk-v3-decoder">前往 silk-v3-decoder</a>)</p>
 <p>++环境要求 gcc 和 ffmpeg，所以还是得要安装 ffmpeg，gcc 是拿来编译 silk-v3-decoder 源码，ffmpeg 是拿来转换格式的。++</p>
-<h2 id="安装-gcc"><a href="#安装-gcc" class="headerlink" title="安装 gcc"></a>安装 gcc</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum -y install gcc</span><br><span class="line">yum -y install gcc-c++</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="安装-gcc"><a href="#安装-gcc" class="headerlink" title="安装 gcc"></a>安装 gcc</h2><pre class="line-numbers language-text" data-language="text"><code class="language-text">yum -y install gcc
+yum -y install gcc-c++
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
 <h2 id="ffmpeg-安装"><a href="#ffmpeg-安装" class="headerlink" title="ffmpeg 安装"></a>ffmpeg 安装</h2><p>打开官网地址，进入下载页：<a target="_blank" rel="noopener" href="https://ffmpeg.org/download.html#build-linux">https://ffmpeg.org/download.html#build-linux</a></p>
 <p><img src="https://blog-file.hehouhui.cn/202203172321911.png"></p>
 <p>选择 Linux Static Builds 下的构建选项，进入详情页</p>
 <p><img src="https://blog-file.hehouhui.cn/202203172323866.png"></p>
 <p>在列表中选择适合自己的版本，鼠标右键，复制链接地址</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># 下载文件</span><br><span class="line">wget &lt;https://johnvansickle.com/ffmpeg/builds/ffmpeg-git-amd64-static.tar.xz&gt;</span><br><span class="line"></span><br><span class="line"># 解压</span><br><span class="line">xz -d ffmpeg-git-amd64-static.tar.xz</span><br><span class="line"></span><br><span class="line"># 再次解压</span><br><span class="line">tar -xvf ffmpeg-git-amd64-static.tar</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text"># 下载文件
+wget &lt;https://johnvansickle.com/ffmpeg/builds/ffmpeg-git-amd64-static.tar.xz>
+
+# 解压
+xz -d ffmpeg-git-amd64-static.tar.xz
+
+# 再次解压
+tar -xvf ffmpeg-git-amd64-static.tar
+
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>得到目录</p>
 <p><img src="https://blog-file.hehouhui.cn/202203172329558.png"></p>
@@ -417,22 +386,28 @@
 <blockquote>
 <p>如果想要 ffmpeg 命令全局可用，可以在 bin 目录加个链接。比如，分别执行如下命令，即可在:&#x2F;usr&#x2F;bin 目录下创建 ffmpeg 和 ffprobe 软链接。</p>
 </blockquote>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/bin</span><br><span class="line">ln -s 解压目录/ffmpeg ffmpeg</span><br><span class="line">ln -s 解压目录/ffprobe ffprobe</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">cd /usr/bin
+ln -s 解压目录/ffmpeg ffmpeg
+ln -s 解压目录/ffprobe ffprobe
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 
-<h2 id="下载-silk-v3-decoder-源码"><a href="#下载-silk-v3-decoder-源码" class="headerlink" title="下载 silk-v3-decoder 源码"></a>下载 silk-v3-decoder 源码</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;https://ghproxy.com/https://github.com/kn007/silk-v3-decoder/archive/refs/heads/master.zip&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="下载-silk-v3-decoder-源码"><a href="#下载-silk-v3-decoder-源码" class="headerlink" title="下载 silk-v3-decoder 源码"></a>下载 silk-v3-decoder 源码</h2><pre class="line-numbers language-text" data-language="text"><code class="language-text">&lt;https://ghproxy.com/https://github.com/kn007/silk-v3-decoder/archive/refs/heads/master.zip>
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p><img src="https://blog-file.hehouhui.cn/202203172333398.png"></p>
 <p>给脚步赋执行权限</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">chmod +x converter.sh</span><br><span class="line">chmod +x converter_beta.sh</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">chmod +x converter.sh
+chmod +x converter_beta.sh
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
-<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">silk-v3-decoder目录/converter.sh silk音频文件路径 mp3</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><pre class="line-numbers language-text" data-language="text"><code class="language-text">silk-v3-decoder目录/converter.sh silk音频文件路径 mp3
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <blockquote>
 <p>第一个为执行脚本 第二个为 silk 音频如 amr 文件路径 第三个为需要转换为的音频格式</p>
 </blockquote>
 
-    <p><img src="https://i.dawnlab.me/53a8c7cf3ad77a0f0a456ce2c6afe88a.png" loading="lazy"></p>
-
+    
   </article>
 
   
@@ -457,7 +432,7 @@
 </div>
   
   
-    <script async src="/js/copy-codeblock.js?v=1698751493250"></script>
+    <script async src="/js/copy-codeblock.js?v=1699195159860"></script>
   
 
   

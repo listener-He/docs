@@ -1,16 +1,16 @@
 <!doctype html>
 <html lang="zh"><head>
-<title>Java基础-class - Honesty wiki</title>
+<title>Java基础-class - Honesty Wiki</title>
 <meta charset="UTF-8">
 <meta name="keywords" content="Honesty 知识库,Honesty Wiki, Honesty blog,hehouhui 知识库,hehouhui Wiki, hehouhui blog">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
 
-<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+<link rel="shortcut icon" href="https://www.make.com/en/favicon.ico" type="image/x-icon" />
 <meta name="description" content="对象，类类加载一个类的完整生命周期如下：  Class 文件需要加载到虚拟机中之后才能运行和使用，那么虚拟机是如何加载这些 Class 文件呢？ 系统加载 Class 类型的文件主要三步:加载-&gt;连接-&gt;初始化。连接过程又可分为三步:验证-&gt;准备-&gt;解析。  加载类加载过程的第一步，主要完成下面 3 件事情：  通过全类名获取定义此类的二进制字节流 将字节流所代表的静态存储">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java基础-class">
 <meta property="og:url" content="https://docs.hehouhui.cn/archives/43.html">
-<meta property="og:site_name" content="Honesty wiki">
+<meta property="og:site_name" content="Honesty Wiki">
 <meta property="og:description" content="对象，类类加载一个类的完整生命周期如下：  Class 文件需要加载到虚拟机中之后才能运行和使用，那么虚拟机是如何加载这些 Class 文件呢？ 系统加载 Class 类型的文件主要三步:加载-&gt;连接-&gt;初始化。连接过程又可分为三步:验证-&gt;准备-&gt;解析。  加载类加载过程的第一步，主要完成下面 3 件事情：  通过全类名获取定义此类的二进制字节流 将字节流所代表的静态存储">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://blog-file.hehouhui.cn/202203222121164.png">
@@ -32,15 +32,15 @@
 <link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
 
 
-<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1698751493551">
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1699195160100">
 
-<link rel="stylesheet" href="/css/style.css?v=1698751493551">
+<link rel="stylesheet" href="/css/style.css?v=1699195160100">
 
 
 
 
     
-        <link rel="stylesheet" href="/custom.css?v=1698751493551">
+        <link rel="stylesheet" href="/custom.css?v=1699195160100">
     
 
 
@@ -50,7 +50,7 @@
 <script src="/lib/lax.min.js" async></script>
 
 
-<script async src="/js/app.js?v=1698751493551"></script>
+<script async src="/js/app.js?v=1699195160100"></script>
 
  
 
@@ -84,14 +84,14 @@
             </div>
         </a>
         
-        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archive.html" title="文章归档">
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/history.html" title="文章归档">
             <i class="mdui-list-item-icon nexmoefont icon-container"></i>
             <div class="mdui-list-item-content">
                 文章归档
             </div>
         </a>
         
-        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/PY.html" title="我的朋友">
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/friend.html" title="我的朋友">
             <i class="mdui-list-item-icon nexmoefont icon-unorderedlist"></i>
             <div class="mdui-list-item-content">
                 我的朋友
@@ -279,48 +279,6 @@
 
     
         
-        <!-- 一言 -->
-<div class="nexmoe-widget-wrap">
-  <h3 class="nexmoe-widget-title">
-    一言
-  </h3>
-  <div class="nexmoe-widget">
-    <ul class="hitokoto-box">
-      <li id="hitokoto_text_parent" class="hitokoto-text" hitokotoCategory="">
-        <a href="#" id="hitokoto_text">
-          
-        </a>
-        <a href="#" id="hitokoto_error_text" style="display: none;">
-          
-        </a>
-      </li>
-    </ul>
-  </div>
-</div>
-
-<script>
-  let hitokotoText = document.getElementById('hitokoto_text')
-  let hitokotoErroText = document.getElementById('hitokoto_error_text')
-  let hitokotoCategory = document.getElementById('hitokoto_text_parent').getAttribute('hitokotoCategory')
-  window.addEventListener('load', function () {
-    let url = 'https://v1.hitokoto.cn'
-    if (hitokotoCategory) {
-      url += '?c=' + hitokotoCategory
-    }
-    fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        hitokotoText.innerText = "「 " + data.hitokoto + " 」 from " + data.from
-        hitokotoText.href = 'https://hitokoto.cn/?uuid=' + data.uuid
-      })
-      .catch((reason) => {
-        console.error(11, reason)
-        hitokotoText.style.display = 'none'
-        hitokotoErroText.style.display = 'block'
-      })
-  })
-</script>
-    
         
         
   <div class="nexmoe-widget-wrap">
@@ -493,8 +451,7 @@
 <p><img src="https://blog-file.hehouhui.cn/202203222155695.png"></p>
 <p><strong>这两种对象访问方式各有优势。使用句柄来访问的最大好处是 reference 中存储的是稳定的句柄地址，在对象被移动时只会改变句柄中的实例数据指针，而 reference 本身不需要修改。使用直接指针访问方式最大的好处就是速度快，它节省了一次指针定位的时间开销。</strong></p>
 
-    <p><img src="https://i.dawnlab.me/53a8c7cf3ad77a0f0a456ce2c6afe88a.png" loading="lazy"></p>
-
+    
   </article>
 
   
@@ -519,7 +476,7 @@
 </div>
   
   
-    <script async src="/js/copy-codeblock.js?v=1698751493276"></script>
+    <script async src="/js/copy-codeblock.js?v=1699195159870"></script>
   
 
   

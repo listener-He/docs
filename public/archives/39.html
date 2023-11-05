@@ -1,16 +1,16 @@
 <!doctype html>
 <html lang="zh"><head>
-<title>wkhtmltopdf详细使用 - Honesty wiki</title>
+<title>wkhtmltopdf详细使用 - Honesty Wiki</title>
 <meta charset="UTF-8">
 <meta name="keywords" content="Honesty 知识库,Honesty Wiki, Honesty blog,hehouhui 知识库,hehouhui Wiki, hehouhui blog">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
 
-<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+<link rel="shortcut icon" href="https://www.make.com/en/favicon.ico" type="image/x-icon" />
 <meta name="description" content="wkhtmltopdf 精讲(原文) 作者：JSON_NULL 术语定义文档对象“文档对象”是指 PDF 文档中的文档对象，共有三种类型的“文档对象”，他们分别是“页面对象”，“封面对象”和“目录对象”。 页面对象“页面对象”是指以页面的形式在 PDF 文档中呈现的对象，这个是相对于“封面对象”和“目录对象”来讲的。此类对象会成为 PDF 文档中内容。 封面对象“封面对象”是指以封面的形式在 PD">
 <meta property="og:type" content="article">
 <meta property="og:title" content="wkhtmltopdf详细使用">
 <meta property="og:url" content="https://docs.hehouhui.cn/archives/39.html">
-<meta property="og:site_name" content="Honesty wiki">
+<meta property="og:site_name" content="Honesty Wiki">
 <meta property="og:description" content="wkhtmltopdf 精讲(原文) 作者：JSON_NULL 术语定义文档对象“文档对象”是指 PDF 文档中的文档对象，共有三种类型的“文档对象”，他们分别是“页面对象”，“封面对象”和“目录对象”。 页面对象“页面对象”是指以页面的形式在 PDF 文档中呈现的对象，这个是相对于“封面对象”和“目录对象”来讲的。此类对象会成为 PDF 文档中内容。 封面对象“封面对象”是指以封面的形式在 PD">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3060014-05914583ee52091d.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1140/format/webp">
@@ -26,15 +26,15 @@
 <link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
 
 
-<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1698751493478">
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1699195160050">
 
-<link rel="stylesheet" href="/css/style.css?v=1698751493478">
+<link rel="stylesheet" href="/css/style.css?v=1699195160050">
 
 
 
 
     
-        <link rel="stylesheet" href="/custom.css?v=1698751493478">
+        <link rel="stylesheet" href="/custom.css?v=1699195160050">
     
 
 
@@ -44,7 +44,7 @@
 <script src="/lib/lax.min.js" async></script>
 
 
-<script async src="/js/app.js?v=1698751493478"></script>
+<script async src="/js/app.js?v=1699195160050"></script>
 
  
 
@@ -78,14 +78,14 @@
             </div>
         </a>
         
-        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archive.html" title="文章归档">
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/history.html" title="文章归档">
             <i class="mdui-list-item-icon nexmoefont icon-container"></i>
             <div class="mdui-list-item-content">
                 文章归档
             </div>
         </a>
         
-        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/PY.html" title="我的朋友">
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/friend.html" title="我的朋友">
             <i class="mdui-list-item-icon nexmoefont icon-unorderedlist"></i>
             <div class="mdui-list-item-content">
                 我的朋友
@@ -273,48 +273,6 @@
 
     
         
-        <!-- 一言 -->
-<div class="nexmoe-widget-wrap">
-  <h3 class="nexmoe-widget-title">
-    一言
-  </h3>
-  <div class="nexmoe-widget">
-    <ul class="hitokoto-box">
-      <li id="hitokoto_text_parent" class="hitokoto-text" hitokotoCategory="">
-        <a href="#" id="hitokoto_text">
-          
-        </a>
-        <a href="#" id="hitokoto_error_text" style="display: none;">
-          
-        </a>
-      </li>
-    </ul>
-  </div>
-</div>
-
-<script>
-  let hitokotoText = document.getElementById('hitokoto_text')
-  let hitokotoErroText = document.getElementById('hitokoto_error_text')
-  let hitokotoCategory = document.getElementById('hitokoto_text_parent').getAttribute('hitokotoCategory')
-  window.addEventListener('load', function () {
-    let url = 'https://v1.hitokoto.cn'
-    if (hitokotoCategory) {
-      url += '?c=' + hitokotoCategory
-    }
-    fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        hitokotoText.innerText = "「 " + data.hitokoto + " 」 from " + data.from
-        hitokotoText.href = 'https://hitokoto.cn/?uuid=' + data.uuid
-      })
-      .catch((reason) => {
-        console.error(11, reason)
-        hitokotoText.style.display = 'none'
-        hitokotoErroText.style.display = 'block'
-      })
-  })
-</script>
-    
         
         
   <div class="nexmoe-widget-wrap">
@@ -401,24 +359,60 @@
 <h3 id="大纲"><a href="#大纲" class="headerlink" title="大纲"></a>大纲</h3><p>“大纲”是指阅读 PDF 文档时的书签导航。</p>
 <h3 id="外链"><a href="#外链" class="headerlink" title="外链"></a>外链</h3><p>“外链”是指所有在这个页面中且不指向它自身页面中锚点的超链接。</p>
 <h3 id="内链"><a href="#内链" class="headerlink" title="内链"></a>内链</h3><p>“内链”是指在这个页面中且指向的目标页面是这个页面本身中的一个锚点的超链接。</p>
-<h2 id="命令格式"><a href="#命令格式" class="headerlink" title="命令格式"></a>命令格式</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wkhtmltopdf [GLOBAL OPTION]... [OBJECT]... &lt;output file&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="命令格式"><a href="#命令格式" class="headerlink" title="命令格式"></a>命令格式</h2><pre class="line-numbers language-text" data-language="text"><code class="language-text">wkhtmltopdf [GLOBAL OPTION]... [OBJECT]... &lt;output file>
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p>上述代码就是 wkhtmltopdf 的命令行格式，看似简单，其实在 <code>[GLOBAL OPTION]</code> 和 <code>[OBJECT]</code> 中还别有洞天。预知详情，且听我慢慢道来。</p>
 <h2 id="文档对象简介"><a href="#文档对象简介" class="headerlink" title="文档对象简介"></a>文档对象简介</h2><p>wkhtmltopdf 能够把多个“对象”合并生成一个 pdf 文档，这些“对象”可以是“页面对象”、“封面对象”、或是“目录对象”。这些对象在 pdf 文档中的顺序可以通过命令行参数来指定。命令行参数包括两部分，一种是针对某一特定“对象”的命令行参数，另一种是全局的命令行参数。并且全局的命令行参数只能放在全局参数区([GLOBAL OPTION])中指定。</p>
 <h3 id="页面对象简介"><a href="#页面对象简介" class="headerlink" title="页面对象简介"></a>页面对象简介</h3><p>“页面对象”作用是用来把一个网页作为内容输出到 PDF 文档中。</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(page)? &lt;input url/file name&gt; [PAGE OPTION]...</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">(page)? &lt;input url/file name> [PAGE OPTION]...
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p>“页面对象”的参数可以放在“全局参数域([GLOBAL OPTIONS])”和“页面参数域([PAGE OPTIONS])”。程序会根据实际情况在所有参数中找到合适的参数应用到页面、页眉和页脚。</p>
 <h3 id="封面对象简介"><a href="#封面对象简介" class="headerlink" title="封面对象简介"></a>封面对象简介</h3><p>“封面对象”用来把一个网页作为封面输出到 PDF 文档中，输出的页面不会在 TOC 中出现，并且不会包含页眉和页脚。</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cover &lt;input url/file name&gt; [PAGE OPTION]...</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">cover &lt;input url/file name> [PAGE OPTION]...
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p>所有能够在“页面对象”中使用的参数都可以用到“封面对象”</p>
 <h3 id="目录对象简介"><a href="#目录对象简介" class="headerlink" title="目录对象简介"></a>目录对象简介</h3><p>“目录对象”的作用是输出一个目录到 PDF 文件中。</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">toc [TOC OPTION]...</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">toc [TOC OPTION]...
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p>所有能够在“页面对象”中使用的参数都可以用到“TOC 对象”，并且还有许多的针对“TOC 对象”的参数可以应用到“TOC 对象”中。目录是通过 XSLT 生成的，这就意味着它可以被定义成任何你想看到的样子。你可以通过命令行参数 <code>--dump-default-toc-xsl</code> 输出默认的 XSLT 文档，通过 <code>--dump-outline</code> 命令行参数 可指定以 XML 格式输出当前处理文档的目录到指定文件。更多详细内容请查看后面介绍的 <strong>目录对象参数</strong></p>
 <h2 id="命令参数"><a href="#命令参数" class="headerlink" title="命令参数"></a>命令参数</h2><p>命令参数包含五部分，分别是“全局参数”，“大纲参数选项”，“页面对象参数”，“页眉和页脚参数选项”和“目录对象参数”。</p>
-<h3 id="全局参数"><a href="#全局参数" class="headerlink" title="全局参数"></a>全局参数</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">    --collate             当输出多个副本时进行校验(这是默认设置)</span><br><span class="line">    --no-collate          当输出多个副本时不进行校验</span><br><span class="line">    --cookie-jar &lt;path&gt;   从提供的JAR文件中读写cookie数据</span><br><span class="line">    --copies &lt;number&gt;     设置输出副本的数量(默认主1)，其实为1就够了</span><br><span class="line">-d, --dpi &lt;dpi&gt;           指定一个要分辨率(这在 X11 系统中并没有什么卵用)</span><br><span class="line">-H, --extended-help       相对 -h 参数，显示更详细的说明文档</span><br><span class="line">-g, --grayscale           指定以灰度图生成PDF文档。占用的空间更小</span><br><span class="line">-h, --help                显示帮助信息</span><br><span class="line">    --htmldoc             输出程序的html帮助文档</span><br><span class="line">    --image-dpi &lt;integer&gt; 当页面中有内嵌的图片时，</span><br><span class="line">                          会下载此命令行参数指定尺寸的图片(默认值是 600)</span><br><span class="line">    --image-quality &lt;interger&gt; 当使用 jpeg 算法压缩图片时使用这个参数指定的质量(默认为 94)</span><br><span class="line">    --license             输出授权信息并退出</span><br><span class="line">-l, --lowquality          生成低质量的 PDF/PS ,能够很好的节约最终生成文档所占存储空间</span><br><span class="line">    --manpage             输出程序的手册页</span><br><span class="line">-B, --margin-bottom &lt;unitreal&gt; 设置页面的 底边距</span><br><span class="line">-L, --margin-left &lt;unitreal&gt;   设置页面的 左边距 (默认是 10mm)</span><br><span class="line">-R, --margin-right &lt;unitreal&gt;  设置页面的 右边距 (默认是 10mm)</span><br><span class="line">-T, --margin-top &lt;unitreal&gt;    设置页面的 上边距</span><br><span class="line">-O, --orientation &lt;orientation&gt; 设置为“风景(Landscape)”或“肖像(Portrait)”模式,</span><br><span class="line">                                默认是肖像模块(Portrait)</span><br><span class="line">    --page-height &lt;unitreal&gt;   页面高度</span><br><span class="line">-s, --page-size &lt;Size&gt;         设置页面的尺寸，如：A4,Letter等，默认是：A4</span><br><span class="line">    --page-width &lt;unitreal&gt;    页面宽度</span><br><span class="line">    --no-pdf-compression       不对PDF对象使用丢失少量信息的压缩算法，不建议使用些参数，</span><br><span class="line">                               因为生成的PDF文件会非常大。</span><br><span class="line">-q, --quiet                    静态模式，不在标准输出中打印任何信息</span><br><span class="line">    --read-args-from-stdin     从标准输入中读取命令行参数，后续会有针对此指令的详细介绍，</span><br><span class="line">                               请参见 **从标准输入获取参数**</span><br><span class="line">    --readme                   输出程序的 readme 文档</span><br><span class="line">    --title &lt;text&gt;             生成的PDF文档的标题，如果不指定则使用第一个文档的标题</span><br><span class="line">-V, --version                  输出版本信息后退出</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="全局参数"><a href="#全局参数" class="headerlink" title="全局参数"></a>全局参数</h3><pre class="line-numbers language-text" data-language="text"><code class="language-text">    --collate             当输出多个副本时进行校验(这是默认设置)
+    --no-collate          当输出多个副本时不进行校验
+    --cookie-jar &lt;path>   从提供的JAR文件中读写cookie数据
+    --copies &lt;number>     设置输出副本的数量(默认主1)，其实为1就够了
+-d, --dpi &lt;dpi>           指定一个要分辨率(这在 X11 系统中并没有什么卵用)
+-H, --extended-help       相对 -h 参数，显示更详细的说明文档
+-g, --grayscale           指定以灰度图生成PDF文档。占用的空间更小
+-h, --help                显示帮助信息
+    --htmldoc             输出程序的html帮助文档
+    --image-dpi &lt;integer> 当页面中有内嵌的图片时，
+                          会下载此命令行参数指定尺寸的图片(默认值是 600)
+    --image-quality &lt;interger> 当使用 jpeg 算法压缩图片时使用这个参数指定的质量(默认为 94)
+    --license             输出授权信息并退出
+-l, --lowquality          生成低质量的 PDF/PS ,能够很好的节约最终生成文档所占存储空间
+    --manpage             输出程序的手册页
+-B, --margin-bottom &lt;unitreal> 设置页面的 底边距
+-L, --margin-left &lt;unitreal>   设置页面的 左边距 (默认是 10mm)
+-R, --margin-right &lt;unitreal>  设置页面的 右边距 (默认是 10mm)
+-T, --margin-top &lt;unitreal>    设置页面的 上边距
+-O, --orientation &lt;orientation> 设置为“风景(Landscape)”或“肖像(Portrait)”模式,
+                                默认是肖像模块(Portrait)
+    --page-height &lt;unitreal>   页面高度
+-s, --page-size &lt;Size>         设置页面的尺寸，如：A4,Letter等，默认是：A4
+    --page-width &lt;unitreal>    页面宽度
+    --no-pdf-compression       不对PDF对象使用丢失少量信息的压缩算法，不建议使用些参数，
+                               因为生成的PDF文件会非常大。
+-q, --quiet                    静态模式，不在标准输出中打印任何信息
+    --read-args-from-stdin     从标准输入中读取命令行参数，后续会有针对此指令的详细介绍，
+                               请参见 **从标准输入获取参数**
+    --readme                   输出程序的 readme 文档
+    --title &lt;text>             生成的PDF文档的标题，如果不指定则使用第一个文档的标题
+-V, --version                  输出版本信息后退出
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>上述代码区是所有全局参数及注释，下面简单说一下个别参数的意义及用法。</p>
 <h3 id="copies-N"><a href="#copies-N" class="headerlink" title="-copies N"></a>-copies N</h3><p>N 是一个正整数。</p>
@@ -428,7 +422,12 @@
 <h3 id="l-–lowquality"><a href="#l-–lowquality" class="headerlink" title="l, –lowquality"></a>l, –lowquality</h3><p>这个参数与 <code>-g</code> 参数有异曲同工之妙， <code>-l</code> 参数也会大大压缩 PDF 文档所占用的存储空间。只是它是通过降低 PDF 文档的质量来完成这一任务的。这个参数也值得推荐，你最好先尝试一下，看看使用此参数后生成的 PDF 文档与不使用此参数的区别再做决定。我可以告诉你的是，在纯文字的情况下他们的差别不大，此参数只是降低了 PDF 文档的质量，看上去是糙了一些，但不会影响阅读。如果你是一个追求感官享受，或是你生成的 PDF 文档中有大量图片，那就不要使用此参数了。</p>
 <h3 id="no-pdf-compression"><a href="#no-pdf-compression" class="headerlink" title="-no-pdf-compression"></a>-no-pdf-compression</h3><p>这个参数强烈建议不要使用，最好这辈子都不要去了解他的好，因为对于你来说肯定用不到。它的作用就是在输出 PDF 文档时，不使用任何的压缩。这将会导致输出的 PDF 文档特别的大，质量是无损的，但是对于人类来说从感观上根本察觉不到压缩前后的质量变化的。如果你的感观超乎于常人，压缩之后的体验对你来说无法接受，那我收回前面的话，你就尽情使用此参数吧。</p>
 <h3 id="q-–quiet"><a href="#q-–quiet" class="headerlink" title="q, –quiet"></a>q, –quiet</h3><p>使用这个参数后，你将得到一个干净的命令行输出，就连程序处理的进度和状态都没有。这个参数会抑制所有命令行输出，在程序的工作过程中，你看不到任何输出。建议不会使用此参数，因为程序输出一些进度和状态信息还是非常有用的。万一程序工作到某处死了呢(嘿嘿)，在 <code>-q</code> 模式下你是无法分辨是否程序死掉了的。</p>
-<h3 id="大纲参数选项"><a href="#大纲参数选项" class="headerlink" title="大纲参数选项"></a>大纲参数选项</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">--dump-default-toc-xsl     输出默认的 TOC xsl 样式表到标准输出</span><br><span class="line">--dump-outline &lt;file&gt;      输出“大纲”到指定的文件(文件内容为xml)</span><br><span class="line">--outline                  在生成的PDF文档中输出“大纲”(这是默认设置)</span><br><span class="line">--no-outline               不在pdf文档中输出大纲</span><br><span class="line">--outline-depth &lt;level&gt;    设置生成大纲的深度(默认为 4)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="大纲参数选项"><a href="#大纲参数选项" class="headerlink" title="大纲参数选项"></a>大纲参数选项</h3><pre class="line-numbers language-text" data-language="text"><code class="language-text">--dump-default-toc-xsl     输出默认的 TOC xsl 样式表到标准输出
+--dump-outline &lt;file>      输出“大纲”到指定的文件(文件内容为xml)
+--outline                  在生成的PDF文档中输出“大纲”(这是默认设置)
+--no-outline               不在pdf文档中输出大纲
+--outline-depth &lt;level>    设置生成大纲的深度(默认为 4)
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>大纲参数中唯一需要特别说一下的是 <code>--outline-depth</code> ，其他参数默认就好了。</p>
 <h3 id="何为大纲"><a href="#何为大纲" class="headerlink" title="何为大纲"></a>何为大纲</h3><p><img src="https://upload-images.jianshu.io/upload_images/3060014-05914583ee52091d.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1140/format/webp"></p>
@@ -438,7 +437,75 @@
 <li><code>-outline-depth</code> 用来指定生成的大纲的深度。默认值为 4。你可以指定一个大一些的数字，以保证所有在 HTML 中指定的 H 标签都能在大纲中生成对应的项，方便阅读时快速跳转。</li>
 </ul>
 <p>当指定了 <code>--no-outline</code> 参数时， 将不会输出大纲到 PDF 文档，所以再指定 <code>--outline-depth</code> 也就没有意义了。</p>
-<h3 id="页面对象参数"><a href="#页面对象参数" class="headerlink" title="页面对象参数"></a>页面对象参数</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line">    --allow &lt;path&gt;                指定加载HTML中相对路径文件的目录(可重复使用此参数指定多个</span><br><span class="line">                                  目录)，这个参数会在后面进行更详细的讲解</span><br><span class="line">    --background                  输出页面背景到PDF文档(这是默认设置)</span><br><span class="line">    --no-background               不输出页面背景到PDF文档</span><br><span class="line">    --cache-dir &lt;path&gt;            网页的缓存目录</span><br><span class="line">    --checkbox-checked-svg &lt;path&gt; 使用指定的SVG文件渲染选中的复选框</span><br><span class="line">    --checkbox-svg &lt;path&gt;         使用指定的SVG文件渲染未选中的筛选框</span><br><span class="line">    --cookie &lt;name&gt; &lt;value&gt;       设置访问网页时的cookie,value 需要进行url编码</span><br><span class="line">                                  (可重复使用此参数指定多个cookie)</span><br><span class="line">    --custom-header &lt;name&gt; &lt;value&gt; 设置访问网页时的HTTP头(可重复使用此参数指定多个HTTP头)</span><br><span class="line">    --custom-header-propagation   为每个要加载的资源添加由 --custom-header 指定的HTTP头</span><br><span class="line">    --no-custom-header-propagation 不为每个要加载的资源添加由 --custom-header 指定的HTTP头</span><br><span class="line">    --debug-javascript            显示javascript调试输出的信息</span><br><span class="line">    --no-debug-javascript         不显示javascript调试输出的信息(这是默认设置)</span><br><span class="line">    --default-header              添加一个默认的“头”，在页面的左头显示页面的名字，</span><br><span class="line">                                  在页面的右头显示页码，这相对于进行了如下设置：</span><br><span class="line">                                  --header-left=&#x27;[webpage]&#x27;</span><br><span class="line">                                  --header-right=&#x27;[page]/[toPage]&#x27;</span><br><span class="line">                                  --top 2cm</span><br><span class="line">                                  --header-line</span><br><span class="line">    --encoding &lt;encoding&gt;         为输入的文本设置默认的编码方式</span><br><span class="line">    --disable-external-links      禁止页面中的外链生成超链接</span><br><span class="line">    --enable-external-links       允许页面中的外链生成超链接(这是默认设置)</span><br><span class="line">    --disable-forms               不转换HTML表单为PDF表单(这是默认设置)</span><br><span class="line">    --enable-forms                转换HTML表单为PDF表单</span><br><span class="line">    --images                      加载图片并输出到PDF文档(这是默认设置)</span><br><span class="line">    --no-images                   在生成的PDF文档中过滤掉图片</span><br><span class="line">    --disable-internal-links      禁止页面中的内链生成超链接</span><br><span class="line">    --enable-internal-links       允许页面中的内链生成超连接(这是默认设置)</span><br><span class="line">-n, --disable-javascript          禁止WEB页面执行 javascript</span><br><span class="line">    --enable-javascript           允许WEB页面执行 javascript(这是默认设置)</span><br><span class="line">    --javascript-delay &lt;msec&gt;     延迟一定的毫秒等待javascript 执行完成(默认值是200)</span><br><span class="line">    --load-error-handling &lt;handler&gt; 指定当页面加载失败后的动作，可以指定为：abort(中止)、</span><br><span class="line">                                    ignore(忽略)、skip(跳过)；(默认值是：abort)</span><br><span class="line">    --load-media-error-handling &lt;handler&gt; 指定当媒体文件加载失败后的动作，可以指定为：</span><br><span class="line">                                          abort(中止)、ignore(忽略)、skip(跳过)；</span><br><span class="line">                                          (默认值是：ignore)</span><br><span class="line">    --disable-local-file-access   不允许一个本地文件加载其他的本地文件，使用命令行参数</span><br><span class="line">                                   `--allow` 指定的目录除外。</span><br><span class="line">    --enable-local-file-access    允许本地文件加载其他的本地文件(这是默认设置)</span><br><span class="line">    --minimum-font-size &lt;int&gt;     设置最小的字号，除非必要不推荐使用该参数</span><br><span class="line">    --exclude-from-outline        拒绝加载当前页面到PDF文档的目录和大纲中</span><br><span class="line">    --include-in-outline          加载当前页面到PDF文档的目录和大纲中(这是默认设置)</span><br><span class="line">    --page-offset &lt;offset&gt;        设置页码的起始值(默认值为0)</span><br><span class="line">    --password &lt;password&gt;         HTTP身份认证的密码</span><br><span class="line">    --disable-plugins             禁止使用插件(这是默认设置)</span><br><span class="line">    --enable-plugins              允许使用插件，但插件可能并不工作</span><br><span class="line">    --post &lt;name&gt; &lt;value&gt;         添加一个POST字段，可以重复使用该参数添加多个POST字段。</span><br><span class="line">    --post-file &lt;name&gt; &lt;value&gt;    添加一个POST文件，可以重复使用该参数添加多个文件。</span><br><span class="line">    --print-media-type            用显示媒体类型代替屏幕</span><br><span class="line">    --no-print-media-type         不用显示媒体类型代替屏幕</span><br><span class="line">-p, --proxy &lt;proxy&gt;               使用代理</span><br><span class="line">--radiobutton-checked-svg &lt;path&gt;  使用指定的SVG文件渲染选中的单选框</span><br><span class="line">--radiobutton-svg &lt;path&gt;          使用指定的SVG文件渲染未选中的单选框</span><br><span class="line">--run-sript &lt;js&gt;                  页面加载完成后执行一个附加的JS文件，可以重复使用此参数指定</span><br><span class="line">                                  多个要在页面加载完成后要执行的JS文件。</span><br><span class="line">--disable-smart-shrinking         不使用智能收缩策略</span><br><span class="line">--enable-smart-shrinking          使用智能收缩策略(这是默认设置)</span><br><span class="line">--stop-slow-scripts               停止运行缓慢的javascript代码(这是默认设置)</span><br><span class="line">--no-stop-slow-scripts            不停止运行缓慢的javascript代码</span><br><span class="line">--disable-toc-back-links          禁止从标题链接到目录(这是默认设置)</span><br><span class="line">--enable-toc-back-links           允许从标题链接到目录</span><br><span class="line">--user-style-sheet &lt;url&gt;          设置一个在每个页面都加载的用户自定义样式表</span><br><span class="line">--username &lt;username&gt;             HTTP身谁的用户名</span><br><span class="line">--viewport-size &lt;&gt;                设置窗口大小,需要你自定义滚动条或css属性来自适应窗口大小。</span><br><span class="line">--window-status &lt;windowStatus&gt;    Wait until window.status is equal to</span><br><span class="line">                                  this string before rendering page</span><br><span class="line">--zoom &lt;float&gt;                    设置转换成PDF时页面的缩放比例(默认为1)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="页面对象参数"><a href="#页面对象参数" class="headerlink" title="页面对象参数"></a>页面对象参数</h3><pre class="line-numbers language-text" data-language="text"><code class="language-text">    --allow &lt;path>                指定加载HTML中相对路径文件的目录(可重复使用此参数指定多个
+                                  目录)，这个参数会在后面进行更详细的讲解
+    --background                  输出页面背景到PDF文档(这是默认设置)
+    --no-background               不输出页面背景到PDF文档
+    --cache-dir &lt;path>            网页的缓存目录
+    --checkbox-checked-svg &lt;path> 使用指定的SVG文件渲染选中的复选框
+    --checkbox-svg &lt;path>         使用指定的SVG文件渲染未选中的筛选框
+    --cookie &lt;name> &lt;value>       设置访问网页时的cookie,value 需要进行url编码
+                                  (可重复使用此参数指定多个cookie)
+    --custom-header &lt;name> &lt;value> 设置访问网页时的HTTP头(可重复使用此参数指定多个HTTP头)
+    --custom-header-propagation   为每个要加载的资源添加由 --custom-header 指定的HTTP头
+    --no-custom-header-propagation 不为每个要加载的资源添加由 --custom-header 指定的HTTP头
+    --debug-javascript            显示javascript调试输出的信息
+    --no-debug-javascript         不显示javascript调试输出的信息(这是默认设置)
+    --default-header              添加一个默认的“头”，在页面的左头显示页面的名字，
+                                  在页面的右头显示页码，这相对于进行了如下设置：
+                                  --header-left='[webpage]'
+                                  --header-right='[page]/[toPage]'
+                                  --top 2cm
+                                  --header-line
+    --encoding &lt;encoding>         为输入的文本设置默认的编码方式
+    --disable-external-links      禁止页面中的外链生成超链接
+    --enable-external-links       允许页面中的外链生成超链接(这是默认设置)
+    --disable-forms               不转换HTML表单为PDF表单(这是默认设置)
+    --enable-forms                转换HTML表单为PDF表单
+    --images                      加载图片并输出到PDF文档(这是默认设置)
+    --no-images                   在生成的PDF文档中过滤掉图片
+    --disable-internal-links      禁止页面中的内链生成超链接
+    --enable-internal-links       允许页面中的内链生成超连接(这是默认设置)
+-n, --disable-javascript          禁止WEB页面执行 javascript
+    --enable-javascript           允许WEB页面执行 javascript(这是默认设置)
+    --javascript-delay &lt;msec>     延迟一定的毫秒等待javascript 执行完成(默认值是200)
+    --load-error-handling &lt;handler> 指定当页面加载失败后的动作，可以指定为：abort(中止)、
+                                    ignore(忽略)、skip(跳过)；(默认值是：abort)
+    --load-media-error-handling &lt;handler> 指定当媒体文件加载失败后的动作，可以指定为：
+                                          abort(中止)、ignore(忽略)、skip(跳过)；
+                                          (默认值是：ignore)
+    --disable-local-file-access   不允许一个本地文件加载其他的本地文件，使用命令行参数
+                                   `--allow` 指定的目录除外。
+    --enable-local-file-access    允许本地文件加载其他的本地文件(这是默认设置)
+    --minimum-font-size &lt;int>     设置最小的字号，除非必要不推荐使用该参数
+    --exclude-from-outline        拒绝加载当前页面到PDF文档的目录和大纲中
+    --include-in-outline          加载当前页面到PDF文档的目录和大纲中(这是默认设置)
+    --page-offset &lt;offset>        设置页码的起始值(默认值为0)
+    --password &lt;password>         HTTP身份认证的密码
+    --disable-plugins             禁止使用插件(这是默认设置)
+    --enable-plugins              允许使用插件，但插件可能并不工作
+    --post &lt;name> &lt;value>         添加一个POST字段，可以重复使用该参数添加多个POST字段。
+    --post-file &lt;name> &lt;value>    添加一个POST文件，可以重复使用该参数添加多个文件。
+    --print-media-type            用显示媒体类型代替屏幕
+    --no-print-media-type         不用显示媒体类型代替屏幕
+-p, --proxy &lt;proxy>               使用代理
+--radiobutton-checked-svg &lt;path>  使用指定的SVG文件渲染选中的单选框
+--radiobutton-svg &lt;path>          使用指定的SVG文件渲染未选中的单选框
+--run-sript &lt;js>                  页面加载完成后执行一个附加的JS文件，可以重复使用此参数指定
+                                  多个要在页面加载完成后要执行的JS文件。
+--disable-smart-shrinking         不使用智能收缩策略
+--enable-smart-shrinking          使用智能收缩策略(这是默认设置)
+--stop-slow-scripts               停止运行缓慢的javascript代码(这是默认设置)
+--no-stop-slow-scripts            不停止运行缓慢的javascript代码
+--disable-toc-back-links          禁止从标题链接到目录(这是默认设置)
+--enable-toc-back-links           允许从标题链接到目录
+--user-style-sheet &lt;url>          设置一个在每个页面都加载的用户自定义样式表
+--username &lt;username>             HTTP身谁的用户名
+--viewport-size &lt;>                设置窗口大小,需要你自定义滚动条或css属性来自适应窗口大小。
+--window-status &lt;windowStatus>    Wait until window.status is equal to
+                                  this string before rendering page
+--zoom &lt;float>                    设置转换成PDF时页面的缩放比例(默认为1)
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>上面代码段中只是对所有 <strong>页面对象参数</strong> 做了个大概的说明，下面针对个别主要参数做更详细的讲解。</p>
 <h3 id="allow"><a href="#allow" class="headerlink" title="-allow"></a>-allow</h3><p>这个参数只在“页面对象”是一个文件时有效，在“页面对象”是一个 url 时此参数无效。</p>
@@ -461,10 +528,36 @@
 <h3 id="enable-toc-back-links-AND-–disable-toc-back-links"><a href="#enable-toc-back-links-AND-–disable-toc-back-links" class="headerlink" title="-enable-toc-back-links AND –disable-toc-back-links"></a>-enable-toc-back-links AND –disable-toc-back-links</h3><p>这组参数用来设置，是否在 PDF 内容中的 H 标签处生成超链接。生成的超链接点击后会跳转到目录和大纲中该 H 标签对应的锚点位置。默认情况下 <code>--disable-toc-back-links</code> 参数被打开，不会在 PDF 文档的 H 标签处生成超链接。</p>
 <p>如果你需要在阅读 PDF 文档的内容时快速回到目录，你可以打开 <code>--enable-toc-back-links</code> 参数。</p>
 <h3 id="user-style-sheet"><a href="#user-style-sheet" class="headerlink" title="-user-style-sheet"></a>-user-style-sheet</h3><p>这个参数用来加载一个用户自定义的样式表，用来改变 HTML 页面原有的样式。需要高度自定义页面新式的同学可以尝试使用这个参数达到目的。</p>
-<h3 id="页眉和页脚参数选项"><a href="#页眉和页脚参数选项" class="headerlink" title="页眉和页脚参数选项"></a>页眉和页脚参数选项</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">--footer-center &lt;text&gt;        在页脚的居中部分显示页脚文本 &lt;text&gt;</span><br><span class="line">--footer-font-name &lt;name&gt;     设置页脚的字体 (默认为 Arial)</span><br><span class="line">--footer-font-size &lt;size&gt;     设置页脚的字体大小 (默认为 12)</span><br><span class="line">--footer-html &lt;url&gt;           添加一个html作为页脚</span><br><span class="line">--footer-left &lt;text&gt;          在页脚的居左部分显示页脚文本 &lt;text&gt;</span><br><span class="line">--footer-line                 在页脚上方显示一条直线分隔正文</span><br><span class="line">--no-footer-line              不使用直线分隔页脚与正文(这是默认设置)</span><br><span class="line">--footer-right &lt;text&gt;         在页脚的居右部分显示页脚文本 &lt;text&gt;</span><br><span class="line">--footer-spacing &lt;real&gt;       页脚与正文之间的距离(默认为零)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">--header-center &lt;text&gt;        在页眉的居中部分显示页眉文本 &lt;text&gt;</span><br><span class="line">--header-font-name &lt;name&gt;     设置页眉的字体 (默认为 Arial)</span><br><span class="line">--header-font-size &lt;size&gt;     设置页眉的字体大小 (默认为 12)</span><br><span class="line">--header-html &lt;url&gt;           添加一个html作为页眉</span><br><span class="line">--header-left &lt;text&gt;          在页眉的居左部分显示页眉文本 &lt;text&gt;</span><br><span class="line">--header-line                 在页眉下方显示一条直线分隔正文</span><br><span class="line">--no-header-line              不使用直线分隔页眉与正文(这是默认设置)</span><br><span class="line">--header-right &lt;text&gt;         在页眉的居右部分显示页眉文本 &lt;text&gt;</span><br><span class="line">--header-spacing &lt;real&gt;       页眉与正文之间的距离(默认为零)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="页眉和页脚参数选项"><a href="#页眉和页脚参数选项" class="headerlink" title="页眉和页脚参数选项"></a>页眉和页脚参数选项</h3><pre class="line-numbers language-text" data-language="text"><code class="language-text">--footer-center &lt;text>        在页脚的居中部分显示页脚文本 &lt;text>
+--footer-font-name &lt;name>     设置页脚的字体 (默认为 Arial)
+--footer-font-size &lt;size>     设置页脚的字体大小 (默认为 12)
+--footer-html &lt;url>           添加一个html作为页脚
+--footer-left &lt;text>          在页脚的居左部分显示页脚文本 &lt;text>
+--footer-line                 在页脚上方显示一条直线分隔正文
+--no-footer-line              不使用直线分隔页脚与正文(这是默认设置)
+--footer-right &lt;text>         在页脚的居右部分显示页脚文本 &lt;text>
+--footer-spacing &lt;real>       页脚与正文之间的距离(默认为零)
+
+
+--header-center &lt;text>        在页眉的居中部分显示页眉文本 &lt;text>
+--header-font-name &lt;name>     设置页眉的字体 (默认为 Arial)
+--header-font-size &lt;size>     设置页眉的字体大小 (默认为 12)
+--header-html &lt;url>           添加一个html作为页眉
+--header-left &lt;text>          在页眉的居左部分显示页眉文本 &lt;text>
+--header-line                 在页眉下方显示一条直线分隔正文
+--no-header-line              不使用直线分隔页眉与正文(这是默认设置)
+--header-right &lt;text>         在页眉的居右部分显示页眉文本 &lt;text>
+--header-spacing &lt;real>       页眉与正文之间的距离(默认为零)
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>页眉页脚的设置比较简单，看上述代码段中的解释已经非常明了，所以不再赘述。后面还有针对页眉与页脚的其他相关介绍。</p>
-<h3 id="目录对象参数"><a href="#目录对象参数" class="headerlink" title="目录对象参数"></a>目录对象参数</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">--disable-dotted-lines        在目录中不使用虚线</span><br><span class="line">--toc-header-text &lt;text&gt;      设置目录的页眉文本</span><br><span class="line">--toc-level-indentation &lt;width&gt; 第级标题在目录中的缩进宽度(默认为1em)</span><br><span class="line">--disable-toc-links           在目录中不生成指向内容锚点的超链接</span><br><span class="line">--toc-text-size-shrink &lt;real&gt; 在目录中每级标题的缩放比例(默认为0.8)</span><br><span class="line">--xsl-style-sheet &lt;file&gt;      使用自定义的 XSL 样式表显示目录内容</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="目录对象参数"><a href="#目录对象参数" class="headerlink" title="目录对象参数"></a>目录对象参数</h3><pre class="line-numbers language-text" data-language="text"><code class="language-text">--disable-dotted-lines        在目录中不使用虚线
+--toc-header-text &lt;text>      设置目录的页眉文本
+--toc-level-indentation &lt;width> 第级标题在目录中的缩进宽度(默认为1em)
+--disable-toc-links           在目录中不生成指向内容锚点的超链接
+--toc-text-size-shrink &lt;real> 在目录中每级标题的缩放比例(默认为0.8)
+--xsl-style-sheet &lt;file>      使用自定义的 XSL 样式表显示目录内容
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>“目录对象”我们一般用不到，上述代码段中的讲解也不难懂，所以不针对每一个具体参数再做详细的讲解。</p>
 <h2 id="关于页面尺寸说明"><a href="#关于页面尺寸说明" class="headerlink" title="关于页面尺寸说明"></a>关于页面尺寸说明</h2><p>默认的页面尺寸是 A4，你可以使用 <code>--page-size</code> 参数指定你想要的页面尺寸，如：A3，Letter 和 Legal 等。想要查看本程序支持的所有页面尺寸，请访问 <a target="_blank" rel="noopener" href="http://qt-project.org/doc/qt-4.8/qprinter.html#PaperSize-enum">http://qt-project.org/doc/qt-4.8/qprinter.html#PaperSize-enum</a></p>
@@ -472,38 +565,84 @@
 <h2 id="从标准输入获取参数"><a href="#从标准输入获取参数" class="headerlink" title="从标准输入获取参数"></a>从标准输入获取参数</h2><p>如果你需要对许多页面进行批量的处理，并且感觉 wkhtmltopdf 开启比较慢，你可以尝试使用 <code>--read-args-from-stdin</code> 参数。</p>
 <p>wkhtmltopdf 命令会为 <code>--read-args-from-stdin</code> 参数发送过来的每一行进行一次单独命令调用。也就是说此参数每读取一行都会执行一次 wkhtmltopdf 命令。而最终执行的命令中的参数是命令行中参数与此参数读取的标准输入流中参数的结合。</p>
 <p>下面的代码段是一个例子:</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;&lt;http://qt-project.org/doc/qt-4.8/qapplication.html&gt; qapplication.pdf&quot; &gt;&gt; cmds</span><br><span class="line">echo &quot;cover google.com &lt;http://en.wikipedia.org/wiki/Qt_(software)&gt; qt.pdf&quot; &gt;&gt; cmds</span><br><span class="line">wkhtmltopdf --read-args-from-stdin --book &lt; cmds</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">echo "&lt;http://qt-project.org/doc/qt-4.8/qapplication.html> qapplication.pdf" >> cmds
+echo "cover google.com &lt;http://en.wikipedia.org/wiki/Qt_(software)> qt.pdf" >> cmds
+wkhtmltopdf --read-args-from-stdin --book &lt; cmds
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 
 <h2 id="指令一个代理"><a href="#指令一个代理" class="headerlink" title="指令一个代理"></a>指令一个代理</h2><p>默认情况下代理信息将读取环境变量:proxy、all_proxy 和 http_proxy,代理选项还可以通过指定 <code>-p</code> 参数开启。</p>
 <p>使用 BNF 对代理的定义如下：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;type&gt; := &quot;http://&quot; | &quot;socks5://&quot;</span><br><span class="line">&lt;serif&gt; := &lt;username&gt; (&quot;:&quot; &lt;password&gt;)? &quot;@&quot;</span><br><span class="line">&lt;proxy&gt; := &quot;None&quot; | &lt;type&gt;? &lt;serif&gt;? &lt;host&gt; (&quot;:&quot; &lt;port&gt;)?</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">&lt;type> := "http://" | "socks5://"
+&lt;serif> := &lt;username> (":" &lt;password>)? "@"
+&lt;proxy> := "None" | &lt;type>? &lt;serif>? &lt;host> (":" &lt;port>)?
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 
 <p>如果你不熟悉 BNF 的话，下面的代码段中是三个例子:</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;http://user:password@myproxyserver:8080&gt;</span><br><span class="line">socks5://myproxyserver</span><br><span class="line">None</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">&lt;http://user:password@myproxyserver:8080>
+socks5://myproxyserver
+None
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 
 <h2 id="页眉和页脚"><a href="#页眉和页脚" class="headerlink" title="页眉和页脚"></a>页眉和页脚</h2><p>页眉和页脚可以使用参数 <code>--header-*</code> 和 <code>--footer-*</code> 添加到文件中。有些参数(如 <code>--footer-left</code>)需要提供一个字符串<code>text</code>作为参数值。你可以在 <code>text</code>中插入下述变量，他们将会被替换成对应的值。</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[page]       当前正在被输出页面的页码</span><br><span class="line">[frompage]   第一页在文档中的页码</span><br><span class="line">[topage]     最后一面在文档中的页码</span><br><span class="line">[webpage]    当前正在被输出页面的URL</span><br><span class="line">[section]    当前正在被输出的章节的名字</span><br><span class="line">[subsection] 当前正在被输出的小节的名字</span><br><span class="line">[date]       本地系统格式的当前日期</span><br><span class="line">[isodate]    ISO 8601 格式的当前日期</span><br><span class="line">[time]       本地系统格式的当前时间</span><br><span class="line">[title]      当前对象的标题</span><br><span class="line">[doctitle]   输出文档的标题</span><br><span class="line">[sitepage]   当前正在处理的对象中当前页面的页码</span><br><span class="line">[sitepages]  当前正在处理的对象中的总页数</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">[page]       当前正在被输出页面的页码
+[frompage]   第一页在文档中的页码
+[topage]     最后一面在文档中的页码
+[webpage]    当前正在被输出页面的URL
+[section]    当前正在被输出的章节的名字
+[subsection] 当前正在被输出的小节的名字
+[date]       本地系统格式的当前日期
+[isodate]    ISO 8601 格式的当前日期
+[time]       本地系统格式的当前时间
+[title]      当前对象的标题
+[doctitle]   输出文档的标题
+[sitepage]   当前正在处理的对象中当前页面的页码
+[sitepages]  当前正在处理的对象中的总页数
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>举一个例子来说明吧，<code>--header-right &quot;Page [page] of [toPage]&quot;</code>, 会在页面的右上角生成一个类似 <code>Page x of y</code> 的字符串，其中 <code>x</code> 是当前页面的页码， <code>y</code> 是当前文档最后一页的页码。</p>
 <p>页眉和页脚也可以通过 HTML 文档来提供。 同样举一个例子，使用命令行参数 <code>--header-html header.html</code> 来生成页眉，而 header.html 的内容如下:</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;&lt;head&gt;&lt;script&gt;</span><br><span class="line">function subst() &#123;</span><br><span class="line">  var vars=&#123;&#125;;</span><br><span class="line">  var x=window.location.search.substring(1).split(&#x27;&amp;&#x27;);</span><br><span class="line">  for (var i in x) &#123;var z=x[i].split(&#x27;=&#x27;,2);vars[z[0]] = unescape(z[1]);&#125;</span><br><span class="line">  var x=[&#x27;frompage&#x27;,&#x27;topage&#x27;,&#x27;page&#x27;,&#x27;webpage&#x27;,&#x27;section&#x27;,&#x27;subsection&#x27;,&#x27;subsubsection&#x27;];</span><br><span class="line">  for (var i in x) &#123;</span><br><span class="line">    var y = document.getElementsByClassName(x[i]);</span><br><span class="line">    for (var j=0; j&lt;y.length; ++j) y[j].textContent = vars[x[i]];</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;&lt;/head&gt;&lt;body style=&quot;border:0; margin: 0;&quot; onload=&quot;subst()&quot;&gt;</span><br><span class="line">&lt;table style=&quot;border-bottom: 1px solid black; width: 100%&quot;&gt;</span><br><span class="line">  &lt;tr&gt;</span><br><span class="line">    &lt;td class=&quot;section&quot;&gt;&lt;/td&gt;</span><br><span class="line">    &lt;td style=&quot;text-align:right&quot;&gt;</span><br><span class="line">      Page &lt;span class=&quot;page&quot;&gt;&lt;/span&gt; of &lt;span class=&quot;topage&quot;&gt;&lt;/span&gt;</span><br><span class="line">    &lt;/td&gt;</span><br><span class="line">  &lt;/tr&gt;</span><br><span class="line">&lt;/table&gt;</span><br><span class="line">&lt;/body&gt;&lt;/html&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">&lt;html>&lt;head>&lt;script>
+function subst() &#123;
+  var vars=&#123;&#125;;
+  var x=window.location.search.substring(1).split('&amp;');
+  for (var i in x) &#123;var z=x[i].split('=',2);vars[z[0]] = unescape(z[1]);&#125;
+  var x=['frompage','topage','page','webpage','section','subsection','subsubsection'];
+  for (var i in x) &#123;
+    var y = document.getElementsByClassName(x[i]);
+    for (var j=0; j&lt;y.length; ++j) y[j].textContent = vars[x[i]];
+  &#125;
+&#125;
+&lt;/script>&lt;/head>&lt;body style="border:0; margin: 0;" onload="subst()">
+&lt;table style="border-bottom: 1px solid black; width: 100%">
+  &lt;tr>
+    &lt;td class="section">&lt;/td>
+    &lt;td style="text-align:right">
+      Page &lt;span class="page">&lt;/span> of &lt;span class="topage">&lt;/span>
+    &lt;/td>
+  &lt;/tr>
+&lt;/table>
+&lt;/body>&lt;/html>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <h2 id="大纲-Outlines"><a href="#大纲-Outlines" class="headerlink" title="大纲(Outlines)"></a>大纲(Outlines)</h2><p>wkhtmltopdf 可以使用 <code>--outline</code> 命令行参数来指定在 PDF 就要中输出像书本中目录一样的“大纲”，“大纲”是基本 HTML 文档中 H 标签生成的，具体的大纲的层级和尝试请移步 <strong>目录</strong></p>
 <p>如果 HTML 文档中的 H 标签等级比较多，就可以生成深层级树形结构的“大纲”，而生成“大纲”的真实深度是通过 <code>--outline-depth</code> 参数来控制。</p>
 <h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><p>通过在命令行中添加 TOC 对象 可以把一个目录添加到生成的 PDF 文档中，例如下面的代码段：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wkhtmltopdf toc &lt;http://qt-project.org/doc/qt-4.8/qstring.html&gt; qstring.pdf</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">wkhtmltopdf toc &lt;http://qt-project.org/doc/qt-4.8/qstring.html> qstring.pdf
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p>生成的目录也是基于 HTML 文档的 H 标签。过程是首先生成一个 XML 文档,然后使用 XSLT 转换为 HTML。<br>生成的 XML 文档可以通过 <code>--dump-outline</code> 参数查看。</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wkhtmltopdf --dump-outline toc.xml &lt;http://qt-project.org/doc/qt-4.8/qstring.html&gt; qstring.pdf</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">wkhtmltopdf --dump-outline toc.xml &lt;http://qt-project.org/doc/qt-4.8/qstring.html> qstring.pdf
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p>你如果想要使用自定义的 XSLT 文档可以通过 <code>--xsl-style-sheet</code> 参数指定</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wkhtmltopdf toc --xsl-style-sheet my.xsl &lt;http://qt-project.org/doc/qt-4.8/qstring.html&gt; qstring.pdf</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">wkhtmltopdf toc --xsl-style-sheet my.xsl &lt;http://qt-project.org/doc/qt-4.8/qstring.html> qstring.pdf
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p>你可以使用 <code>--dump-default-toc-xsl</code> 参数把默认的 XSLT 文档打印到标准输出，然后基于它创建你的自定义 XSLT 文档。</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wkhtmltopdf --dump-default-toc-xsl</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">wkhtmltopdf --dump-default-toc-xsl
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-    <p><img src="https://i.dawnlab.me/53a8c7cf3ad77a0f0a456ce2c6afe88a.png" loading="lazy"></p>
-
+    
   </article>
 
   
@@ -528,7 +667,7 @@
 </div>
   
   
-    <script async src="/js/copy-codeblock.js?v=1698751493251"></script>
+    <script async src="/js/copy-codeblock.js?v=1699195159862"></script>
   
 
   

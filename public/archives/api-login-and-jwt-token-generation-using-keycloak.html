@@ -1,16 +1,16 @@
 <!doctype html>
 <html lang="zh"><head>
-<title>使用 Keycloak 的 API 登录和 JWT 令牌生成 - Honesty wiki</title>
+<title>使用 Keycloak 的 API 登录和 JWT 令牌生成 - Honesty Wiki</title>
 <meta charset="UTF-8">
 <meta name="keywords" content="Honesty 知识库,Honesty Wiki, Honesty blog,hehouhui 知识库,hehouhui Wiki, hehouhui blog">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
 
-<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+<link rel="shortcut icon" href="https://www.make.com/en/favicon.ico" type="image/x-icon" />
 <meta name="description" content="Red Hat 单点登录(SSO) — 或其开源版本 Keycloak — 是 Web SSO 功能的领先产品之一，它基于流行的标准，例如安全断言标记语言 (SAML) 2.0、OpenID Connect 和 OAuth 2.0。Red Hat SSO 最强大的功能之一是我们可以通过多种方式直接访问 Keycloak，无论是通过简单的 HTML 登录表单，还是通过 API 调用。在以下场景中，我">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用 Keycloak 的 API 登录和 JWT 令牌生成">
 <meta property="og:url" content="https://docs.hehouhui.cn/archives/api-login-and-jwt-token-generation-using-keycloak.html">
-<meta property="og:site_name" content="Honesty wiki">
+<meta property="og:site_name" content="Honesty Wiki">
 <meta property="og:description" content="Red Hat 单点登录(SSO) — 或其开源版本 Keycloak — 是 Web SSO 功能的领先产品之一，它基于流行的标准，例如安全断言标记语言 (SAML) 2.0、OpenID Connect 和 OAuth 2.0。Red Hat SSO 最强大的功能之一是我们可以通过多种方式直接访问 Keycloak，无论是通过简单的 HTML 登录表单，还是通过 API 调用。在以下场景中，我">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2019/12/keycloak01-1.png?itok=WywnX4-4">
@@ -27,8 +27,8 @@
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="开发">
 <meta property="article:tag" content="建站">
-<meta property="article:tag" content="keycloak">
 <meta property="article:tag" content="oauth">
+<meta property="article:tag" content="keycloak">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2019/12/keycloak01-1.png?itok=WywnX4-4">
 
@@ -36,15 +36,15 @@
 <link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
 
 
-<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1698751493434">
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1699195160023">
 
-<link rel="stylesheet" href="/css/style.css?v=1698751493434">
+<link rel="stylesheet" href="/css/style.css?v=1699195160023">
 
 
 
 
     
-        <link rel="stylesheet" href="/custom.css?v=1698751493434">
+        <link rel="stylesheet" href="/custom.css?v=1699195160023">
     
 
 
@@ -54,7 +54,7 @@
 <script src="/lib/lax.min.js" async></script>
 
 
-<script async src="/js/app.js?v=1698751493434"></script>
+<script async src="/js/app.js?v=1699195160023"></script>
 
  
 
@@ -88,14 +88,14 @@
             </div>
         </a>
         
-        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archive.html" title="文章归档">
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/history.html" title="文章归档">
             <i class="mdui-list-item-icon nexmoefont icon-container"></i>
             <div class="mdui-list-item-content">
                 文章归档
             </div>
         </a>
         
-        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/PY.html" title="我的朋友">
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/friend.html" title="我的朋友">
             <i class="mdui-list-item-icon nexmoefont icon-unorderedlist"></i>
             <div class="mdui-list-item-content">
                 我的朋友
@@ -283,48 +283,6 @@
 
     
         
-        <!-- 一言 -->
-<div class="nexmoe-widget-wrap">
-  <h3 class="nexmoe-widget-title">
-    一言
-  </h3>
-  <div class="nexmoe-widget">
-    <ul class="hitokoto-box">
-      <li id="hitokoto_text_parent" class="hitokoto-text" hitokotoCategory="">
-        <a href="#" id="hitokoto_text">
-          
-        </a>
-        <a href="#" id="hitokoto_error_text" style="display: none;">
-          
-        </a>
-      </li>
-    </ul>
-  </div>
-</div>
-
-<script>
-  let hitokotoText = document.getElementById('hitokoto_text')
-  let hitokotoErroText = document.getElementById('hitokoto_error_text')
-  let hitokotoCategory = document.getElementById('hitokoto_text_parent').getAttribute('hitokotoCategory')
-  window.addEventListener('load', function () {
-    let url = 'https://v1.hitokoto.cn'
-    if (hitokotoCategory) {
-      url += '?c=' + hitokotoCategory
-    }
-    fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        hitokotoText.innerText = "「 " + data.hitokoto + " 」 from " + data.from
-        hitokotoText.href = 'https://hitokoto.cn/?uuid=' + data.uuid
-      })
-      .catch((reason) => {
-        console.error(11, reason)
-        hitokotoText.style.display = 'none'
-        hitokotoErroText.style.display = 'block'
-      })
-  })
-</script>
-    
         
         
   <div class="nexmoe-widget-wrap">
@@ -428,21 +386,40 @@
 <p>图 7：设置新客户的凭据。”&gt;</p>
 <h1 id="测试你的新客户"><a href="#测试你的新客户" class="headerlink" title="测试你的新客户"></a>测试你的新客户</h1><p>现在我们可以通过 REST API 来测试我们新创建的客户端来模拟一个简单的登录。我们的身份验证 URL 是</p>
 <p>填写参数并使用我们的用户名和密码设置 client_id 和 client_secret：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">curl -L -X POST &#x27;http://localhost:8080/auth/realms/whatever-realm/protocol/openid-connect/token&#x27; \</span><br><span class="line">-H &#x27;Content-Type: application/x-www-form-urlencoded&#x27; \</span><br><span class="line">--data-urlencode &#x27;client_id=clientid-03&#x27; \</span><br><span class="line">--data-urlencode &#x27;grant_type=password&#x27; \</span><br><span class="line">--data-urlencode &#x27;client_secret=ec78c6bb-8339-4bed-9b1b-e973d27107dc&#x27; \</span><br><span class="line">--data-urlencode &#x27;scope=openid&#x27; \</span><br><span class="line">--data-urlencode &#x27;username=emuhamma&#x27; \</span><br><span class="line">--data-urlencode &#x27;password=1&#x27;</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">curl</span> <span class="token parameter variable">-L</span> <span class="token parameter variable">-X</span> POST <span class="token string">'http://localhost:8080/auth/realms/whatever-realm/protocol/openid-connect/token'</span> <span class="token punctuation">\</span>
+<span class="token parameter variable">-H</span> <span class="token string">'Content-Type: application/x-www-form-urlencoded'</span> <span class="token punctuation">\</span>
+--data-urlencode <span class="token string">'client_id=clientid-03'</span> <span class="token punctuation">\</span>
+--data-urlencode <span class="token string">'grant_type=password'</span> <span class="token punctuation">\</span>
+--data-urlencode <span class="token string">'client_secret=ec78c6bb-8339-4bed-9b1b-e973d27107dc'</span> <span class="token punctuation">\</span>
+--data-urlencode <span class="token string">'scope=openid'</span> <span class="token punctuation">\</span>
+--data-urlencode <span class="token string">'username=emuhamma'</span> <span class="token punctuation">\</span>
+--data-urlencode <span class="token string">'password=1'</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>或者，我们可以使用 Postman 等 REST API 工具来模拟 HTTP POST 请求，如图 8 所示。</p>
 <p><img src="https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2019/12/keycloak08-1.png?itok=lXBjdXCy"></p>
 <p>图 8：我们模拟的 HTTP POST 请求。”&gt;</p>
 <p>结果将是一个有效的 JWT 令牌：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;access_token&quot;</span><span class="punctuation">:</span> <span class="string">&quot;eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiAwNjEwLCJpc3MiOiJodHRwO.......wKRTus6PAoHMFlIlYQ75dYiLzzuRMvdXkHl6naLNQ8wYDv4gi7A3eJ163YzXSJf5PmQ&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;expires_in&quot;</span><span class="punctuation">:</span> <span class="number">600</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;refresh_expires_in&quot;</span><span class="punctuation">:</span> <span class="number">1800</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;refresh_token&quot;</span><span class="punctuation">:</span> <span class="string">&quot;eyJhbGciOiJIUzI1NiIsInR5cC.......IsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoib3BlbmlkIGVtYWlsIHByb2ZpbGUifQ.ePV2aqeDjlg6ih6SA7_x77gT4JYyv7HvK7PLQW-X1mM&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot; token_type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;bearer&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;id_token&quot;</span><span class="punctuation">:</span> <span class="string">&quot;eyJhbGciOiJSUz......A_d_LV96VCLBeTJSpqeqpMJYlh4AMJqN6kddtrI4ixZLfwAIj-Qwqn9kzGe-v1-oe80wQXrXzVBG7TJbKm4x5bgCO_B9lnDMrey9 0rvaKKr48K697ug&quot;</span><span class="punctuation">,</span> <span class="string">&quot;</span></span><br><span class="line"><span class="string">    not-before-policy&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;session_state&quot;</span><span class="punctuation">:</span> <span class="string">&quot;22c8278b-3346-468e-9533-f41f22ed264f&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;scope&quot;</span><span class="punctuation">:</span> <span class="string">&quot;openid email profile&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
+    <span class="token property">"access_token"</span><span class="token operator">:</span> <span class="token string">"eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiAwNjEwLCJpc3MiOiJodHRwO.......wKRTus6PAoHMFlIlYQ75dYiLzzuRMvdXkHl6naLNQ8wYDv4gi7A3eJ163YzXSJf5PmQ"</span><span class="token punctuation">,</span>
+    <span class="token property">"expires_in"</span><span class="token operator">:</span> <span class="token number">600</span><span class="token punctuation">,</span>
+    <span class="token property">"refresh_expires_in"</span><span class="token operator">:</span> <span class="token number">1800</span><span class="token punctuation">,</span>
+    <span class="token property">"refresh_token"</span><span class="token operator">:</span> <span class="token string">"eyJhbGciOiJIUzI1NiIsInR5cC.......IsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoib3BlbmlkIGVtYWlsIHByb2ZpbGUifQ.ePV2aqeDjlg6ih6SA7_x77gT4JYyv7HvK7PLQW-X1mM"</span><span class="token punctuation">,</span>
+    <span class="token property">" token_type"</span><span class="token operator">:</span> <span class="token string">"bearer"</span><span class="token punctuation">,</span>
+    <span class="token property">"id_token"</span><span class="token operator">:</span> <span class="token string">"eyJhbGciOiJSUz......A_d_LV96VCLBeTJSpqeqpMJYlh4AMJqN6kddtrI4ixZLfwAIj-Qwqn9kzGe-v1-oe80wQXrXzVBG7TJbKm4x5bgCO_B9lnDMrey9 0rvaKKr48K697ug"</span><span class="token punctuation">,</span> "
+    not-before-policy"<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
+    <span class="token property">"session_state"</span><span class="token operator">:</span> <span class="token string">"22c8278b-3346-468e-9533-f41f22ed264f"</span><span class="token punctuation">,</span>
+    <span class="token property">"scope"</span><span class="token operator">:</span> <span class="token string">"openid email profile"</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>错误的用户名和密码组合会导致 HTTP 401 响应代码和如下响应正文：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    “error”：“invalid_grant”，</span><br><span class="line">    “error_description”：“无效的用户凭证”</span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
+    “error”：“invalid_grant”，
+    “error_description”：“无效的用户凭证”
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>给你。现在您已经配置了一个登录 API，可以很好地与 Keycloak 配合使用。玩得开心！</p>
 
-    <p><img src="https://i.dawnlab.me/53a8c7cf3ad77a0f0a456ce2c6afe88a.png" loading="lazy"></p>
-
+    
   </article>
 
   
@@ -467,7 +444,7 @@
 </div>
   
   
-    <script async src="/js/copy-codeblock.js?v=1698751493229"></script>
+    <script async src="/js/copy-codeblock.js?v=1699195159856"></script>
   
 
   

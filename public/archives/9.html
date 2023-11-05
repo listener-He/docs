@@ -1,16 +1,16 @@
 <!doctype html>
 <html lang="zh"><head>
-<title>RedisOperations scan 用法 - Honesty wiki</title>
+<title>RedisOperations scan 用法 - Honesty Wiki</title>
 <meta charset="UTF-8">
 <meta name="keywords" content="Honesty 知识库,Honesty Wiki, Honesty blog,hehouhui 知识库,hehouhui Wiki, hehouhui blog">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
 
-<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+<link rel="shortcut icon" href="https://www.make.com/en/favicon.ico" type="image/x-icon" />
 <meta name="description" content="记录一次 scan 和 keys 的使用,scan 和 key 都是 redis 搜索 key 的值函数,但实现却完全不同。生产环境用 key 的同学准备好跑路吧~  keys Warning: consider KEYS as a command that should only be used in production environments with extreme care. It">
 <meta property="og:type" content="article">
 <meta property="og:title" content="RedisOperations scan 用法">
 <meta property="og:url" content="https://docs.hehouhui.cn/archives/9.html">
-<meta property="og:site_name" content="Honesty wiki">
+<meta property="og:site_name" content="Honesty Wiki">
 <meta property="og:description" content="记录一次 scan 和 keys 的使用,scan 和 key 都是 redis 搜索 key 的值函数,但实现却完全不同。生产环境用 key 的同学准备好跑路吧~  keys Warning: consider KEYS as a command that should only be used in production environments with extreme care. It">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-07-23T00:00:00.000Z">
@@ -25,15 +25,15 @@
 <link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
 
 
-<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1698751493528">
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1699195160082">
 
-<link rel="stylesheet" href="/css/style.css?v=1698751493528">
+<link rel="stylesheet" href="/css/style.css?v=1699195160082">
 
 
 
 
     
-        <link rel="stylesheet" href="/custom.css?v=1698751493528">
+        <link rel="stylesheet" href="/custom.css?v=1699195160082">
     
 
 
@@ -43,7 +43,7 @@
 <script src="/lib/lax.min.js" async></script>
 
 
-<script async src="/js/app.js?v=1698751493528"></script>
+<script async src="/js/app.js?v=1699195160083"></script>
 
  
 
@@ -77,14 +77,14 @@
             </div>
         </a>
         
-        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archive.html" title="文章归档">
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/history.html" title="文章归档">
             <i class="mdui-list-item-icon nexmoefont icon-container"></i>
             <div class="mdui-list-item-content">
                 文章归档
             </div>
         </a>
         
-        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/PY.html" title="我的朋友">
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/friend.html" title="我的朋友">
             <i class="mdui-list-item-icon nexmoefont icon-unorderedlist"></i>
             <div class="mdui-list-item-content">
                 我的朋友
@@ -272,48 +272,6 @@
 
     
         
-        <!-- 一言 -->
-<div class="nexmoe-widget-wrap">
-  <h3 class="nexmoe-widget-title">
-    一言
-  </h3>
-  <div class="nexmoe-widget">
-    <ul class="hitokoto-box">
-      <li id="hitokoto_text_parent" class="hitokoto-text" hitokotoCategory="">
-        <a href="#" id="hitokoto_text">
-          
-        </a>
-        <a href="#" id="hitokoto_error_text" style="display: none;">
-          
-        </a>
-      </li>
-    </ul>
-  </div>
-</div>
-
-<script>
-  let hitokotoText = document.getElementById('hitokoto_text')
-  let hitokotoErroText = document.getElementById('hitokoto_error_text')
-  let hitokotoCategory = document.getElementById('hitokoto_text_parent').getAttribute('hitokotoCategory')
-  window.addEventListener('load', function () {
-    let url = 'https://v1.hitokoto.cn'
-    if (hitokotoCategory) {
-      url += '?c=' + hitokotoCategory
-    }
-    fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        hitokotoText.innerText = "「 " + data.hitokoto + " 」 from " + data.from
-        hitokotoText.href = 'https://hitokoto.cn/?uuid=' + data.uuid
-      })
-      .catch((reason) => {
-        console.error(11, reason)
-        hitokotoText.style.display = 'none'
-        hitokotoErroText.style.display = 'block'
-      })
-  })
-</script>
-    
         
         
   <div class="nexmoe-widget-wrap">
@@ -401,7 +359,17 @@
 <blockquote>
 <p>上面是官方文档声明，KEYS 命令不能用在生产的环境中，这个时候如果数量过大效率是十分低的。</p>
 </blockquote>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">      /**</span><br><span class="line"> * Find all keys matching the given &#123;@code pattern&#125;.</span><br><span class="line"> *</span><br><span class="line"> * @param pattern must not be &#123;@literal null&#125;.</span><br><span class="line"> * @return &#123;@literal null&#125; when used in pipeline / transaction.</span><br><span class="line"> * @see &lt;a href=&quot;&lt;https://redis.io/commands/keys&gt;&quot;&gt;Redis Documentation: KEYS&lt;/a&gt;</span><br><span class="line"> */</span><br><span class="line">@Nullable</span><br><span class="line">Set&lt;K&gt; keys(K pattern);</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">      /**
+ * Find all keys matching the given &#123;@code pattern&#125;.
+ *
+ * @param pattern must not be &#123;@literal null&#125;.
+ * @return &#123;@literal null&#125; when used in pipeline / transaction.
+ * @see &lt;a href="&lt;https://redis.io/commands/keys>">Redis Documentation: KEYS&lt;/a>
+ */
+@Nullable
+Set&lt;K> keys(K pattern);
+
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <blockquote>
 <p>keys 函数支持传入一个正则字符串，遍历 redis 中所有匹配到的 key。命令会引起阻塞,性能随着数据库数据的增多而越来越慢。</p>
@@ -422,16 +390,35 @@
 <h2 id="RedisOperations-sacn"><a href="#RedisOperations-sacn" class="headerlink" title="RedisOperations sacn"></a>RedisOperations sacn</h2><blockquote>
 <p>spring 中 redisOperations 只有 HashOperations 类提供 scan 方法</p>
 </blockquote>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">     /**</span><br><span class="line"> * Use a &#123;@link Cursor&#125; to iterate over entries in hash at &#123;@code key&#125;. &lt;br /&gt;</span><br><span class="line"> * &lt;strong&gt;Important:&lt;/strong&gt; Call &#123;@link Cursor#close()&#125; when done to avoid resource leak.</span><br><span class="line"> *</span><br><span class="line"> * @param key must not be &#123;@literal null&#125;.</span><br><span class="line"> * @param options</span><br><span class="line"> * @return &#123;@literal null&#125; when used in pipeline / transaction.</span><br><span class="line"> * @since 1.4</span><br><span class="line"> */</span><br><span class="line">Cursor&lt;Map.Entry&lt;HK, HV&gt;&gt; scan(H key, ScanOptions options);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">     /**
+ * Use a &#123;@link Cursor&#125; to iterate over entries in hash at &#123;@code key&#125;. &lt;br />
+ * &lt;strong>Important:&lt;/strong> Call &#123;@link Cursor#close()&#125; when done to avoid resource leak.
+ *
+ * @param key must not be &#123;@literal null&#125;.
+ * @param options
+ * @return &#123;@literal null&#125; when used in pipeline / transaction.
+ * @since 1.4
+ */
+Cursor&lt;Map.Entry&lt;HK, HV>> scan(H key, ScanOptions options);
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">  *  搜索</span><br><span class="line">  */</span><br><span class="line"> Cursor&lt;Map.Entry&lt;ID, Double&gt;&gt; cursor = hash.scan(key,new ScanOptions.ScanOptionsBuilder().match(sb.toString()).count(keys.size()).build());</span><br><span class="line"></span><br><span class="line"> Map&lt;ID, Double&gt; map = new HashMap&lt;&gt;(keys.size());</span><br><span class="line"> while (cursor.hasNext()) &#123;</span><br><span class="line">     Map.Entry&lt;ID, Double&gt; next = cursor.next();</span><br><span class="line">     map.put(next.getKey(), next.getValue());</span><br><span class="line"> &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><pre class="line-numbers language-text" data-language="text"><code class="language-text">/**
+  *  搜索
+  */
+ Cursor&lt;Map.Entry&lt;ID, Double>> cursor = hash.scan(key,new ScanOptions.ScanOptionsBuilder().match(sb.toString()).count(keys.size()).build());
+
+ Map&lt;ID, Double> map = new HashMap&lt;>(keys.size());
+ while (cursor.hasNext()) &#123;
+     Map.Entry&lt;ID, Double> next = cursor.next();
+     map.put(next.getKey(), next.getValue());
+ &#125;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <blockquote>
 <p>第一个遍历是 cursor 值为 0，然后将返回结果的第一个整数作为下一个遍历的游标，如果最后返回的到 cursor 的值为 0 就代表结束。</p>
 </blockquote>
 
-    <p><img src="https://i.dawnlab.me/53a8c7cf3ad77a0f0a456ce2c6afe88a.png" loading="lazy"></p>
-
+    
   </article>
 
   
@@ -456,7 +443,7 @@
 </div>
   
   
-    <script async src="/js/copy-codeblock.js?v=1698751493271"></script>
+    <script async src="/js/copy-codeblock.js?v=1699195159868"></script>
   
 
   

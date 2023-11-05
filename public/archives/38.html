@@ -1,16 +1,16 @@
 <!doctype html>
 <html lang="zh"><head>
-<title>Mysql数据结构&amp;锁 - Honesty wiki</title>
+<title>Mysql数据结构&amp;锁 - Honesty Wiki</title>
 <meta charset="UTF-8">
 <meta name="keywords" content="Honesty 知识库,Honesty Wiki, Honesty blog,hehouhui 知识库,hehouhui Wiki, hehouhui blog">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
 
-<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+<link rel="shortcut icon" href="https://www.make.com/en/favicon.ico" type="image/x-icon" />
 <meta name="description" content="Mysql 数据库存储引擎MyISAM 引擎不支持事务  支持表级锁（MySql 支持两种表级锁，表共享读锁和表独占写锁），但不支持行级锁 存储表的总行数 一个 MyISAM 表有三个文件：索引文件（.MYI），表结构文件(.frm)，数据文件(.MYD) 采用非聚集索引：即索引文件和数据文件是分开的，索引文件的数据域存储指向数据文件的指针 跨平台应用更方便（表保存为文件形式） 支持三种不同的存储">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Mysql数据结构&amp;锁">
 <meta property="og:url" content="https://docs.hehouhui.cn/archives/38.html">
-<meta property="og:site_name" content="Honesty wiki">
+<meta property="og:site_name" content="Honesty Wiki">
 <meta property="og:description" content="Mysql 数据库存储引擎MyISAM 引擎不支持事务  支持表级锁（MySql 支持两种表级锁，表共享读锁和表独占写锁），但不支持行级锁 存储表的总行数 一个 MyISAM 表有三个文件：索引文件（.MYI），表结构文件(.frm)，数据文件(.MYD) 采用非聚集索引：即索引文件和数据文件是分开的，索引文件的数据域存储指向数据文件的指针 跨平台应用更方便（表保存为文件形式） 支持三种不同的存储">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy8xNDQ2MDg3LWJjMDIzZTQ3YmM3NGNmYTEuanBn?x-oss-process=image/format,png">
@@ -66,15 +66,15 @@
 <link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
 
 
-<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1698751493489">
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1699195160056">
 
-<link rel="stylesheet" href="/css/style.css?v=1698751493489">
+<link rel="stylesheet" href="/css/style.css?v=1699195160056">
 
 
 
 
     
-        <link rel="stylesheet" href="/custom.css?v=1698751493489">
+        <link rel="stylesheet" href="/custom.css?v=1699195160056">
     
 
 
@@ -84,7 +84,7 @@
 <script src="/lib/lax.min.js" async></script>
 
 
-<script async src="/js/app.js?v=1698751493489"></script>
+<script async src="/js/app.js?v=1699195160056"></script>
 
  
 
@@ -118,14 +118,14 @@
             </div>
         </a>
         
-        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archive.html" title="文章归档">
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/history.html" title="文章归档">
             <i class="mdui-list-item-icon nexmoefont icon-container"></i>
             <div class="mdui-list-item-content">
                 文章归档
             </div>
         </a>
         
-        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/PY.html" title="我的朋友">
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/friend.html" title="我的朋友">
             <i class="mdui-list-item-icon nexmoefont icon-unorderedlist"></i>
             <div class="mdui-list-item-content">
                 我的朋友
@@ -313,48 +313,6 @@
 
     
         
-        <!-- 一言 -->
-<div class="nexmoe-widget-wrap">
-  <h3 class="nexmoe-widget-title">
-    一言
-  </h3>
-  <div class="nexmoe-widget">
-    <ul class="hitokoto-box">
-      <li id="hitokoto_text_parent" class="hitokoto-text" hitokotoCategory="">
-        <a href="#" id="hitokoto_text">
-          
-        </a>
-        <a href="#" id="hitokoto_error_text" style="display: none;">
-          
-        </a>
-      </li>
-    </ul>
-  </div>
-</div>
-
-<script>
-  let hitokotoText = document.getElementById('hitokoto_text')
-  let hitokotoErroText = document.getElementById('hitokoto_error_text')
-  let hitokotoCategory = document.getElementById('hitokoto_text_parent').getAttribute('hitokotoCategory')
-  window.addEventListener('load', function () {
-    let url = 'https://v1.hitokoto.cn'
-    if (hitokotoCategory) {
-      url += '?c=' + hitokotoCategory
-    }
-    fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        hitokotoText.innerText = "「 " + data.hitokoto + " 」 from " + data.from
-        hitokotoText.href = 'https://hitokoto.cn/?uuid=' + data.uuid
-      })
-      .catch((reason) => {
-        console.error(11, reason)
-        hitokotoText.style.display = 'none'
-        hitokotoErroText.style.display = 'block'
-      })
-  })
-</script>
-    
         
         
   <div class="nexmoe-widget-wrap">
@@ -668,16 +626,38 @@
 <p>(8) 对于 btree 支持的联合索引的最优前缀，hash 也是无法支持的，联合索引中的字段要么全用要么全不用。提起最优前缀居然都泛起迷糊了，看来有时候放空得太厉害；</p>
 <p>(9) hash 不支持索引排序，索引值和计算出来的 hash 值大小并不一定一致。</p>
 <h3 id="B-Tree-索引"><a href="#B-Tree-索引" class="headerlink" title="B-Tree 索引"></a>B-Tree 索引</h3><p>B-tree 索引可以用于使用 &#x3D;, &gt;, &gt;&#x3D;, &lt;, &lt;&#x3D; 或者 BETWEEN 运算符的列比较。如果 LIKE 的参数是一个没有以通配符起始的常量字符串的话也可以使用这种索引。比如，以下 SELECT 语句就使用索引：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1.  SELECT * FROM tbl_name WHERE key_col LIKE &#x27;Patrick%&#x27;;</span><br><span class="line">2.  SELECT * FROM tbl_name WHERE key_col LIKE &#x27;Pat%_ck%&#x27;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">1.  SELECT * FROM tbl_name WHERE key_col LIKE 'Patrick%';
+2.  SELECT * FROM tbl_name WHERE key_col LIKE 'Pat%_ck%';
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
 <p>在第一个句子中，只会考虑 ‘Patrick’ &lt;&#x3D; key_col &lt; ‘Patricl’ 的记录。第二句中，则只会考虑 ‘Pat’ &lt;&#x3D; key_col &lt; ‘Pau’ 的记录。<br>以下 SELECT 语句不使用索引：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1.  SELECT * FROM tbl_name WHERE key_col LIKE &#x27;%Patrick%&#x27;;</span><br><span class="line">2.  SELECT * FROM tbl_name WHERE key_col LIKE other_col;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">1.  SELECT * FROM tbl_name WHERE key_col LIKE '%Patrick%';
+2.  SELECT * FROM tbl_name WHERE key_col LIKE other_col;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
 <p>第一句里面，LIKE 的值起始于一个通配符。在第二句里，LIKE 的值不是一个常量。如果你这样使用： … LIKE ‘%string%’，其中的 string 不大于三个字符，MySql 将使用 Turbo Boyer-Moore 算法来对该字符串表达式进行初始化，并使用这种表达式来让查询更加迅速。如果 col_name 列创建了索引，那么一个使用了 col_name IS NULL 的查询是可以使用该索引的。任何没有涵盖 WHERE 从句中所有 AND 级别的条件的索引将不会被使用。换句话讲，要想使用索引，该索引的前导列必须在每一个 AND 组合中使用到。<br>以下 WHERE 从句使用索引：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">1.  ... WHERE index_part1=1 AND index_part2=2 AND other_column=3</span><br><span class="line"></span><br><span class="line">4.  /* index = 1 OR index = 2 */</span><br><span class="line">5.  ... WHERE index=1 OR A=10 AND index=2</span><br><span class="line"></span><br><span class="line">8.  /* optimized like &quot;index_part1=&#x27;hello&#x27;&quot; */</span><br><span class="line">9.  ... WHERE index_part1=&#x27;hello&#x27; AND index_part3=5</span><br><span class="line"></span><br><span class="line">12.  /* Can use index on index1 but not on index2 or index3 */</span><br><span class="line">13.  ... WHERE index1=1 AND index2=2 OR index1=3 AND index3=3;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">1.  ... WHERE index_part1=1 AND index_part2=2 AND other_column=3
+
+4.  /* index = 1 OR index = 2 */
+5.  ... WHERE index=1 OR A=10 AND index=2
+
+8.  /* optimized like "index_part1='hello'" */
+9.  ... WHERE index_part1='hello' AND index_part3=5
+
+12.  /* Can use index on index1 but not on index2 or index3 */
+13.  ... WHERE index1=1 AND index2=2 OR index1=3 AND index3=3;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>这些 WHERE 从句不使用索引：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">1.  /* index_part1 is not used */</span><br><span class="line">2.  WHERE index_part2=1 AND index_part3=2</span><br><span class="line"></span><br><span class="line">5.  /*  Index is not used in both parts of the WHERE clause  */</span><br><span class="line">6.  WHERE index=1 OR A=10</span><br><span class="line"></span><br><span class="line">9.  /* No index spans all rows  */</span><br><span class="line">10.  WHERE index_part1=1 OR index_part2=10</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">1.  /* index_part1 is not used */
+2.  WHERE index_part2=1 AND index_part3=2
+
+5.  /*  Index is not used in both parts of the WHERE clause  */
+6.  WHERE index=1 OR A=10
+
+9.  /* No index spans all rows  */
+10.  WHERE index_part1=1 OR index_part2=10
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>有时，即使有索引可以使用，<a target="_blank" rel="noopener" href="http://lib.csdn.net/base/mysql">MySQL</a> 也不使用任何索引。发生这种情况的场景之一就是优化器估算出使用该索引将要求 MySql 去访问这张表的绝大部分记录。这种情况下，一个表扫描可能更快，因为它要求更少量的查询。但是，如果这样的一个查询使用了 LIMIT 来检索只是少量的记录时，MySql 还是会使用索引，因为它能够更快地找到这点记录并将其返回。</p>
 <h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><p><strong>事务是逻辑上的一组操作，要么都执行，要么都不执行。</strong></p>
@@ -896,7 +876,13 @@
 <p>以下事务将进行 undo:日志中只包括<code>记录,但既不包括</code>记录也不包括&#96;&#96;记录.</p>
 <p>以下事务将进行 redo:日志中包括<code>记录,也包括</code>记录或&#96;&#96;记录。</p>
 <p>假设系统从崩溃中恢复时日志记录如下</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;T0 start&gt;</span><br><span class="line">&lt;T0,A,1000,950&gt;</span><br><span class="line">&lt;T0,B,2000,2050&gt;</span><br><span class="line">&lt;T0 commit&gt;</span><br><span class="line">&lt;T1 start&gt;</span><br><span class="line">&lt;T1,C,700,600&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">&lt;T0 start>
+&lt;T0,A,1000,950>
+&lt;T0,B,2000,2050>
+&lt;T0 commit>
+&lt;T1 start>
+&lt;T1,C,700,600>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>由于 T0 既有 start 记录又有 commit 记录,将会对事务 T0 进行重做,执行相应的 redo 操作。<br>由于 T1 只有 start 记录,将会对 T1 进行撤销,执行相应的 undo 操作,撤销完毕将写入一条 abort 记录。</p>
 <h3 id="事务故障中止-正常回滚的恢复流程"><a href="#事务故障中止-正常回滚的恢复流程" class="headerlink" title="事务故障中止&#x2F;正常回滚的恢复流程"></a>事务故障中止&#x2F;正常回滚的恢复流程</h3><ol>
@@ -1114,8 +1100,7 @@
 <li><strong>中间件代理：</strong> <strong>在应用和数据中间加了一个代理层。分片逻辑统一维护在中间件服务中。</strong> 我们现在谈的 <strong>Mycat</strong> 、360 的 Atlas、网易的 DDB 等等都是这种架构的实现。</li>
 </ul>
 
-    <p><img src="https://i.dawnlab.me/53a8c7cf3ad77a0f0a456ce2c6afe88a.png" loading="lazy"></p>
-
+    
   </article>
 
   
@@ -1140,7 +1125,7 @@
 </div>
   
   
-    <script async src="/js/copy-codeblock.js?v=1698751493253"></script>
+    <script async src="/js/copy-codeblock.js?v=1699195159862"></script>
   
 
   

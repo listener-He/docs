@@ -1,16 +1,16 @@
 <!doctype html>
 <html lang="zh"><head>
-<title>微服务之间的数据依赖问题，该如何解决？ - Honesty wiki</title>
+<title>微服务之间的数据依赖问题，该如何解决？ - Honesty Wiki</title>
 <meta charset="UTF-8">
 <meta name="keywords" content="Honesty 知识库,Honesty Wiki, Honesty blog,hehouhui 知识库,hehouhui Wiki, hehouhui blog">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
 
-<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+<link rel="shortcut icon" href="https://www.make.com/en/favicon.ico" type="image/x-icon" />
 <meta name="description" content="微服务，顾名思义，就是将我们程序拆分为最小化单元来提供服务。在一体化系统中，各个微服务也是不可能独立存在的，那么微服务之间涉及到的数据依赖问题，应该怎么处理呢？我们从场景入手来分析考虑此类问题。 一、场景在一个供应链系统中，存在商品、销售订单、采购三个微服务，他们的主数据部分数据结构如下： 商品：  订单和子订单：  采购单和子订单：  在设计这个供应链系统时，我们需要满足以下两个需求：  根据商">
 <meta property="og:type" content="article">
 <meta property="og:title" content="微服务之间的数据依赖问题，该如何解决？">
 <meta property="og:url" content="https://docs.hehouhui.cn/archives/springcloud-data-202309.html">
-<meta property="og:site_name" content="Honesty wiki">
+<meta property="og:site_name" content="Honesty Wiki">
 <meta property="og:description" content="微服务，顾名思义，就是将我们程序拆分为最小化单元来提供服务。在一体化系统中，各个微服务也是不可能独立存在的，那么微服务之间涉及到的数据依赖问题，应该怎么处理呢？我们从场景入手来分析考虑此类问题。 一、场景在一个供应链系统中，存在商品、销售订单、采购三个微服务，他们的主数据部分数据结构如下： 商品：  订单和子订单：  采购单和子订单：  在设计这个供应链系统时，我们需要满足以下两个需求：  根据商">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309151508807.png">
@@ -37,15 +37,15 @@
 <link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
 
 
-<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1698751493394">
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1699195159984">
 
-<link rel="stylesheet" href="/css/style.css?v=1698751493394">
+<link rel="stylesheet" href="/css/style.css?v=1699195159984">
 
 
 
 
     
-        <link rel="stylesheet" href="/custom.css?v=1698751493394">
+        <link rel="stylesheet" href="/custom.css?v=1699195159984">
     
 
 
@@ -55,7 +55,7 @@
 <script src="/lib/lax.min.js" async></script>
 
 
-<script async src="/js/app.js?v=1698751493394"></script>
+<script async src="/js/app.js?v=1699195159984"></script>
 
  
 
@@ -89,14 +89,14 @@
             </div>
         </a>
         
-        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archive.html" title="文章归档">
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/history.html" title="文章归档">
             <i class="mdui-list-item-icon nexmoefont icon-container"></i>
             <div class="mdui-list-item-content">
                 文章归档
             </div>
         </a>
         
-        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/PY.html" title="我的朋友">
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/friend.html" title="我的朋友">
             <i class="mdui-list-item-icon nexmoefont icon-unorderedlist"></i>
             <div class="mdui-list-item-content">
                 我的朋友
@@ -284,48 +284,6 @@
 
     
         
-        <!-- 一言 -->
-<div class="nexmoe-widget-wrap">
-  <h3 class="nexmoe-widget-title">
-    一言
-  </h3>
-  <div class="nexmoe-widget">
-    <ul class="hitokoto-box">
-      <li id="hitokoto_text_parent" class="hitokoto-text" hitokotoCategory="">
-        <a href="#" id="hitokoto_text">
-          
-        </a>
-        <a href="#" id="hitokoto_error_text" style="display: none;">
-          
-        </a>
-      </li>
-    </ul>
-  </div>
-</div>
-
-<script>
-  let hitokotoText = document.getElementById('hitokoto_text')
-  let hitokotoErroText = document.getElementById('hitokoto_error_text')
-  let hitokotoCategory = document.getElementById('hitokoto_text_parent').getAttribute('hitokotoCategory')
-  window.addEventListener('load', function () {
-    let url = 'https://v1.hitokoto.cn'
-    if (hitokotoCategory) {
-      url += '?c=' + hitokotoCategory
-    }
-    fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        hitokotoText.innerText = "「 " + data.hitokoto + " 」 from " + data.from
-        hitokotoText.href = 'https://hitokoto.cn/?uuid=' + data.uuid
-      })
-      .catch((reason) => {
-        console.error(11, reason)
-        hitokotoText.style.display = 'none'
-        hitokotoErroText.style.display = 'block'
-      })
-  })
-</script>
-    
         
         
   <div class="nexmoe-widget-wrap">
@@ -500,8 +458,7 @@
 <p>最终，我们总算解决了服务之间数据依赖的问题。</p>
 <h2 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a><strong>五、总结</strong></h2><p>这里我们探讨了服务间的数据依赖问题，并给出了目前较为合适的解决方案。其实这里提到的方案不是一个很大众的方案，肯定会存在一些遗漏的问题没考虑，如果你有更好的方案，欢迎留言讨论。</p>
 
-    <p><img src="https://i.dawnlab.me/53a8c7cf3ad77a0f0a456ce2c6afe88a.png" loading="lazy"></p>
-
+    
   </article>
 
   
@@ -526,7 +483,7 @@
 </div>
   
   
-    <script async src="/js/copy-codeblock.js?v=1698751493224"></script>
+    <script async src="/js/copy-codeblock.js?v=1699195159850"></script>
   
 
   

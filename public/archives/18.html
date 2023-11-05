@@ -1,16 +1,16 @@
 <!doctype html>
 <html lang="zh"><head>
-<title>spring cache - Honesty wiki</title>
+<title>spring cache - Honesty Wiki</title>
 <meta charset="UTF-8">
 <meta name="keywords" content="Honesty 知识库,Honesty Wiki, Honesty blog,hehouhui 知识库,hehouhui Wiki, hehouhui blog">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
 
-<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+<link rel="shortcut icon" href="https://www.make.com/en/favicon.ico" type="image/x-icon" />
 <meta name="description" content="💡 Spring Cache 是一个强大的缓存框架，可用于提高应用程序的性能和可靠性。它是 Spring 框架的一部分，基于标准的缓存抽象，提供了一个统一的、可扩展的缓存解决方案。Spring Cache 支持多种缓存提供者，包括 Ehcache、Redis、Couchbase 等。它还提供了灵活的配置选项，使开发人员可以根据应用程序的需要选择最适合的缓存解决方案。 使用 Spring Cac">
 <meta property="og:type" content="article">
 <meta property="og:title" content="spring cache">
 <meta property="og:url" content="https://docs.hehouhui.cn/archives/18.html">
-<meta property="og:site_name" content="Honesty wiki">
+<meta property="og:site_name" content="Honesty Wiki">
 <meta property="og:description" content="💡 Spring Cache 是一个强大的缓存框架，可用于提高应用程序的性能和可靠性。它是 Spring 框架的一部分，基于标准的缓存抽象，提供了一个统一的、可扩展的缓存解决方案。Spring Cache 支持多种缓存提供者，包括 Ehcache、Redis、Couchbase 等。它还提供了灵活的配置选项，使开发人员可以根据应用程序的需要选择最适合的缓存解决方案。 使用 Spring Cac">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-06-02T00:00:00.000Z">
@@ -24,15 +24,15 @@
 <link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
 
 
-<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1698751493530">
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1699195160085">
 
-<link rel="stylesheet" href="/css/style.css?v=1698751493530">
+<link rel="stylesheet" href="/css/style.css?v=1699195160085">
 
 
 
 
     
-        <link rel="stylesheet" href="/custom.css?v=1698751493530">
+        <link rel="stylesheet" href="/custom.css?v=1699195160085">
     
 
 
@@ -42,7 +42,7 @@
 <script src="/lib/lax.min.js" async></script>
 
 
-<script async src="/js/app.js?v=1698751493530"></script>
+<script async src="/js/app.js?v=1699195160085"></script>
 
  
 
@@ -76,14 +76,14 @@
             </div>
         </a>
         
-        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archive.html" title="文章归档">
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/history.html" title="文章归档">
             <i class="mdui-list-item-icon nexmoefont icon-container"></i>
             <div class="mdui-list-item-content">
                 文章归档
             </div>
         </a>
         
-        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/PY.html" title="我的朋友">
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/friend.html" title="我的朋友">
             <i class="mdui-list-item-icon nexmoefont icon-unorderedlist"></i>
             <div class="mdui-list-item-content">
                 我的朋友
@@ -271,48 +271,6 @@
 
     
         
-        <!-- 一言 -->
-<div class="nexmoe-widget-wrap">
-  <h3 class="nexmoe-widget-title">
-    一言
-  </h3>
-  <div class="nexmoe-widget">
-    <ul class="hitokoto-box">
-      <li id="hitokoto_text_parent" class="hitokoto-text" hitokotoCategory="">
-        <a href="#" id="hitokoto_text">
-          
-        </a>
-        <a href="#" id="hitokoto_error_text" style="display: none;">
-          
-        </a>
-      </li>
-    </ul>
-  </div>
-</div>
-
-<script>
-  let hitokotoText = document.getElementById('hitokoto_text')
-  let hitokotoErroText = document.getElementById('hitokoto_error_text')
-  let hitokotoCategory = document.getElementById('hitokoto_text_parent').getAttribute('hitokotoCategory')
-  window.addEventListener('load', function () {
-    let url = 'https://v1.hitokoto.cn'
-    if (hitokotoCategory) {
-      url += '?c=' + hitokotoCategory
-    }
-    fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        hitokotoText.innerText = "「 " + data.hitokoto + " 」 from " + data.from
-        hitokotoText.href = 'https://hitokoto.cn/?uuid=' + data.uuid
-      })
-      .catch((reason) => {
-        console.error(11, reason)
-        hitokotoText.style.display = 'none'
-        hitokotoErroText.style.display = 'block'
-      })
-  })
-</script>
-    
         
         
   <div class="nexmoe-widget-wrap">
@@ -429,10 +387,28 @@
 </blockquote>
 <p>当调用这个方法的时候，<strong>会先从一个名叫 accountCache 的缓存中查询</strong>，如果没有，则执行实际的方法（即查询数据库），并将执行的结果存入缓存中，否则返回缓存中的对象。<strong>这里的缓存中的 key 就是参数 userName，value 就是 Account 对象。</strong></p>
 <p>**“accountCache”缓存是在 ****spring*.xml** <strong>中定义的名称。</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Cacheable(value=&quot;accountCache&quot;)</span><span class="comment">// 使用了一个缓存名叫 accountCache</span></span><br><span class="line"><span class="keyword">public</span> Account <span class="title function_">getAccountByName</span><span class="params">(String userName)</span> &#123;</span><br><span class="line">   <span class="comment">// 方法内部实现不考虑缓存逻辑，直接实现业务</span></span><br><span class="line">   System.out.println(<span class="string">&quot;real query account.&quot;</span>+userName);</span><br><span class="line">   <span class="keyword">return</span> getFromDB(userName);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Cacheable</span><span class="token punctuation">(</span>value<span class="token operator">=</span><span class="token string">"accountCache"</span><span class="token punctuation">)</span><span class="token comment">// 使用了一个缓存名叫 accountCache</span>
+<span class="token keyword">public</span> <span class="token class-name">Account</span> <span class="token function">getAccountByName</span><span class="token punctuation">(</span><span class="token class-name">String</span> userName<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+   <span class="token comment">// 方法内部实现不考虑缓存逻辑，直接实现业务</span>
+   <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"real query account."</span><span class="token operator">+</span>userName<span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token keyword">return</span> <span class="token function">getFromDB</span><span class="token punctuation">(</span>userName<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p><strong>而在 SpringBoot 中使用的话是存放在 resources 下的**<strong>ehcache.xml*</strong>*。</strong></p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">ehcache</span> <span class="attr">xmlns:xsi</span>=<span class="string">&quot;&lt;http://www.w3.org/2001/XMLSchema-instance&gt;&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xsi:noNamespaceSchemaLocation</span>=<span class="string">&quot;&lt;http://ehcache.org/ehcache.xsd&gt;&quot;</span></span></span><br><span class="line"><span class="tag"></span></span><br><span class="line"><span class="tag">         <span class="attr">updateCheck</span>=<span class="string">&quot;false&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!--账号缓存--&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">cache</span> <span class="attr">name</span>=<span class="string">&quot;accountCache&quot;</span> <span class="attr">maxElementsInMemory</span>=<span class="string">&quot;10000&quot;</span> <span class="attr">timeToLiveSeconds</span>=<span class="string">&quot;300&quot;</span>  <span class="attr">timeToIdleSeconds</span>=<span class="string">&quot;310&quot;</span>   <span class="attr">eternal</span>=<span class="string">&quot;false&quot;</span> <span class="attr">overflowToDisk</span>=<span class="string">&quot;true&quot;</span>/&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">ehcache</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token prolog">&lt;?xml version="1.0" encoding="UTF-8"?></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ehcache</span> <span class="token attr-name"><span class="token namespace">xmlns:</span>xsi</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>&lt;http://www.w3.org/2001/XMLSchema-instance><span class="token punctuation">"</span></span>
+         <span class="token attr-name"><span class="token namespace">xsi:</span>noNamespaceSchemaLocation</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>&lt;http://ehcache.org/ehcache.xsd><span class="token punctuation">"</span></span>
+
+         <span class="token attr-name">updateCheck</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>false<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+
+    <span class="token comment">&lt;!--账号缓存--></span>
+
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>cache</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>accountCache<span class="token punctuation">"</span></span> <span class="token attr-name">maxElementsInMemory</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>10000<span class="token punctuation">"</span></span> <span class="token attr-name">timeToLiveSeconds</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>300<span class="token punctuation">"</span></span>  <span class="token attr-name">timeToIdleSeconds</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>310<span class="token punctuation">"</span></span>   <span class="token attr-name">eternal</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>false<span class="token punctuation">"</span></span> <span class="token attr-name">overflowToDisk</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>true<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ehcache</span><span class="token punctuation">></span></span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <hr>
 <h3 id="CachePut"><a href="#CachePut" class="headerlink" title="@CachePut"></a><strong>@CachePut</strong></h3><blockquote>
@@ -465,7 +441,11 @@
 </tbody></table>
 <p><strong>实例</strong></p>
 <p><strong>@CachePut 注释，这个注释可以确保方法被执行，同时方法的返回值也被记录到缓存中，实现缓存与数据库的同步更新。</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@CachePut(value=&quot;accountCache&quot;,key=&quot;#account.getName()&quot;)</span><span class="comment">// 更新accountCache 缓存</span></span><br><span class="line"><span class="keyword">public</span> Account <span class="title function_">updateAccount</span><span class="params">(Account account)</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> updateDB(account);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@CachePut</span><span class="token punctuation">(</span>value<span class="token operator">=</span><span class="token string">"accountCache"</span><span class="token punctuation">,</span>key<span class="token operator">=</span><span class="token string">"#account.getName()"</span><span class="token punctuation">)</span><span class="token comment">// 更新accountCache 缓存</span>
+<span class="token keyword">public</span> <span class="token class-name">Account</span> <span class="token function">updateAccount</span><span class="token punctuation">(</span><span class="token class-name">Account</span> account<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">return</span> <span class="token function">updateDB</span><span class="token punctuation">(</span>account<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 
 <hr>
 <h3 id="CacheEvict"><a href="#CacheEvict" class="headerlink" title="@CacheEvict"></a><strong>@CacheEvict</strong></h3><blockquote>
@@ -507,33 +487,129 @@
 </tr>
 </tbody></table>
 <p>实例</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@CacheEvict(value=&quot;accountCache&quot;,key=&quot;#account.getName()&quot;)</span><span class="comment">// 清空accountCache 缓存</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">updateAccount</span><span class="params">(Account account)</span> &#123;</span><br><span class="line">   updateDB(account);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@CacheEvict(value=&quot;accountCache&quot;,allEntries=true)</span><span class="comment">// 清空accountCache 缓存</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">reload</span><span class="params">()</span> &#123;</span><br><span class="line"></span><br><span class="line">   reloadAll()</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@Cacheable(value=&quot;accountCache&quot;,condition=&quot;#userName.length() &lt;=4&quot;)</span><span class="comment">// 缓存名叫 accountCache</span></span><br><span class="line"><span class="keyword">public</span> Account <span class="title function_">getAccountByName</span><span class="params">(String userName)</span> &#123;</span><br><span class="line"></span><br><span class="line"> <span class="comment">// 方法内部实现不考虑缓存逻辑，直接实现业务</span></span><br><span class="line"> <span class="keyword">return</span> getFromDB(userName);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@CacheEvict</span><span class="token punctuation">(</span>value<span class="token operator">=</span><span class="token string">"accountCache"</span><span class="token punctuation">,</span>key<span class="token operator">=</span><span class="token string">"#account.getName()"</span><span class="token punctuation">)</span><span class="token comment">// 清空accountCache 缓存</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">updateAccount</span><span class="token punctuation">(</span><span class="token class-name">Account</span> account<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+   <span class="token function">updateDB</span><span class="token punctuation">(</span>account<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+
+<span class="token annotation punctuation">@CacheEvict</span><span class="token punctuation">(</span>value<span class="token operator">=</span><span class="token string">"accountCache"</span><span class="token punctuation">,</span>allEntries<span class="token operator">=</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token comment">// 清空accountCache 缓存</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">reload</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+
+   <span class="token function">reloadAll</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token punctuation">&#125;</span>
+
+
+
+
+<span class="token annotation punctuation">@Cacheable</span><span class="token punctuation">(</span>value<span class="token operator">=</span><span class="token string">"accountCache"</span><span class="token punctuation">,</span>condition<span class="token operator">=</span><span class="token string">"#userName.length() &lt;=4"</span><span class="token punctuation">)</span><span class="token comment">// 缓存名叫 accountCache</span>
+<span class="token keyword">public</span> <span class="token class-name">Account</span> <span class="token function">getAccountByName</span><span class="token punctuation">(</span><span class="token class-name">String</span> userName<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+
+ <span class="token comment">// 方法内部实现不考虑缓存逻辑，直接实现业务</span>
+ <span class="token keyword">return</span> <span class="token function">getFromDB</span><span class="token punctuation">(</span>userName<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <hr>
 <h3 id="CacheConfig"><a href="#CacheConfig" class="headerlink" title="@CacheConfig"></a><strong>@CacheConfig</strong></h3><p>所有的@Cacheable（）里面都有一个 value ＝“xxx”的属性，这显然如果方法多了，写起来也是挺累的，如果可以一次性声明完 那就省事了， 所以，有了@CacheConfig 这个配置，@CacheConfig is a class-level annotation that allows to share the cache names，如果你在你的方法写别的名字，那么依然以方法的名字为准。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@CacheConfig(&quot;books&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">BookRepositoryImpl</span> <span class="keyword">implements</span> <span class="title class_">BookRepository</span> &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="meta">@Cacheable</span></span><br><span class="line">  <span class="keyword">public</span> Book <span class="title function_">findBook</span><span class="params">(ISBN isbn)</span> &#123;...&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@CacheConfig</span><span class="token punctuation">(</span><span class="token string">"books"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">BookRepositoryImpl</span> <span class="token keyword">implements</span> <span class="token class-name">BookRepository</span> <span class="token punctuation">&#123;</span>
+
+
+  <span class="token annotation punctuation">@Cacheable</span>
+  <span class="token keyword">public</span> <span class="token class-name">Book</span> <span class="token function">findBook</span><span class="token punctuation">(</span><span class="token class-name">ISBN</span> isbn<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">&#125;</span>
+
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <hr>
 <h3 id="条件缓存"><a href="#条件缓存" class="headerlink" title="条件缓存"></a><strong>条件缓存</strong></h3><p>下面提供一些常用的条件缓存</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//@Cacheable将在执行方法之前( #result还拿不到返回值)判断condition，如果返回true，则查缓存；</span></span><br><span class="line"><span class="meta">@Cacheable(value = &quot;user&quot;, key = &quot;#id&quot;, condition = &quot;#id lt 10&quot;)</span></span><br><span class="line"><span class="keyword">public</span> User <span class="title function_">conditionFindById</span><span class="params">(<span class="keyword">final</span> Long id)</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//@CachePut将在执行完方法后（#result就能拿到返回值了）判断condition，如果返回true，则放入缓存；</span></span><br><span class="line"><span class="meta">@CachePut(value = &quot;user&quot;, key = &quot;#id&quot;, condition = &quot;#result.username ne &#x27;zhang&#x27;&quot;)</span></span><br><span class="line"><span class="keyword">public</span> User <span class="title function_">conditionSave</span><span class="params">(<span class="keyword">final</span> User user)</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//@CachePut将在执行完方法后（#result就能拿到返回值了）判断unless，如果返回false，则放入缓存；（即跟condition相反）</span></span><br><span class="line"><span class="meta">@CachePut(value = &quot;user&quot;, key = &quot;#user.id&quot;, unless = &quot;#result.username eq &#x27;zhang&#x27;&quot;)</span></span><br><span class="line"><span class="keyword">public</span> User <span class="title function_">conditionSave2</span><span class="params">(<span class="keyword">final</span> User user)</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//@CacheEvict， beforeInvocation=false表示在方法执行之后调用（#result能拿到返回值了）；且判断condition，如果返回true，则移除缓存；</span></span><br><span class="line"><span class="meta">@CacheEvict(value = &quot;user&quot;, key = &quot;#user.id&quot;, beforeInvocation = false, condition = &quot;#result.username ne &#x27;zhang&#x27;&quot;)</span></span><br><span class="line"><span class="keyword">public</span> User <span class="title function_">conditionDelete</span><span class="params">(<span class="keyword">final</span> User user)</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">//@Cacheable将在执行方法之前( #result还拿不到返回值)判断condition，如果返回true，则查缓存；</span>
+<span class="token annotation punctuation">@Cacheable</span><span class="token punctuation">(</span>value <span class="token operator">=</span> <span class="token string">"user"</span><span class="token punctuation">,</span> key <span class="token operator">=</span> <span class="token string">"#id"</span><span class="token punctuation">,</span> condition <span class="token operator">=</span> <span class="token string">"#id lt 10"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token class-name">User</span> <span class="token function">conditionFindById</span><span class="token punctuation">(</span><span class="token keyword">final</span> <span class="token class-name">Long</span> id<span class="token punctuation">)</span>
+
+
+
+
+<span class="token comment">//@CachePut将在执行完方法后（#result就能拿到返回值了）判断condition，如果返回true，则放入缓存；</span>
+<span class="token annotation punctuation">@CachePut</span><span class="token punctuation">(</span>value <span class="token operator">=</span> <span class="token string">"user"</span><span class="token punctuation">,</span> key <span class="token operator">=</span> <span class="token string">"#id"</span><span class="token punctuation">,</span> condition <span class="token operator">=</span> <span class="token string">"#result.username ne 'zhang'"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token class-name">User</span> <span class="token function">conditionSave</span><span class="token punctuation">(</span><span class="token keyword">final</span> <span class="token class-name">User</span> user<span class="token punctuation">)</span>
+
+
+
+<span class="token comment">//@CachePut将在执行完方法后（#result就能拿到返回值了）判断unless，如果返回false，则放入缓存；（即跟condition相反）</span>
+<span class="token annotation punctuation">@CachePut</span><span class="token punctuation">(</span>value <span class="token operator">=</span> <span class="token string">"user"</span><span class="token punctuation">,</span> key <span class="token operator">=</span> <span class="token string">"#user.id"</span><span class="token punctuation">,</span> unless <span class="token operator">=</span> <span class="token string">"#result.username eq 'zhang'"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token class-name">User</span> <span class="token function">conditionSave2</span><span class="token punctuation">(</span><span class="token keyword">final</span> <span class="token class-name">User</span> user<span class="token punctuation">)</span>
+
+
+
+<span class="token comment">//@CacheEvict， beforeInvocation=false表示在方法执行之后调用（#result能拿到返回值了）；且判断condition，如果返回true，则移除缓存；</span>
+<span class="token annotation punctuation">@CacheEvict</span><span class="token punctuation">(</span>value <span class="token operator">=</span> <span class="token string">"user"</span><span class="token punctuation">,</span> key <span class="token operator">=</span> <span class="token string">"#user.id"</span><span class="token punctuation">,</span> beforeInvocation <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">,</span> condition <span class="token operator">=</span> <span class="token string">"#result.username ne 'zhang'"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token class-name">User</span> <span class="token function">conditionDelete</span><span class="token punctuation">(</span><span class="token keyword">final</span> <span class="token class-name">User</span> user<span class="token punctuation">)</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <hr>
 <h3 id="Caching"><a href="#Caching" class="headerlink" title="@Caching"></a><strong>@Caching</strong></h3><p>有时候我们可能组合多个 Cache 注解使用；比如用户新增成功后，我们要添加 id–&gt;user；username—&gt;user；email—&gt;user 的缓存；此时就需要@Caching 组合多个注解标签了。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Caching(put = &#123;</span></span><br><span class="line"><span class="meta">@CachePut(value = &quot;user&quot;, key = &quot;#user.id&quot;),</span></span><br><span class="line"><span class="meta">@CachePut(value = &quot;user&quot;, key = &quot;#user.username&quot;),</span></span><br><span class="line"><span class="meta">@CachePut(value = &quot;user&quot;, key = &quot;#user.email&quot;)</span></span><br><span class="line"><span class="meta">&#125;)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> User <span class="title function_">save</span><span class="params">(User user)</span> &#123;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Caching</span><span class="token punctuation">(</span>put <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
+<span class="token annotation punctuation">@CachePut</span><span class="token punctuation">(</span>value <span class="token operator">=</span> <span class="token string">"user"</span><span class="token punctuation">,</span> key <span class="token operator">=</span> <span class="token string">"#user.id"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+<span class="token annotation punctuation">@CachePut</span><span class="token punctuation">(</span>value <span class="token operator">=</span> <span class="token string">"user"</span><span class="token punctuation">,</span> key <span class="token operator">=</span> <span class="token string">"#user.username"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+<span class="token annotation punctuation">@CachePut</span><span class="token punctuation">(</span>value <span class="token operator">=</span> <span class="token string">"user"</span><span class="token punctuation">,</span> key <span class="token operator">=</span> <span class="token string">"#user.email"</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+
+<span class="token keyword">public</span> <span class="token class-name">User</span> <span class="token function">save</span><span class="token punctuation">(</span><span class="token class-name">User</span> user<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <hr>
 <h3 id="自定义缓存注解"><a href="#自定义缓存注解" class="headerlink" title="自定义缓存注解"></a><strong>自定义缓存注解</strong></h3><p>比如之前的那个@Caching 组合，会让方法上的注解显得整个代码比较乱，此时可以使用自定义注解把这些注解组合到一个注解中，如：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Caching(put = &#123;</span></span><br><span class="line"><span class="meta">@CachePut(value = &quot;user&quot;, key = &quot;#user.id&quot;),</span></span><br><span class="line"><span class="meta">@CachePut(value = &quot;user&quot;, key = &quot;#user.username&quot;),</span></span><br><span class="line"><span class="meta"> @CachePut(value = &quot;user&quot;, key = &quot;#user.email&quot;)</span></span><br><span class="line"><span class="meta">&#125;)</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@Target(&#123;ElementType.METHOD, ElementType.TYPE&#125;)</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="meta">@Inherited</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> UserSaveCache &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Caching</span><span class="token punctuation">(</span>put <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
+<span class="token annotation punctuation">@CachePut</span><span class="token punctuation">(</span>value <span class="token operator">=</span> <span class="token string">"user"</span><span class="token punctuation">,</span> key <span class="token operator">=</span> <span class="token string">"#user.id"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+<span class="token annotation punctuation">@CachePut</span><span class="token punctuation">(</span>value <span class="token operator">=</span> <span class="token string">"user"</span><span class="token punctuation">,</span> key <span class="token operator">=</span> <span class="token string">"#user.username"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+ <span class="token annotation punctuation">@CachePut</span><span class="token punctuation">(</span>value <span class="token operator">=</span> <span class="token string">"user"</span><span class="token punctuation">,</span> key <span class="token operator">=</span> <span class="token string">"#user.email"</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+
+<span class="token annotation punctuation">@Target</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span><span class="token class-name">ElementType</span><span class="token punctuation">.</span><span class="token constant">METHOD</span><span class="token punctuation">,</span> <span class="token class-name">ElementType</span><span class="token punctuation">.</span><span class="token constant">TYPE</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+<span class="token annotation punctuation">@Retention</span><span class="token punctuation">(</span><span class="token class-name">RetentionPolicy</span><span class="token punctuation">.</span><span class="token constant">RUNTIME</span><span class="token punctuation">)</span>
+<span class="token annotation punctuation">@Inherited</span>
+<span class="token keyword">public</span> <span class="token annotation punctuation">@interface</span> <span class="token class-name">UserSaveCache</span> <span class="token punctuation">&#123;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>这样我们在方法上使用如下代码即可，整个代码显得比较干净。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@UserSaveCache</span></span><br><span class="line"><span class="keyword">public</span> User <span class="title function_">save</span><span class="params">(User user)</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@UserSaveCache</span>
+<span class="token keyword">public</span> <span class="token class-name">User</span> <span class="token function">save</span><span class="token punctuation">(</span><span class="token class-name">User</span> user<span class="token punctuation">)</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
 <hr>
 <h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><p>比如 findByUsername 时，不应该只放 username–&gt;user，应该连同 id—&gt;user 和 email—&gt;user 一起放入；这样下次如果按照 id 查找直接从缓存中就命中了</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Caching(</span></span><br><span class="line"><span class="meta">  cacheable = &#123;</span></span><br><span class="line"><span class="meta">    @Cacheable(value = &quot;user&quot;, key = &quot;#username&quot;)</span></span><br><span class="line"><span class="meta">  &#125;,</span></span><br><span class="line"><span class="meta">  put = &#123;</span></span><br><span class="line"><span class="meta">    @CachePut(value = &quot;user&quot;, key = &quot;#result.id&quot;, condition = &quot;#result != null&quot;),</span></span><br><span class="line"><span class="meta">    @CachePut(value = &quot;user&quot;, key = &quot;#result.email&quot;, condition = &quot;#result != null&quot;)</span></span><br><span class="line"><span class="meta">  &#125;</span></span><br><span class="line"><span class="meta">)</span></span><br><span class="line"><span class="keyword">public</span> User <span class="title function_">findByUsername</span><span class="params">(<span class="keyword">final</span> String username)</span> &#123;</span><br><span class="line">  System.out.println(<span class="string">&quot;cache miss, invoke find by username, username:&quot;</span> + username);</span><br><span class="line">  <span class="keyword">for</span> (User user : users) &#123;</span><br><span class="line">    <span class="keyword">if</span> (user.getUsername().equals(username)) &#123;</span><br><span class="line">      <span class="keyword">return</span> user;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Caching</span><span class="token punctuation">(</span>
+  cacheable <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
+    <span class="token annotation punctuation">@Cacheable</span><span class="token punctuation">(</span>value <span class="token operator">=</span> <span class="token string">"user"</span><span class="token punctuation">,</span> key <span class="token operator">=</span> <span class="token string">"#username"</span><span class="token punctuation">)</span>
+  <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+  put <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
+    <span class="token annotation punctuation">@CachePut</span><span class="token punctuation">(</span>value <span class="token operator">=</span> <span class="token string">"user"</span><span class="token punctuation">,</span> key <span class="token operator">=</span> <span class="token string">"#result.id"</span><span class="token punctuation">,</span> condition <span class="token operator">=</span> <span class="token string">"#result != null"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token annotation punctuation">@CachePut</span><span class="token punctuation">(</span>value <span class="token operator">=</span> <span class="token string">"user"</span><span class="token punctuation">,</span> key <span class="token operator">=</span> <span class="token string">"#result.email"</span><span class="token punctuation">,</span> condition <span class="token operator">=</span> <span class="token string">"#result != null"</span><span class="token punctuation">)</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token class-name">User</span> <span class="token function">findByUsername</span><span class="token punctuation">(</span><span class="token keyword">final</span> <span class="token class-name">String</span> username<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"cache miss, invoke find by username, username:"</span> <span class="token operator">+</span> username<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">User</span> user <span class="token operator">:</span> users<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>user<span class="token punctuation">.</span><span class="token function">getUsername</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>username<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      <span class="token keyword">return</span> user<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+  <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>其实对于：id—&gt;user；username—-&gt;user；email—&gt;user；更好的方式可能是：id—&gt;user；username—&gt;id；email—&gt;id；保证 user 只存一份；如：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@CachePut(value=&quot;cacheName&quot;, key=&quot;#user.username&quot;, cacheValue=&quot;#user.username&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">save</span><span class="params">(User user)</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@Cacheable(value=&quot;cacheName&quot;, key=&quot;#user.username&quot;, cacheValue=&quot;#caches[0].get(#caches[0].get(#username).get())&quot;)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> User <span class="title function_">findByUsername</span><span class="params">(String username)</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@CachePut</span><span class="token punctuation">(</span>value<span class="token operator">=</span><span class="token string">"cacheName"</span><span class="token punctuation">,</span> key<span class="token operator">=</span><span class="token string">"#user.username"</span><span class="token punctuation">,</span> cacheValue<span class="token operator">=</span><span class="token string">"#user.username"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">save</span><span class="token punctuation">(</span><span class="token class-name">User</span> user<span class="token punctuation">)</span>
+
+
+<span class="token annotation punctuation">@Cacheable</span><span class="token punctuation">(</span>value<span class="token operator">=</span><span class="token string">"cacheName"</span><span class="token punctuation">,</span> key<span class="token operator">=</span><span class="token string">"#user.username"</span><span class="token punctuation">,</span> cacheValue<span class="token operator">=</span><span class="token string">"#caches[0].get(#caches[0].get(#username).get())"</span><span class="token punctuation">)</span>
+
+<span class="token keyword">public</span> <span class="token class-name">User</span> <span class="token function">findByUsername</span><span class="token punctuation">(</span><span class="token class-name">String</span> username<span class="token punctuation">)</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p><strong>SpEL 上下文数据</strong></p>
 <p>Spring Cache 提供了一些供我们使用的 SpEL 上下文数据，下表直接摘自 Spring 官方文档：</p>
@@ -595,10 +671,10 @@
 <td>result</td>
 </tr>
 </tbody></table>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@CacheEvict(value = &quot;user&quot;, key = &quot;#user.id&quot;, condition = &quot;#root.target.canCache() and #root.caches[0].get(#user.id).get().username ne #user.username&quot;, beforeInvocation = true)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">conditionUpdate</span><span class="params">(User user)</span></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@CacheEvict</span><span class="token punctuation">(</span>value <span class="token operator">=</span> <span class="token string">"user"</span><span class="token punctuation">,</span> key <span class="token operator">=</span> <span class="token string">"#user.id"</span><span class="token punctuation">,</span> condition <span class="token operator">=</span> <span class="token string">"#root.target.canCache() and #root.caches[0].get(#user.id).get().username ne #user.username"</span><span class="token punctuation">,</span> beforeInvocation <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">conditionUpdate</span><span class="token punctuation">(</span><span class="token class-name">User</span> user<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
-    <p><img src="https://i.dawnlab.me/53a8c7cf3ad77a0f0a456ce2c6afe88a.png" loading="lazy"></p>
-
+    
   </article>
 
   
@@ -623,7 +699,7 @@
 </div>
   
   
-    <script async src="/js/copy-codeblock.js?v=1698751493272"></script>
+    <script async src="/js/copy-codeblock.js?v=1699195159868"></script>
   
 
   
