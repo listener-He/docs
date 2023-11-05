@@ -24,18 +24,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: 安裝 Hexo CI
-        run: |
-          export TZ='Asia/Shanghai'
-          npm install hexo-cli -g
-
-      - name: 緩存
-        uses: actions/cache@v1
-        id: cache-dependencies
-        with:
-          path: node_modules
-          key: ${{runner.OS}}-${{hashFiles('**/package-lock.json')}}
-
       - name: 安裝插件
         if: steps.cache-dependencies.outputs.cache-hit != 'true'
         run: |
@@ -53,10 +41,21 @@ jobs:
         run: |
           # 对应package.json中的script.sync
           npm run sync
+      - name: 安裝 Hexo CI
+        run: |
+          export TZ='Asia/Shanghai'
+          npm install hexo-cli -g
+
+      - name: 緩存
+        uses: actions/cache@v1
+        id: cache-dependencies
+        with:
+          path: node_modules
+          key: ${{runner.OS}}-${{hashFiles('**/package-lock.json')}}          
 
       - name: 部署博客
         run: |
-          npm run build
+          hexo clean && hexo g && hexo douban && gulp
           cd ./public
           git init
           git config user.name "${{secrets.GIT_NAME}}"
