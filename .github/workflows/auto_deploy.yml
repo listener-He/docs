@@ -4,17 +4,13 @@ on:
   push:
     branches:
       - master
-  repository_dispatch:
-    types:
-      - deploy
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [16.x]
-
+        node-version: [14.x]
     steps:
       - name: 開始運行
         uses: actions/checkout@v1
@@ -23,24 +19,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-
-      - name: 安裝插件
-        if: steps.cache-dependencies.outputs.cache-hit != 'true'
-        run: |
-          npm install
-          
-      - name: 拉取语雀/Notion的文章
-        env:
-          # Notion相关环境变量
-          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
-          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
-          # 图床相关环境变量，以github为例
-          GITHUB_USER: ${{ secrets.IMG_GITHUB_USER }}
-          GITHUB_TOKEN: ${{ secrets.IMG_GITHUB_TOKEN }}
-          GITHUB_REPO: ${{ secrets.IMG_GITHUB_REPO }}
-        run: |
-          # 对应package.json中的script.sync
-          npm run sync
       - name: 安裝 Hexo CI
         run: |
           export TZ='Asia/Shanghai'
@@ -51,8 +29,13 @@ jobs:
         id: cache-dependencies
         with:
           path: node_modules
-          key: ${{runner.OS}}-${{hashFiles('**/package-lock.json')}}          
+          key: ${{runner.OS}}-${{hashFiles('**/package-lock.json')}}             
 
+      - name: 安裝插件
+        if: steps.cache-dependencies.outputs.cache-hit != 'true'
+        run: |
+          npm install
+                 
       - name: 部署博客
         run: |
           hexo clean && hexo g && hexo douban && gulp
