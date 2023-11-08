@@ -1,22 +1,20 @@
 ---
-password: ''
-icon: ''
-date: '2022-02-08'
+password: ""
+icon: ""
+date: "2022-02-08"
 type: Post
 category: 技术分享
-urlname: '37'
+urlname: "37"
 catalog:
   - archives
 tags:
   - Java
-summary: >-
-  synchronized
-  关键字解决的是多个线程之间访问资源的同步性，synchronized关键字可以保证被它修饰的方法或者代码块在任意时刻只能有一个线程执行。另外，在 Ja
-sort: ''
+summary: synchronized 关键字解决的是多个线程之间访问资源的同步性，synchronized关键字可以保证被它修饰的方法或者代码块在任意时刻只能有一个线程执行。另外，在 Ja
+sort: ""
 title: Java基础-锁
 status: Published
-updated: '2023-10-08 14:42:00'
-abbrlink: 1008
+cover: "https://blog-file.hehouhui.cn/image-1647847160115.png"
+updated: "2023-10-08 14:42:00"
 ---
 
 ### synchronized
@@ -131,7 +129,7 @@ public class SynchronizedDemo {
 
 通过 JDK 自带的 `javap` 命令查看 `SynchronizedDemo` 类的相关字节码信息：首先切换到类的对应目录执行 `javac SynchronizedDemo.java` 命令生成编译后的 .class 文件，然后执行`javap -c -s -v -l SynchronizedDemo.class`。
 
-![](https://blog-file.hehouhui.cn/202203222203508.png)
+![202203222203508.png](https://blog-file.hehouhui.cn/202203222203508.png)
 
 从上面我们可以看出：
 
@@ -159,7 +157,7 @@ Copy to clipboardErrorCopied
 
 ```
 
-![](https://blog-file.hehouhui.cn/202203222128189.png)
+![202203222128189.png](https://blog-file.hehouhui.cn/202203222128189.png)
 
 `synchronized` 修饰的方法并没有 `monitorenter` 指令和 `monitorexit` 指令，取得代之的确实是 `ACC_SYNCHRONIZED` 标识，该标识指明了该方法是一个同步方法。JVM 通过该 `ACC_SYNCHRONIZED` 访问标志来辨别一个方法是否声明为同步方法，从而执行相应的同步调用。
 
@@ -241,7 +239,7 @@ CAS 与`synchronized`的使用情景
 
 如下图所示，线程 A 持有资源 2，线程 B 持有资源 1，他们同时都想申请对方的资源，所以这两个线程就会互相等待而进入死锁状态。
 
-![](https://blog-file.hehouhui.cn/202203222203695.png)
+![202203222203695.png](https://blog-file.hehouhui.cn/202203222203695.png)
 
 线程 A 通过 synchronized (resource1) 获得 resource1 的监视器锁，然后通过`Thread.sleep(1000);`让线程 A 休眠 1s 为的是让线程 B 得到执行然后获取到 resource2 的监视器锁。线程 A 和线程 B 休眠结束了都开始企图请求获取对方的资源，然后这两个线程就会陷入互相等待的状态，这也就产生了死锁。上面的例子符合产生死锁的四个必要条件。
 
@@ -274,7 +272,7 @@ CAS 与`synchronized`的使用情景
 
 看个 AQS(AbstractQueuedSynchronizer)原理图：
 
-![](https://blog-file.hehouhui.cn/image-1648381455274.png)
+![image-1648381455274.png](https://blog-file.hehouhui.cn/image-1648381455274.png)
 
 AQS 使用一个 int 成员变量来表示同步状态，通过内置的 FIFO 队列来完成获取资源线程的排队工作。AQS 使用 CAS 对该同步状态进行原子操作实现对其值的修改。
 

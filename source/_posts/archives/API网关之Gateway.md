@@ -1,25 +1,22 @@
 ---
-password: ''
-icon: ''
-date: '2022-03-05'
+password: ""
+icon: ""
+date: "2022-03-05"
 type: Post
 category: 技术分享
-urlname: '46'
+urlname: "46"
 catalog:
   - archives
 tags:
   - Spring
   - 微服务
   - 分布式
-summary: >-
-  API 网关是一个服务器，是系统对外的唯一入口。API 网关封装了系统内部架构，为每个客户端提供定制的
-  API。所有的客户端和消费端都通过统一的网关接入微服务，在网关层处理所有非业务功能。API 网关并不是微服务场景中必须的组件，如下图，不管有没有 API
-  网关，后端微服务都可以通过 API 很好地支持客户端的访问
-sort: ''
+summary: API 网关是一个服务器，是系统对外的唯一入口。API 网关封装了系统内部架构，为每个客户端提供定制的 API。所有的客户端和消费端都通过统一的网关接入微服务，在网关层处理所有非业务功能。API 网关并不是微服务场景中必须的组件，如下图，不管有没有 API 网关，后端微服务都可以通过 API 很好地支持客户端的访问
+sort: ""
 title: API网关之Gateway
 status: Published
-updated: '2023-10-08 14:42:00'
-abbrlink: 45959
+cover: "https://cdn.jsdelivr.net/gh/listener-He/images@default/202305102209640.png"
+updated: "2023-10-08 14:42:00"
 ---
 
 # Gateway
@@ -32,7 +29,7 @@ API 网关的流行，源于近几年来移动应用与企业间互联需求的�
 
 API 网关是一个服务器，是系统对外的唯一入口。API 网关封装了系统内部架构，为每个客户端提供定制的 API。所有的客户端和消费端都通过统一的网关接入微服务，在网关层处理所有非业务功能。API 网关并不是微服务场景中必须的组件，如下图，不管有没有 API 网关，后端微服务都可以通过 API 很好地支持客户端的访问。
 
-![](https://blog-file.hehouhui.cn/1280X1280.png)
+![1280X1280.png](https://blog-file.hehouhui.cn/1280X1280.png)
 
 API 网关出现的原因是微服务架构的出现，不同的微服务一般会有不同的网络地址，而外部客户端可能需要调用多个服务的接口才能完成一个业务需求，如果让客户端直接与各个微服务通信，会有以下的问题：
 
@@ -52,7 +49,7 @@ API 网关出现的原因是微服务架构的出现，不同的微服务一般�
 - 聚合后台服务，节省流量，提高性能，提升用户体验
 - 提供安全、流控、过滤、缓存、计费、监控等 API 管理功能
 
-![](https://blog-file.hehouhui.cn/clip_image003.png)
+![clip_image003.png](https://blog-file.hehouhui.cn/clip_image003.png)
 
 网关应当具备以下功能
 
@@ -91,7 +88,7 @@ Spring Cloud Gateway 需要 Spring Boot 和 `Spring Webflux` 提供的 `Netty` �
 
 工作流程
 
-![](https://blog-file.hehouhui.cn/clip_image005.png)
+![clip_image005.png](https://blog-file.hehouhui.cn/clip_image005.png)
 
 如上图所示，客户端向 `Spring Cloud Gateway` 发出请求。再由网关处理程序 `Gateway Handler Mapping` 映射确定与请求相匹配的路由，将其发送到网关 Web 处理程序 `Gateway Web Handler`。该处理程序通过指定的过滤器链将请求发送到我们实际的服务执行业务逻辑，然后返回。过滤器由虚线分隔的原因是，过滤器可以在发送代理请求之前和之后运行逻辑。所有 `pre` 过滤器逻辑均被执行。然后发出代理请求。发出代理请求后，将运行 `post` 过滤器逻辑。
 

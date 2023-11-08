@@ -1,22 +1,20 @@
 ---
-password: ''
-icon: ''
-date: '2020-01-22'
+password: ""
+icon: ""
+date: "2020-01-22"
 type: Post
 category: 技术分享
-urlname: '45'
+urlname: "45"
 catalog:
   - archives
 tags:
   - Java
-summary: >-
-  String对象常量池String 对象的两种创建方式：String str1 =
-  "abcd";//先检查字符串常量池中有没有"abcd"，如果字符串常量池中
-sort: ''
+summary: String对象常量池String 对象的两种创建方式：String str1 = "abcd";//先检查字符串常量池中有没有"abcd"，如果字符串常量池中
+sort: ""
 title: Java基础-String
 status: Published
-updated: '2023-10-08 14:42:00'
-abbrlink: 23829
+cover: "https://www.notion.so/images/page-cover/nasa_fingerprints_of_water_on_the_sand.jpg"
+updated: "2023-10-08 14:42:00"
 ---
 
 ## String 对象
@@ -43,7 +41,7 @@ System.out.println(str2==str3);//falseCopy to clipboardErrorCopied
 
 再给大家一个图应该更容易理解，图片来源：[https://www.journaldev.com/797/what-is-java-string-pool：](https://www.journaldev.com/797/what-is-java-string-pool%EF%BC%9A)
 
-![](https://blog-file.hehouhui.cn/202203222203380.png)
+![202203222203380.png](https://blog-file.hehouhui.cn/202203222203380.png)
 
 **String 类型的常量池比较特殊。它的主要使用方法有两种：**
 
@@ -75,7 +73,7 @@ System.out.println(str2==str3);//falseCopy to clipboardErrorCopied
 
 ```
 
-![](https://blog-file.hehouhui.cn/202203222203646.png)
+![202203222203646.png](https://blog-file.hehouhui.cn/202203222203646.png)
 
 尽量避免多个字符串拼接，因为这样会重新创建对象。如果需要改变字符串的话，可以使用 StringBuilder 或者 StringBuffer。
 

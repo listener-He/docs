@@ -1,7 +1,7 @@
 ---
-password: ''
-icon: ''
-date: '2023-09-12'
+password: ""
+icon: ""
+date: "2023-09-12"
 type: Post
 category: 技术分享
 urlname: redis-key-202309
@@ -9,16 +9,14 @@ catalog:
   - archives
 tags:
   - Redis
-summary: >-
+summary: |-
   做一些C端业务，不可避免的要引入一级缓存来代替数据库的压力并且减少业务响应时间，其实每次引入一个中间件来解决问题的同时，必然会带来很多新的问题需要注意，比如缓存一致性问题。
-
-  那么其实还会有一些其他问题比如使用Redis作为一级缓存时可能带来的热key、大key等问题，本文我们就热key（hot
-  key）问题来讨论，如何合理的解决热key问题。
-sort: ''
+  那么其实还会有一些其他问题比如使用Redis作为一级缓存时可能带来的热key、大key等问题，本文我们就热key（hot key）问题来讨论，如何合理的解决热key问题。
+sort: ""
 title: Redis 热key是什么问题，如何导致的？有什么解决方案？
 status: Published
-updated: '2023-10-08 14:42:00'
-abbrlink: 60175
+cover: "https://cdn.jsdelivr.net/gh/listener-He/images@default/202309121610208.png"
+updated: "2023-10-08 14:42:00"
 ---
 
 做一些 C 端业务，不可避免的要引入一级缓存来代替数据库的压力并且减少业务响应时间，其实每次引入一个中间件来解决问题的同时，必然会带来很多新的问题需要注意，比如缓存一致性问题。
@@ -35,9 +33,9 @@ abbrlink: 60175
 
 如下图 1、2 所示，分别是正常 redis cluster 集群和使用一层 proxy 代理的 redis 集群 key 访问。
 
-![](https://cdn.jsdelivr.net/gh/listener-He/images@default/202309121604507.png)
+![202309121604507.png](https://cdn.jsdelivr.net/gh/listener-He/images@default/202309121604507.png)
 
-![](https://cdn.jsdelivr.net/gh/listener-He/images@default/202309121605080.png)
+![202309121605080.png](https://cdn.jsdelivr.net/gh/listener-He/images@default/202309121605080.png)
 
 如上所说，热 key 会给集群中的少部分节点带来超高的负载压力，如果不正确处理，那么这些节点宕机都有可能，从而会影响整个缓存集群的运作，因此我们必须及时发现热 key、解决热 key 问题。
 
@@ -57,7 +55,7 @@ abbrlink: 60175
 
 redis 4.0 以上的版本支持了每个节点上的基于 LFU 的热点 key 发现机制，使用 redis-cli –hotkeys 即可，执行 redis-cli 时加上–hotkeys 选项。可以定时在节点中使用该命令来发现对应热点 key。
 
-![](https://cdn.jsdelivr.net/gh/listener-He/images@default/202309121606497.png)
+![202309121606497.png](https://cdn.jsdelivr.net/gh/listener-He/images@default/202309121606497.png)
 
 如下所示，可以看到 redis-cli –hotkeys 的执行结果，热 key 的统计信息，这个命令的执行时间较长，可以设置定时执行来统计。
 
@@ -113,7 +111,7 @@ Object result = configCache.get(key);
 
 我们在放入缓存时就将对应业务的缓存 key 拆分成多个不同的 key。如下图所示，我们首先在更新缓存的一侧，将 key 拆成 N 份，比如一个 key 名字叫做“good_100”，那我们就可以把它拆成四份，“`good_100_copy1`”、“`good_100_copy2`”、“`good_100_copy3`”、“`good_100_copy4`”，每次更新和新增时都需要去改动这 N 个 key，这一步就是拆 key。
 
-![](https://cdn.jsdelivr.net/gh/listener-He/images@default/202309121606262.png)
+![202309121606262.png](https://cdn.jsdelivr.net/gh/listener-He/images@default/202309121606262.png)
 
 对于 service 端来讲，我们就需要想办法尽量将自己访问的流量足够的均匀，如何给自己即将访问的热 key 上加入后缀。几种办法，根据本机的 ip 或 mac 地址做 hash，之后的值与拆 key 的数量做取余，最终决定拼接成什么样的 key 后缀，从而打到哪台机器上；服务启动时的一个随机数对拆 key 的数量做取余。
 
@@ -131,7 +129,7 @@ Object result = configCache.get(key);
 
 目前市面上已经有了不少关于 hotKey 相对完整的应用级解决方案，其中京东在这方面有开源的 hotkey 工具，原理就是在 client 端做洞察，然后上报对应 hotkey，server 端检测到后，将对应 hotkey 下发到对应服务端做本地缓存，并且这个本地缓存在远程对应的 key 更新后，会同步更新，已经是目前较为成熟的自动探测热 key、分布式一致性缓存解决方案
 
-![](https://cdn.jsdelivr.net/gh/listener-He/images@default/202309121607163.png)
+![202309121607163.png](https://cdn.jsdelivr.net/gh/listener-He/images@default/202309121607163.png)
 
 ## 总结
 

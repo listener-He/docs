@@ -1,7 +1,7 @@
 ---
-password: ''
-icon: ''
-date: '2023-04-28'
+password: ""
+icon: ""
+date: "2023-04-28"
 type: Post
 category: 技术分享
 urlname: api-login-and-jwt-token-generation-using-keycloak
@@ -13,14 +13,12 @@ tags:
   - Java
   - keycloak
   - oauth
-summary: >-
-  Red Hat SSO (或Keycloak)是领先的Web SSO产品之一，支持SAML 2.0、OpenID Connect和OAuth
-  2.0等标准，强大之处在于可通过多种方式直接访问Keycloak，包括API调用生成和验证JWT令牌。操作仅限API调用，无需暴露Keycloak的UI给公众。
-sort: ''
+summary: Red Hat SSO (或Keycloak)是领先的Web SSO产品之一，支持SAML 2.0、OpenID Connect和OAuth 2.0等标准，强大之处在于可通过多种方式直接访问Keycloak，包括API调用生成和验证JWT令牌。操作仅限API调用，无需暴露Keycloak的UI给公众。
+sort: ""
 title: 使用 Keycloak 的 API 登录和 JWT 令牌生成
 status: Published
-updated: '2023-10-08 14:42:00'
-abbrlink: 10290
+cover: "https://developers.redhat.com/sites/default/files/styles/article_feature/public/blog/2019/12/keycloak10.png?itok=-ExiELH9"
+updated: "2023-10-08 14:42:00"
 ---
 
 [Red Hat 单点登录](https://www.redhat.com/en/products/middleware)(SSO) — 或其开源版本 Keycloak — 是 Web SSO 功能的领先产品之一，它基于流行的标准，例如安全断言标记语言 (SAML) 2.0、OpenID Connect 和 OAuth 2.0。Red Hat SSO 最强大的功能之一是我们可以通过多种方式直接访问 Keycloak，无论是通过简单的 HTML 登录表单，还是通过 API 调用。在以下场景中，我们将生成一个 JWT 令牌，然后对其进行验证。一切都将使用 API 调用来完成，因此 Keycloak 的 UI 不会直接暴露给公众。
@@ -29,19 +27,19 @@ abbrlink: 10290
 
 首先，我们将在 Keycloak 中创建一个简单的用户，如图 1 所示。
 
-![](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2019/12/keycloak01-1.png?itok=WywnX4-4)
+![keycloak01-1.png](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2019/12/keycloak01-1.png?itok=WywnX4-4)
 
 图 1：在 Keycloak 中创建用户。">
 
 填写所有必填字段，例如**Username**、**First Name**和**Last Name**，如图 2 所示。
 
-![](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2019/12/keycloak02-1.png?itok=6nuYjWAS)
+![keycloak02-1.png](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2019/12/keycloak02-1.png?itok=6nuYjWAS)
 
 图 2：输入用户信息。">
 
 设置用户密码，如图 3 所示。
 
-![](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2019/12/keycloak03-1.png?itok=xhzQFM8t)
+![keycloak03-1.png](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2019/12/keycloak03-1.png?itok=xhzQFM8t)
 
 图 3：设置用户密码。">
 
@@ -49,25 +47,25 @@ abbrlink: 10290
 
 下一步是在我们的领域中创建一个特定的*客户端*，如图 4 所示。Keycloak 中的客户端代表特定用户可以访问的资源，无论是用于验证用户身份、请求身份信息还是验证访问令牌。
 
-![](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2019/12/keycloak04-1.png?itok=cKzhT2We)
+![keycloak04-1.png](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2019/12/keycloak04-1.png?itok=cKzhT2We)
 
 图 4：查看您现有的客户。">
 
 单击**“创建”** ，打开**“添加客户端”**对话框，如图 5 所示。
 
-![](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2019/12/keycloak05-1.png?itok=GQ60hiap)
+![keycloak05-1.png](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2019/12/keycloak05-1.png?itok=GQ60hiap)
 
 图 5：创建新客户端。">
 
 填写客户表格中的所有必填字段。请特别注意**Direct Grant Flow**（如图 6 所示）并将其值设置为**direct grant**。此外，将**访问类型**更改为**机密**。
 
-![](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2019/12/keycloak06-1.png?itok=azkV9Cm1)
+![keycloak06-1.png](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2019/12/keycloak06-1.png?itok=azkV9Cm1)
 
 图 6：覆盖客户端的身份验证流程。">
 
 **最后，将 Client Authenticator**字段中的客户端凭证更改为**Client Id 和 Secret**，如图 7 所示。
 
-![](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2019/12/keycloak07-1.png?itok=3soIf6MC)
+![keycloak07-1.png](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2019/12/keycloak07-1.png?itok=3soIf6MC)
 
 图 7：设置新客户的凭据。">
 
@@ -75,7 +73,12 @@ abbrlink: 10290
 
 现在我们可以通过 REST API 来测试我们新创建的客户端来模拟一个简单的登录。我们的身份验证 URL 是
 
+<details>
+<summary>`http://localhost:8080/auth/realms/&lt;your-realm-name&gt;/protocol/openid-connect/token`</summary>
+
 填写参数并使用我们的用户名和密码设置 client_id 和 client_secret：
+
+</details>
 
 ```shell
 curl -L -X POST 'http://localhost:8080/auth/realms/whatever-realm/protocol/openid-connect/token' \
@@ -90,7 +93,7 @@ curl -L -X POST 'http://localhost:8080/auth/realms/whatever-realm/protocol/openi
 
 或者，我们可以使用 Postman 等 REST API 工具来模拟 HTTP POST 请求，如图 8 所示。
 
-![](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2019/12/keycloak08-1.png?itok=lXBjdXCy)
+![keycloak08-1.png](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2019/12/keycloak08-1.png?itok=lXBjdXCy)
 
 图 8：我们模拟的 HTTP POST 请求。">
 

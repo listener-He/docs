@@ -1,22 +1,20 @@
 ---
-password: ''
-icon: ''
-date: '2022-03-15'
+password: ""
+icon: ""
+date: "2022-03-15"
 type: Post
 category: 技术分享
-urlname: '39'
+urlname: "39"
 catalog:
   - archives
 tags:
   - 图像处理
-summary: >-
-  wkhtmltopdf精讲(原文)
-  作者：JSON_NULL术语定义文档对象“文档对象”是指PDF文档中的文档对象，共有三种类型的“文档对象”，他们分别是“页面对象”，“封面对象”和“目录对象”。页面
-sort: ''
+summary: wkhtmltopdf精讲(原文) 作者：JSON_NULL术语定义文档对象“文档对象”是指PDF文档中的文档对象，共有三种类型的“文档对象”，他们分别是“页面对象”，“封面对象”和“目录对象”。页面
+sort: ""
 title: wkhtmltopdf详细使用
 status: Published
-updated: '2023-10-08 14:42:00'
-abbrlink: 1869
+cover: "https://blog-file.hehouhui.cn/image-1647847511877.png"
+updated: "2023-10-08 14:42:00"
 ---
 
 # wkhtmltopdf 精讲
@@ -182,7 +180,7 @@ N 是一个正整数。
 
 ### 何为大纲
 
-![](https:////upload-images.jianshu.io/upload_images/3060014-05914583ee52091d.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1140/format/webp)
+![3060014-05914583ee52091d.jpg](https:////upload-images.jianshu.io/upload_images/3060014-05914583ee52091d.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1140/format/webp)
 
 大纲
 
@@ -284,7 +282,7 @@ N 是一个正整数。
 
 这两个参数用来指定是否在标准输出中输出 javascript 的调试信息，默认 `--no-debug-javasript` 参数是开启的，也就是说默认不会输出 javascript 的调试信息。下图是打开 `--debug-javascript` 参数的演示。
 
-![](https:////upload-images.jianshu.io/upload_images/3060014-c9a2fdee76719829.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/861/format/webp)
+![3060014-c9a2fdee76719829.png](https:////upload-images.jianshu.io/upload_images/3060014-c9a2fdee76719829.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/861/format/webp)
 
 - -debug-javascript
 

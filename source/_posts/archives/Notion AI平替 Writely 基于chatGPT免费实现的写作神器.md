@@ -1,7 +1,7 @@
 ---
-password: ''
-icon: ''
-date: '2023-04-24T00:00:00.000+08:00'
+password: ""
+icon: ""
+date: "2023-04-24T00:00:00.000+08:00"
 type: Post
 category: 创作分享
 urlname: notion-ai-writely
@@ -12,13 +12,12 @@ tags:
   - 工具
   - chatgpt
   - notion
-summary: >-
-  作为NiotionAi的重度依赖者，最近观察到一个比NotionAI更强大而且还免费的插件。一款基于chatGPT技术的写作神器Writely。借助自然语言处理技术，Writely可以自动生成、推荐内容，并进行语法纠错优化。同时提供多种模板和主题，让写作更加高效实用。该工具适合初学者和专业写作者使用
-sort: ''
+summary: 作为NiotionAi的重度依赖者，最近观察到一个比NotionAI更强大而且还免费的插件。一款基于chatGPT技术的写作神器Writely。借助自然语言处理技术，Writely可以自动生成、推荐内容，并进行语法纠错优化。同时提供多种模板和主题，让写作更加高效实用。该工具适合初学者和专业写作者使用
+sort: ""
 title: Notion AI平替 Writely 基于chatGPT免费实现的写作神器
 status: Published
-updated: '2023-10-08 14:42:00'
-abbrlink: 64940
+cover: "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/bd13b709-62b4-45ef-bdf2-cb1a84350da2/WX20230424-180802.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20231108%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20231108T075909Z&X-Amz-Expires=3600&X-Amz-Signature=4f8953f5b9ac94928951911af84d79aa0e1b8b6ca1f9d533a6ec516721fc9f74&X-Amz-SignedHeaders=host&x-id=GetObject"
+updated: "2023-10-08 14:42:00"
 ---
 
 AI 技术的迅速发展和普及，为人类的生活带来了很多便利。在写作领域，也出现了不少基于人工智能技术的写作工具。其中最近推出的一款基于 chatGPT 技术的写作神器 Writely，引起了广泛关注。
@@ -49,26 +48,26 @@ Writely 的问世，既是技术的一次升级，也是写作工具创新的一
 
 Chrome 插件：[](https://chrome.google.com/webstore/detail/writely/eocenplmfgoaibmmohkhhocnlkpaecgn)
 
-![](https://camo.githubusercontent.com/8a0f1cbc977222a795118f3a124cc31fbadb75ba71c444ae8c9851e98e436d0f/68747470733a2f2f696d672e736869656c64732e696f2f6368726f6d652d7765622d73746f72652f762f656f63656e706c6d66676f6169626d6d6f686b68686f636e6c6b70616563676e)
+![image](https://camo.githubusercontent.com/8a0f1cbc977222a795118f3a124cc31fbadb75ba71c444ae8c9851e98e436d0f/68747470733a2f2f696d672e736869656c64732e696f2f6368726f6d652d7765622d73746f72652f762f656f63656e706c6d66676f6169626d6d6f686b68686f636e6c6b70616563676e)
 
 Firefox 扩展：
 
-![](https://camo.githubusercontent.com/267163d02f6bd288e0175f2c81f50e8f015f9f982ea1cf8b19d25419ded08dac/68747470733a2f2f696d672e736869656c64732e696f2f616d6f2f762f77726974656c79)
+![image](https://camo.githubusercontent.com/267163d02f6bd288e0175f2c81f50e8f015f9f982ea1cf8b19d25419ded08dac/68747470733a2f2f696d672e736869656c64732e696f2f616d6f2f762f77726974656c79)
 
 ### 配置
 
 1. 获取 Open AI API Key。 如果您没有，请在  [https://platform.openai.com/account/api-keys](https://platform.openai.com/account/api-keys)  上进行申请。
 2. 单击插件图标，然后单击“设置”图标。
 
-![](https://user-images.githubusercontent.com/13167934/223933756-b001d01a-899c-42e5-be14-753357a1bba5.png)
+![223933756-b001d01a-899c-42e5-be14-753357a1bba5.png](https://user-images.githubusercontent.com/13167934/223933756-b001d01a-899c-42e5-be14-753357a1bba5.png)
 
 1. 进行配置。
 
-![](https://user-images.githubusercontent.com/13167934/224465348-f2e0aaf8-ce7b-48d2-9637-be2a205f317f.png)
+![224465348-f2e0aaf8-ce7b-48d2-9637-be2a205f317f.png](https://user-images.githubusercontent.com/13167934/224465348-f2e0aaf8-ce7b-48d2-9637-be2a205f317f.png)
 
 1. 将鼠标滑动到任何网页上的单词上，一个“W”图标将出现在鼠标附近，单击以使用。
 
-![](https://user-images.githubusercontent.com/13167934/224236822-eb1cc963-77e5-4820-aa6d-63088989c0cf.gif)
+![224236822-eb1cc963-77e5-4820-aa6d-63088989c0cf.gif](https://user-images.githubusercontent.com/13167934/224236822-eb1cc963-77e5-4820-aa6d-63088989c0cf.gif)
 
 GitHub 地址 :
 

@@ -1,29 +1,25 @@
 ---
-password: ''
-icon: ''
-date: '2020-03-12'
+password: ""
+icon: ""
+date: "2020-03-12"
 type: Post
 category: 技术分享
-urlname: '42'
+urlname: "42"
 catalog:
   - archives
 tags:
   - Java
   - Jvm
-summary: >-
-  Java基础-JVM是Java开发者必须要掌握的重要知识点之一，JVM全称为Java Virtual
-  Machine（Java虚拟机），它是Java程序运行的环境，在Java编程中具有极其重要的作用。
-
+summary: |-
+  Java基础-JVM是Java开发者必须要掌握的重要知识点之一，JVM全称为Java Virtual Machine（Java虚拟机），它是Java程序运行的环境，在Java编程中具有极其重要的作用。
   作为Java语言的核心，JVM能够通过将Java代码编译为字节码，再通过字节码的解释器实现Java程序的运行。JVM负责管理应用程序的内存、多线程、垃圾回收等操作，是实现跨平台、自动垃圾回收、安全性高等特性的关键。
-
   要深入理解JVM，需要掌握JVM的内部机制，包括虚拟机类加载器、运行时数据区域、字节码执行引擎等方面。此外，对于JVM的性能调优及故障排查也非常重要，能够帮助开发者优化应用程序的运行效率。
-
   总之，掌握Java基础-JVM是Java开发者必须要具备的知识技能，它可以帮助你更好地理解Java程序的运行机制，提高开发效率，提升应用程序的性能以及稳定性。
-sort: ''
+sort: ""
 title: Java基础-JVM
 status: Published
-updated: '2023-10-08 14:42:00'
-abbrlink: 5201
+cover: "https://cdn.jsdelivr.net/gh/listener-He/images@default/202305102223244.png"
+updated: "2023-10-08 14:42:00"
 ---
 
 ## JMM
@@ -32,13 +28,13 @@ abbrlink: 5201
 
 在 JDK1.2 之前，Java 的内存模型实现总是从**主存**（即共享内存）读取变量，是不需要进行特别的注意的。而在当前的 Java 内存模型下，线程可以把变量保存**本地内存**（比如机器的寄存器）中，而不是直接在主存中进行读写。这就可能造成一个线程在主存中修改了一个变量的值，而另外一个线程还继续使用它在寄存器中的变量值的拷贝，造成**数据的不一致**。
 
-![](https://blog-file.hehouhui.cn/202203222203113.png)
+![202203222203113.png](https://blog-file.hehouhui.cn/202203222203113.png)
 
 要解决这个问题，就需要把变量声明为**`volatile`**，这就指示 JVM，这个变量是共享且不稳定的，每次使用它都到主存中进行读取。
 
 所以，**`volatile`** **关键字 除了防止 JVM 的指令重排 ，还有一个重要的作用就是保证变量的可见性。**
 
-![](https://blog-file.hehouhui.cn/202203222203555.png)
+![202203222203555.png](https://blog-file.hehouhui.cn/202203222203555.png)
 
 ## JVM
 
@@ -61,11 +57,11 @@ ava 虚拟机在执行 Java 程序的过程中会把它管理的内存划分成�
 
 **JDK 1.8 之前：**
 
-![](https://blog-file.hehouhui.cn/202203222203825.png)
+![202203222203825.png](https://blog-file.hehouhui.cn/202203222203825.png)
 
 **JDK 1.8 ：**
 
-![](https://blog-file.hehouhui.cn/202203222129191.png)
+![202203222129191.png](https://blog-file.hehouhui.cn/202203222129191.png)
 
 **线程私有的：**
 
@@ -140,13 +136,13 @@ Java 堆是垃圾收集器管理的主要区域，因此也被称作**GC 堆（G
 2. 老生代(Old Generation)
 3. 永生代(Permanent Generation)
 
-![](https://blog-file.hehouhui.cn/202203222203705.png)
+![202203222203705.png](https://blog-file.hehouhui.cn/202203222203705.png)
 
-![](https://blog-file.hehouhui.cn/202203222203389.png)
+![202203222203389.png](https://blog-file.hehouhui.cn/202203222203389.png)
 
 JDK 8 版本之后方法区（HotSpot 的永久代）被彻底移除了（JDK1.7 就已经开始了），取而代之是元空间，元空间使用的是直接内存。
 
-![](https://blog-file.hehouhui.cn/202203222203514.png)
+![202203222203514.png](https://blog-file.hehouhui.cn/202203222203514.png)
 
 **上图所示的 Eden 区、两个 Survivor 区都属于新生代（为了区分，这两个 Survivor 区域按照顺序被命名为 from 和 to），中间一层属于老年代。**
 
@@ -355,7 +351,7 @@ Java 堆是垃圾收集器管理的主要区域，因此也被称作**GC 堆（G
 
 **堆空间的基本结构：**
 
-![](https://snailclimb.gitee.io/javaguide/docs/java/jvm/pictures/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/01d330d8-2710-4fad-a91c-7bbbfaaefc0e.png)
+![01d330d8-2710-4fad-a91c-7bbbfaaefc0e.png](https://snailclimb.gitee.io/javaguide/docs/java/jvm/pictures/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/01d330d8-2710-4fad-a91c-7bbbfaaefc0e.png)
 
 上图所示的 Eden 区、From Survivor0("From") 区、To Survivor1("To") 区都属于新生代，Old Memory 区属于老年代。
 
@@ -389,13 +385,13 @@ Java 堆是垃圾收集器管理的主要区域，因此也被称作**GC 堆（G
 
 经过这次 GC 后，Eden 区和"From"区已经被清空。这个时候，"From"和"To"会交换他们的角色，也就是新的"To"就是上次 GC 前的“From”，新的"From"就是上次 GC 前的"To"。不管怎样，都会保证名为 To 的 Survivor 区域是空的。Minor GC 会一直重复这样的过程，直到“To”区被填满，"To"区被填满之后，会将所有对象移动到老年代中。
 
-![](https://blog-file.hehouhui.cn/202203222203744.png)
+![202203222203744.png](https://blog-file.hehouhui.cn/202203222203744.png)
 
-![](https://blog-file.hehouhui.cn/202203222203096.png)
+![202203222203096.png](https://blog-file.hehouhui.cn/202203222203096.png)
 
-![](https://blog-file.hehouhui.cn/202203222203366.png)
+![202203222203366.png](https://blog-file.hehouhui.cn/202203222203366.png)
 
-![](https://blog-file.hehouhui.cn/202203222203478.png)
+![202203222203478.png](https://blog-file.hehouhui.cn/202203222203478.png)
 
 > 当需要排查各种内存溢出问题、当垃圾收集成为系统达到更高并发的瓶颈时，我们就需要对这些“自动化”的技术实施必要的监控和调节。
 
@@ -435,7 +431,7 @@ public class GCTest {
 
 通过以下方式运行：
 
-![](https://blog-file.hehouhui.cn/202203222136423.png)
+![202203222136423.png](https://blog-file.hehouhui.cn/202203222136423.png)
 
 添加的参数：
 
@@ -443,11 +439,11 @@ public class GCTest {
 -XX:+PrintGCDetails
 ```
 
-![](https://snailclimb.gitee.io/javaguide/docs/java/jvm/pictures/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/10317146.png)
+![10317146.png](https://snailclimb.gitee.io/javaguide/docs/java/jvm/pictures/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/10317146.png)
 
 运行结果 (红色字体描述有误，应该是对应于 JDK1.7 的永久代)：
 
-![](https://blog-file.hehouhui.cn/202203222203083.jpg)
+![202203222203083.jpg](https://blog-file.hehouhui.cn/202203222203083.jpg)
 
 从上图我们可以看出 eden 区内存几乎已经被分配完全（即使程序什么也不做，新生代也会使用 2000 多 k 内存）。假如我们再为 allocation2 分配内存会出现什么情况呢？
 
@@ -456,7 +452,7 @@ allocation2 = new byte[900*1024];Copy to clipboardErrorCopied
 
 ```
 
-![](https://blog-file.hehouhui.cn/202203222203234.png)
+![202203222203234.png](https://blog-file.hehouhui.cn/202203222203234.png)
 
 **简单解释一下为什么会出现这种情况：** 因为给 allocation2 分配内存的时候 eden 区内存几乎已经被分配完了，我们刚刚讲了当 Eden 区没有足够空间进行分配时，虚拟机将发起一次 Minor GC.GC 期间虚拟机又发现 allocation1 无法存入 Survivor 空间，所以只好通过 **分配担保机制** 把新生代的对象提前转移到老年代中去，老年代上的空间足够存放 allocation1，所以不会出现 Full GC。执行 Minor GC 后，后面分配的对象如果能够存在 eden 区的话，还是会在 eden 区分配内存。可以执行如下代码验证：
 
@@ -534,7 +530,7 @@ Copy to clipboardErrorCopied
 
 上面的说法已经在《深入理解 Java 虚拟机》第三版中被改正过来了。感谢 R 大的回答：
 
-![](https://blog-file.hehouhui.cn/202203222203561.png)
+![202203222203561.png](https://blog-file.hehouhui.cn/202203222203561.png)
 
 **总结：**
 
@@ -552,7 +548,7 @@ Copy to clipboardErrorCopied
 
 堆中几乎放着所有的对象实例，对堆垃圾回收前的第一步就是要判断哪些对象已经死亡（即不能再被任何途径使用的对象）。
 
-![](https://blog-file.hehouhui.cn/202203222203717.png)
+![202203222203717.png](https://blog-file.hehouhui.cn/202203222203717.png)
 
 ### 引用计数器
 
@@ -580,7 +576,7 @@ public class ReferenceCountingGc {
 
 这个算法的基本思想就是通过一系列的称为 **“GC Roots”** 的对象作为起点，从这些节点开始向下搜索，节点所走过的路径称为引用链，当一个对象到 GC Roots 没有任何引用链相连的话，则证明此对象是不可用的。
 
-![](https://blog-file.hehouhui.cn/202203222203882.png)
+![202203222203882.png](https://blog-file.hehouhui.cn/202203222203882.png)
 
 可作为 GC Roots 的对象包括下面几种:
 
@@ -658,7 +654,7 @@ JDK1.2 以后，Java 对引用的概念进行了扩充，将引用分为强引�
 
 ### 垃圾收集算法
 
-![](https://blog-file.hehouhui.cn/202203222203133.png)
+![202203222203133.png](https://blog-file.hehouhui.cn/202203222203133.png)
 
 ### 标记-清除术算法
 
@@ -667,19 +663,19 @@ JDK1.2 以后，Java 对引用的概念进行了扩充，将引用分为强引�
 1. **效率问题**
 2. **空间问题（标记清除后会产生大量不连续的碎片）**
 
-![](https://blog-file.hehouhui.cn/202203222203288.jpeg)
+![202203222203288.jpeg](https://blog-file.hehouhui.cn/202203222203288.jpeg)
 
 ### 标记-复制算法
 
 为了解决效率问题，“标记-复制”收集算法出现了。它可以将内存分为大小相同的两块，每次使用其中的一块。当这一块的内存使用完后，就将还存活的对象复制到另一块去，然后再把使用的空间一次清理掉。这样就使每次的内存回收都是对内存区间的一半进行回收。
 
-![](https://blog-file.hehouhui.cn/202203222146680.png)
+![202203222146680.png](https://blog-file.hehouhui.cn/202203222146680.png)
 
 ### 标记-整理算法
 
 根据老年代的特点提出的一种标记算法，标记过程仍然与“标记-清除”算法一样，但后续步骤不是直接对可回收对象回收，而是让所有存活的对象向一端移动，然后直接清理掉端边界以外的内存。
 
-![](https://blog-file.hehouhui.cn/202203222203632.png)
+![202203222203632.png](https://blog-file.hehouhui.cn/202203222203632.png)
 
 ### 分代收集算法
 
@@ -693,11 +689,11 @@ JDK1.2 以后，Java 对引用的概念进行了扩充，将引用分为强引�
 
 ### 垃圾收集器
 
-![](https://blog-file.hehouhui.cn/202203222150111.png)
+![202203222150111.png](https://blog-file.hehouhui.cn/202203222150111.png)
 
 HotSpot VM 中的垃圾回收器，以及适用场景
 
-![](https://blog-file.hehouhui.cn/202203222121319.png)
+![202203222121319.png](https://blog-file.hehouhui.cn/202203222121319.png)
 
 到 jdk8 为止，默认的垃圾收集器是 Parallel Scavenge 和 Parallel Old
 
@@ -713,7 +709,7 @@ Serial（串行）收集器是最基本、历史最悠久的垃圾收集器了�
 
 **新生代采用标记-复制算法，老年代采用标记-整理算法。**
 
-![](https://blog-file.hehouhui.cn/202203222203314.png)
+![202203222203314.png](https://blog-file.hehouhui.cn/202203222203314.png)
 
 虚拟机的设计者们当然知道 Stop The World 带来的不良用户体验，所以在后续的垃圾收集器设计中停顿时间在不断缩短（仍然还有停顿，寻找最优秀的垃圾收集器的过程仍然在继续）。
 
@@ -725,7 +721,7 @@ Serial（串行）收集器是最基本、历史最悠久的垃圾收集器了�
 
 **新生代采用标记-复制算法，老年代采用标记-整理算法。**
 
-![](https://blog-file.hehouhui.cn/202203222203393.png)
+![202203222203393.png](https://blog-file.hehouhui.cn/202203222203393.png)
 
 它是许多运行在 Server 模式下的虚拟机的首要选择，除了 Serial 收集器外，只有它能与 CMS 收集器（真正意义上的并发收集器，后面会介绍到）配合工作。
 
@@ -754,7 +750,7 @@ Copy to clipboardErrorCopied
 
 **新生代采用标记-复制算法，老年代采用标记-整理算法。**
 
-![](https://blog-file.hehouhui.cn/202203222152500.png)
+![202203222152500.png](https://blog-file.hehouhui.cn/202203222152500.png)
 
 **这是 JDK1.8 默认收集器**
 
@@ -791,7 +787,7 @@ JDK1.8 默认使用的是 Parallel Scavenge + Parallel Old，如果指定了-XX:
 - **重新标记：** 重新标记阶段就是为了修正并发标记期间因为用户程序继续运行而导致标记产生变动的那一部分对象的标记记录，这个阶段的停顿时间一般会比初始标记阶段的时间稍长，远远比并发标记阶段时间短
 - **并发清除：** 开启用户线程，同时 GC 线程开始对未标记的区域做清扫。
 
-![](https://blog-file.hehouhui.cn/image-1647957148871.png)
+![image-1647957148871.png](https://blog-file.hehouhui.cn/image-1647957148871.png)
 
 从它的名字就可以看出它是一款优秀的垃圾收集器，主要优点：**并发收集、低停顿**。但是它有下面三个明显的缺点：
 

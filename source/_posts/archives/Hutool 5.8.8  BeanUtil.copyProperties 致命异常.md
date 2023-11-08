@@ -1,7 +1,7 @@
 ---
-password: ''
-icon: ''
-date: '2023-05-23'
+password: ""
+icon: ""
+date: "2023-05-23"
 type: Post
 category: 技术分享
 urlname: hutool-beanutil-error
@@ -11,14 +11,12 @@ tags:
   - BUG
   - Java
   - hutool
-summary: >-
-  Hutool是一个小而全的Java工具类库，通过静态方法封装，降低相关API的学习成本，提高工作效率，使Java拥有函数式语言般的优雅，让Java语言也可以“甜甜的”。
-  JavaBean是一个拥有对属性进行set和get方法的类。它可以被简单地定义为包含setXXX和getXXX方法的对象。在Hutool中，判定Bean的方法为：是否存在只有一个参数的setXXX方法。Bean工具类主要操作setXXX和getXXX方法，如将Bean对象转为Map等。
-sort: ''
+summary: Hutool是一个小而全的Java工具类库，通过静态方法封装，降低相关API的学习成本，提高工作效率，使Java拥有函数式语言般的优雅，让Java语言也可以“甜甜的”。 JavaBean是一个拥有对属性进行set和get方法的类。它可以被简单地定义为包含setXXX和getXXX方法的对象。在Hutool中，判定Bean的方法为：是否存在只有一个参数的setXXX方法。Bean工具类主要操作setXXX和getXXX方法，如将Bean对象转为Map等。
+sort: ""
 title: Hutool 5.8.8  BeanUtil.copyProperties 致命异常
 status: Published
-updated: '2023-10-08 14:42:00'
-abbrlink: 33194
+cover: "https://plus.hutool.cn/images/logo.jpg"
+updated: "2023-10-08 14:42:00"
 ---
 
 ## 前言
@@ -78,17 +76,17 @@ public class BeanCopyTest {   
 
 升级前，`hutool`是 5.7.2 版本下，执行结果如下图。
 
-![](https://mmbiz.qpic.cn/mmbiz_png/oH5VKTC5sLgticcibSXbXUSYLrUMNovDaTjjibKRMn2hre1iczL2YJiaKBfP6nMRibht3Aj5rABic23bXfGCiaAW0E9slQ/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1)
+![image](https://mmbiz.qpic.cn/mmbiz_png/oH5VKTC5sLgticcibSXbXUSYLrUMNovDaTjjibKRMn2hre1iczL2YJiaKBfP6nMRibht3Aj5rABic23bXfGCiaAW0E9slQ/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1)
 
 - `BeanUtil.copyProperties`虽然字段类型不一样，但是做了兼容处理，所以业务没有影响业务逻辑。
 
 升级后，`hutool`是 5.8.8 版本，执行结果如下图所示：
 
-![](https://mmbiz.qpic.cn/mmbiz_png/oH5VKTC5sLgticcibSXbXUSYLrUMNovDaTU3PxCE8ZdB1RbGTZeOico3N8u9KV7okT3zWGN5kV5les3lYcX5SAXjg/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1)
+![image](https://mmbiz.qpic.cn/mmbiz_png/oH5VKTC5sLgticcibSXbXUSYLrUMNovDaTU3PxCE8ZdB1RbGTZeOico3N8u9KV7okT3zWGN5kV5les3lYcX5SAXjg/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1)
 
 - 执行报错，因为升级后的版本修改了实现，增加了下面的逻辑，如果包含 E, 就会抛错，从而影响了业务逻辑，同时这个 id 是否包含 e 又是随机因素，到了生产才发现，就悲剧了。
 
-![](https://mmbiz.qpic.cn/mmbiz_png/oH5VKTC5sLgticcibSXbXUSYLrUMNovDaTG9TzjlbbByPMyMa7cAztWZJ3hBTRiatE1I4pLotd84fNgwkRIibyKAVw/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1)
+![image](https://mmbiz.qpic.cn/mmbiz_png/oH5VKTC5sLgticcibSXbXUSYLrUMNovDaTG9TzjlbbByPMyMa7cAztWZJ3hBTRiatE1I4pLotd84fNgwkRIibyKAVw/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1)
 
 ## 分析探讨
 
@@ -102,13 +100,13 @@ public class BeanCopyTest {   
 
 我是比较推崇这种做法的，比如现在`DiagramDTO`删去某个字段，编译器就会报错，就会引起你的注意了，让问题提前暴露，无处遁形。
 
-![](https://mmbiz.qpic.cn/mmbiz_png/oH5VKTC5sLgticcibSXbXUSYLrUMNovDaTliaL28982IYstMia7EjVia0KhJvWAwSkD4bjUwWFBnsAXGGvtbQfoOK0Q/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1)
+![image](https://mmbiz.qpic.cn/mmbiz_png/oH5VKTC5sLgticcibSXbXUSYLrUMNovDaTliaL28982IYstMia7EjVia0KhJvWAwSkD4bjUwWFBnsAXGGvtbQfoOK0Q/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1)
 
 你可能觉得站着说话不腰疼，字段少好，如果字段很多还不得写死啊，我这里推荐一个 IDEA 的插件，可以帮你智能生成这样的代码。
 
-![](https://mmbiz.qpic.cn/mmbiz_png/oH5VKTC5sLgticcibSXbXUSYLrUMNovDaT3mFLBMO8icetJcjicn4RqCwMuaeqibKoTNxTaJRuZOicXn4OdnYP9TPibsw/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1)
+![image](https://mmbiz.qpic.cn/mmbiz_png/oH5VKTC5sLgticcibSXbXUSYLrUMNovDaT3mFLBMO8icetJcjicn4RqCwMuaeqibKoTNxTaJRuZOicXn4OdnYP9TPibsw/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1)
 
-![](https://mmbiz.qpic.cn/mmbiz_png/oH5VKTC5sLgticcibSXbXUSYLrUMNovDaTSGKwbEQxgZgfbZQumibSH0yavicrPa9TJB2vxz6UCXN4hHBGv0j5flFA/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1)
+![image](https://mmbiz.qpic.cn/mmbiz_png/oH5VKTC5sLgticcibSXbXUSYLrUMNovDaTSGKwbEQxgZgfbZQumibSH0yavicrPa9TJB2vxz6UCXN4hHBGv0j5flFA/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1)
 
 话不多说，自己玩儿去~~
 

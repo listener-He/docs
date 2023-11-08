@@ -1,23 +1,22 @@
 ---
-password: ''
-icon: ''
-date: '2020-02-25'
+password: ""
+icon: ""
+date: "2020-02-25"
 type: Post
 category: 技术分享
-urlname: '22'
+urlname: "22"
 catalog:
   - archives
 tags:
   - Java
   - 异步编程
   - 多线程
-summary: >-
-  线程与进程相似，但线程是一个比进程更小的执行单位。一个进程在其执行的过程中可以产生多个线程。与进程不同的是同类的多个线程共享同一块内存空间和一组系统资源，所以系统在产生一个线程，或是在各个线程之间作切换工作时，负担要比进程小得多，也正因为如此，线程也被称为轻量级进程。
-sort: ''
+summary: 线程与进程相似，但线程是一个比进程更小的执行单位。一个进程在其执行的过程中可以产生多个线程。与进程不同的是同类的多个线程共享同一块内存空间和一组系统资源，所以系统在产生一个线程，或是在各个线程之间作切换工作时，负担要比进程小得多，也正因为如此，线程也被称为轻量级进程。
+sort: ""
 title: Java基础-线程&并发
 status: Published
-updated: '2023-10-08 14:42:00'
-abbrlink: 43673
+cover: "https://www.notion.so/images/page-cover/webb1.jpg"
+updated: "2023-10-08 14:42:00"
 ---
 
 ## 线程
@@ -32,11 +31,11 @@ abbrlink: 43673
 
 Java 线程在运行的生命周期中的指定时刻只可能处于下面 6 种不同状态的其中一个状态（图源《Java 并发编程艺术》4.1.4 节）。
 
-![](https://blog-file.hehouhui.cn/202203222203748.png)
+![202203222203748.png](https://blog-file.hehouhui.cn/202203222203748.png)
 
 线程在生命周期中并不是固定处于某一个状态而是随着代码的执行在不同状态之间切换。Java 线程状态变迁如下图所示（图源《Java 并发编程艺术》4.1.4 节）：
 
-![](https://blog-file.hehouhui.cn/202203222203017.png)
+![202203222203017.png](https://blog-file.hehouhui.cn/202203222203017.png)
 
 > 订正(来自 issue736)：原图中 wait 到 runnable 状态的转换中，join 实际上是 Thread 类的方法，但这里写成了 Object。
 
@@ -44,7 +43,7 @@ Java 线程在运行的生命周期中的指定时刻只可能处于下面 6 种
 
 > 操作系统隐藏 Java 虚拟机（JVM）中的 READY 和 RUNNING 状态，它只能看到 RUNNABLE 状态（图源：HowToDoInJava：Java Thread Life Cycle and Thread States），所以 Java 系统一般将这两个状态统称为 RUNNABLE（运行中） 状态 。
 
-![](https://blog-file.hehouhui.cn/202203222203261.png)
+![202203222203261.png](https://blog-file.hehouhui.cn/202203222203261.png)
 
 当线程执行 `wait()`方法之后，线程进入 **WAITING（等待）** 状态。进入等待状态的线程需要依靠其他线程的通知才能够返回到运行状态，而 **TIME_WAITING(超时等待)** 状态相当于在等待状态的基础上增加了超时限制，比如通过 `sleep（long millis）`方法或 `wait（long millis）`方法可以将 Java 线程置于 TIMED WAITING 状态。当超时时间到达后 Java 线程将会返回到 RUNNABLE 状态。当线程调用同步方法时，在没有获取到锁的情况下，线程将会进入到 **BLOCKED（阻塞）** 状态。线程在执行 Runnable 的`run()`方法之后将会进入到 **TERMINATED（终止）** 状态。
 
@@ -79,7 +78,7 @@ AVA 反射机制是在运行状态中，对于任意一个类，都能够知道�
 
 **结构图**
 
-![](https://blog-file.hehouhui.cn/202203222203465.png)
+![202203222203465.png](https://blog-file.hehouhui.cn/202203222203465.png)
 
 在 Java 中，所有的异常都有一个共同的祖先 `java.lang` 包中的 `Throwable` 类。`Throwable` 类有两个重要的子类 `Exception`（异常）和 `Error`（错误）。`Exception` 能被程序本身处理(`try-catch`)， `Error` 是无法处理的(只能尽量避免)。
 
@@ -92,7 +91,7 @@ AVA 反射机制是在运行状态中，对于任意一个类，都能够知道�
 
 Java 代码在编译过程中，如果受检查异常没有被 `catch`/`throw` 处理的话，就没办法通过编译 。比如下面这段 IO 操作的代码。
 
-![](https://blog-file.hehouhui.cn/202203222203783.png)
+![202203222203783.png](https://blog-file.hehouhui.cn/202203222203783.png)
 
 除了`RuntimeException`及其子类以外，其他的`Exception`类及其子类都属于受检查异常 。常见的受检查异常有： IO 相关的异常、`ClassNotFoundException` 、`SQLException`...。
 
@@ -117,11 +116,11 @@ Java Io 流共涉及 40 多个类，这些类看上去很杂乱，但实际上�
 
 按操作方式分类结构图：
 
-![](https://blog-file.hehouhui.cn/202203222203257.jpeg)
+![202203222203257.jpeg](https://blog-file.hehouhui.cn/202203222203257.jpeg)
 
 按操作对象分类结构图：
 
-![](https://blog-file.hehouhui.cn/202203222203094.jpeg)
+![202203222203094.jpeg](https://blog-file.hehouhui.cn/202203222203094.jpeg)
 
 ### 为什么要字符流
 
@@ -251,7 +250,7 @@ public class SynchronizedDemo {
 
 通过 JDK 自带的 `javap` 命令查看 `SynchronizedDemo` 类的相关字节码信息：首先切换到类的对应目录执行 `javac SynchronizedDemo.java` 命令生成编译后的 .class 文件，然后执行`javap -c -s -v -l SynchronizedDemo.class`。
 
-![](https://blog-file.hehouhui.cn/202203222203508.png)
+![202203222203508.png](https://blog-file.hehouhui.cn/202203222203508.png)
 
 从上面我们可以看出：
 
@@ -279,7 +278,7 @@ Copy to clipboardErrorCopied
 
 ```
 
-![](https://blog-file.hehouhui.cn/202203222128189.png)
+![202203222128189.png](https://blog-file.hehouhui.cn/202203222128189.png)
 
 `synchronized` 修饰的方法并没有 `monitorenter` 指令和 `monitorexit` 指令，取得代之的确实是 `ACC_SYNCHRONIZED` 标识，该标识指明了该方法是一个同步方法。JVM 通过该 `ACC_SYNCHRONIZED` 访问标志来辨别一个方法是否声明为同步方法，从而执行相应的同步调用。
 
@@ -361,7 +360,7 @@ CAS 与`synchronized`的使用情景
 
 如下图所示，线程 A 持有资源 2，线程 B 持有资源 1，他们同时都想申请对方的资源，所以这两个线程就会互相等待而进入死锁状态。
 
-![](https://blog-file.hehouhui.cn/202203222203695.png)
+![202203222203695.png](https://blog-file.hehouhui.cn/202203222203695.png)
 
 线程 A 通过 synchronized (resource1) 获得 resource1 的监视器锁，然后通过`Thread.sleep(1000);`让线程 A 休眠 1s 为的是让线程 B 得到执行然后获取到 resource2 的监视器锁。线程 A 和线程 B 休眠结束了都开始企图请求获取对方的资源，然后这两个线程就会陷入互相等待的状态，这也就产生了死锁。上面的例子符合产生死锁的四个必要条件。
 

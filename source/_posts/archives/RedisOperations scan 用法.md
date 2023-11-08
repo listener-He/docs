@@ -1,24 +1,22 @@
 ---
-password: ''
-icon: ''
-date: '2020-07-23'
+password: ""
+icon: ""
+date: "2020-07-23"
 type: Post
 category: 技术分享
-urlname: '9'
+urlname: "9"
 catalog:
   - archives
 tags:
   - Spring
   - Java
   - Redis
-summary: >-
-  记录一次scan和keys的使用,scan和key都是redis搜索key的值函数,但实现却完全不同。生产环境用key的同学准备好跑路吧~keysWarning:
-  consider KEYS as a
-sort: ''
+summary: "记录一次scan和keys的使用,scan和key都是redis搜索key的值函数,但实现却完全不同。生产环境用key的同学准备好跑路吧~keysWarning: consider KEYS as a"
+sort: ""
 title: RedisOperations scan 用法
 status: Published
-updated: '2023-10-08 14:42:00'
-abbrlink: 35150
+cover: "https://cdn.jsdelivr.net/gh/listener-He/images@default/202305102218981.png"
+updated: "2023-10-08 14:42:00"
 ---
 
 > 记录一次 scan 和 keys 的使用,scan 和 key 都是 redis 搜索 key 的值函数,但实现却完全不同。生产环境用 key 的同学准备好跑路吧~

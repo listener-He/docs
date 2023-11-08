@@ -1,22 +1,20 @@
 ---
-password: ''
-icon: ''
-date: '2020-01-26'
+password: ""
+icon: ""
+date: "2020-01-26"
 type: Post
 category: 技术分享
-urlname: '43'
+urlname: "43"
 catalog:
   - archives
 tags:
   - Java
-summary: >-
-  对象，类类加载一个类的完整生命周期如下：Class 文件需要加载到虚拟机中之后才能运行和使用，那么虚拟机是如何加载这些 Class 文件呢？系统加载
-  Class 类型的文件主要三步:加载->连接
-sort: ''
+summary: "对象，类类加载一个类的完整生命周期如下：Class 文件需要加载到虚拟机中之后才能运行和使用，那么虚拟机是如何加载这些 Class 文件呢？系统加载 Class 类型的文件主要三步:加载->连接"
+sort: ""
 title: Java基础-class
 status: Published
-updated: '2023-10-08 14:42:00'
-abbrlink: 40393
+cover: "https://www.notion.so/images/page-cover/woodcuts_11.jpg"
+updated: "2023-10-08 14:42:00"
 ---
 
 ## 对象，类
@@ -25,13 +23,13 @@ abbrlink: 40393
 
 一个类的完整生命周期如下：
 
-![](https://blog-file.hehouhui.cn/202203222121164.png)
+![202203222121164.png](https://blog-file.hehouhui.cn/202203222121164.png)
 
 Class 文件需要加载到虚拟机中之后才能运行和使用，那么虚拟机是如何加载这些 Class 文件呢？
 
 系统加载 Class 类型的文件主要三步:**加载->连接->初始化**。连接过程又可分为三步:**验证->准备->解析**。
 
-![](https://blog-file.hehouhui.cn/202203222203871.png)
+![202203222203871.png](https://blog-file.hehouhui.cn/202203222203871.png)
 
 ### 加载
 
@@ -51,7 +49,7 @@ Class 文件需要加载到虚拟机中之后才能运行和使用，那么虚�
 
 ### 验证
 
-![](https://blog-file.hehouhui.cn/202203222203084.png)
+![202203222203084.png](https://blog-file.hehouhui.cn/202203222203084.png)
 
 ### 准备
 
@@ -62,7 +60,7 @@ Class 文件需要加载到虚拟机中之后才能运行和使用，那么虚�
 
 **基本数据类型的零值：**
 
-![](https://blog-file.hehouhui.cn/202203222203304.png)
+![202203222203304.png](https://blog-file.hehouhui.cn/202203222203304.png)
 
 ### 解析
 
@@ -111,7 +109,7 @@ Class 文件需要加载到虚拟机中之后才能运行和使用，那么虚�
 
 下图便是 Java 对象的创建过程，我建议最好是能默写出来，并且要掌握每一步在做什么。
 
-![](https://blog-file.hehouhui.cn/202203222203447.png)
+![202203222203447.png](https://blog-file.hehouhui.cn/202203222203447.png)
 
 ### 类加载检查
 
@@ -125,7 +123,7 @@ Class 文件需要加载到虚拟机中之后才能运行和使用，那么虚�
 
 选择以上两种方式中的哪一种，取决于 Java 堆内存是否规整。而 Java 堆内存是否规整，取决于 GC 收集器的算法是"标记-清除"，还是"标记-整理"（也称作"标记-压缩"），值得注意的是，复制算法内存也是规整的
 
-![](https://blog-file.hehouhui.cn/202203222203619.png)
+![202203222203619.png](https://blog-file.hehouhui.cn/202203222203619.png)
 
 **内存分配并发问题（补充内容，需要掌握）**
 
@@ -162,10 +160,10 @@ Class 文件需要加载到虚拟机中之后才能运行和使用，那么虚�
 
 1. **句柄：** 如果使用句柄的话，那么 Java 堆中将会划分出一块内存来作为句柄池，reference 中存储的就是对象的句柄地址，而句柄中包含了对象实例数据与类型数据各自的具体地址信息；
 
-   ![](https://blog-file.hehouhui.cn/202203222203076.png)
+   ![202203222203076.png](https://blog-file.hehouhui.cn/202203222203076.png)
 
 2. **直接指针：** 如果使用直接指针访问，那么 Java 堆对象的布局中就必须考虑如何放置访问类型数据的相关信息，而 reference 中存储的直接就是对象的地址。
 
-![](https://blog-file.hehouhui.cn/202203222155695.png)
+![202203222155695.png](https://blog-file.hehouhui.cn/202203222155695.png)
 
 **这两种对象访问方式各有优势。使用句柄来访问的最大好处是 reference 中存储的是稳定的句柄地址，在对象被移动时只会改变句柄中的实例数据指针，而 reference 本身不需要修改。使用直接指针访问方式最大的好处就是速度快，它节省了一次指针定位的时间开销。**

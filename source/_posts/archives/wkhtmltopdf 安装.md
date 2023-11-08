@@ -1,24 +1,22 @@
 ---
-password: ''
-icon: ''
-date: '2022-03-15'
+password: ""
+icon: ""
+date: "2022-03-15"
 type: Post
 category: 技术分享
-urlname: '40'
+urlname: "40"
 catalog:
   - archives
 tags:
   - 图像处理
-summary: >-
-  “wkhtmltopdf"，是一个能够把网页/文件转换成PDF的工具。工具全名叫 "wkhtmltopdf" ; 是一个使用 Qt WebKit
-  引擎做渲染的，能够把html 文档转换成 pdf 文档 或 图片(image) 的**“命令行工具”**。
-
+summary: |-
+  “wkhtmltopdf"，是一个能够把网页/文件转换成PDF的工具。工具全名叫 "wkhtmltopdf" ; 是一个使用 Qt WebKit 引擎做渲染的，能够把html 文档转换成 pdf 文档 或 图片(image) 的**“命令行工具”**。
   支持多个平台，可在win，linux，os x 等系统下运行。
-sort: ''
+sort: ""
 title: wkhtmltopdf 安装
 status: Published
-updated: '2023-10-08 14:42:00'
-abbrlink: 53502
+cover: "https://cdn.jsdelivr.net/gh/listener-He/images@default/202305102132809.jpeg"
+updated: "2023-10-08 14:42:00"
 ---
 
 # wkhtmltopdf
@@ -36,7 +34,7 @@ abbrlink: 53502
 
 `/wkhtmltopdf/local/bin/`
 
-![](https://blog-file.hehouhui.cn/202203152219619.png)
+![202203152219619.png](https://blog-file.hehouhui.cn/202203152219619.png)
 
 - wkhtmltopdf 把一个文件或网页转成 pdf
 - wkhtmltoimage 把一个文件或网页转成图片
@@ -105,13 +103,13 @@ liunx 中缺少中文（宋体）字体文件，
 
 放置服务器中 `/usr/share/fonts`目录下
 
-![](https://blog-file.hehouhui.cn/202203152228291.png)
+![202203152228291.png](https://blog-file.hehouhui.cn/202203152228291.png)
 
 **缺少 lib**
 
 libjpeg.so.62 的解决方案
 
-![](https://blog-file.hehouhui.cn/202203152229619.png)
+![202203152229619.png](https://blog-file.hehouhui.cn/202203152229619.png)
 
 执行如下命令下载依赖
 

@@ -1,10 +1,10 @@
 ---
-password: ''
-icon: ''
-date: '2021-04-10'
+password: ""
+icon: ""
+date: "2021-04-10"
 type: Post
 category: 技术分享
-urlname: '21'
+urlname: "21"
 catalog:
   - archives
 tags:
@@ -13,14 +13,12 @@ tags:
   - 响应式
   - 异步编程
   - WebFlux
-summary: >-
-  webFlux 初识LambdaLambda 表达式，有时候也称为匿名函数或箭头函数，几乎在当前的各种主流的编程语言中都有它的身影。Java8 中引入
-  Lambda 表达式，使原本需要用匿名类实现接口
-sort: ''
+summary: webFlux 初识LambdaLambda 表达式，有时候也称为匿名函数或箭头函数，几乎在当前的各种主流的编程语言中都有它的身影。Java8 中引入 Lambda 表达式，使原本需要用匿名类实现接口
+sort: ""
 title: 响应式开发之webFlux & Reactor
 status: Published
-updated: '2023-10-08 14:42:00'
-abbrlink: 15211
+cover: "https://www.notion.so/images/page-cover/nasa_tim_peake_spacewalk.jpg"
+updated: "2023-10-08 14:42:00"
 ---
 
 # webFlux 初识
@@ -140,7 +138,7 @@ Java 8 中采用**函数式接口**作为**Lambda 表达式**的目标类型。*
 
 ### java.util.function
 
-![](https://pic3.zhimg.com/80/v2-aae13ab98b68ec811e4efa2808b499ae_1440w.jpg)
+![v2-aae13ab98b68ec811e4efa2808b499ae_1440w.jpg](https://pic3.zhimg.com/80/v2-aae13ab98b68ec811e4efa2808b499ae_1440w.jpg)
 
 ```text
         Function<T, R> stringIntegerFunction //输入T返回R的函数
@@ -212,7 +210,7 @@ Java 8 中采用**函数式接口**作为**Lambda 表达式**的目标类型。*
 
 一个通用的流处理架构一般会是这样的（**生产者产生数据，对数据进行中间处理，消费者拿到数据消费**)
 
-![](https://pic4.zhimg.com/80/v2-edb2811ded51ed4de4de5656b057fc07_1440w.png)
+![v2-edb2811ded51ed4de4de5656b057fc07_1440w.png](https://pic4.zhimg.com/80/v2-edb2811ded51ed4de4de5656b057fc07_1440w.png)
 
 - 数据来源，一般称为生产者（Producer）
 - 数据的目的地，一般称为消费者(Consumer)
@@ -220,7 +218,7 @@ Java 8 中采用**函数式接口**作为**Lambda 表达式**的目标类型。*
 
 规范定义了 4 个接口
 
-![](https://pic4.zhimg.com/80/v2-d235427992d3feb5e49bcf2b210ba5eb_1440w.jpg)
+![v2-d235427992d3feb5e49bcf2b210ba5eb_1440w.jpg](https://pic4.zhimg.com/80/v2-d235427992d3feb5e49bcf2b210ba5eb_1440w.jpg)
 
 在响应式流上提到了 back pressure（背压）这么一个概念。在响应式流实现异步非阻塞是基于生产者和消费者模式的，而生产者消费者很容易出现的一个问题就是：**生产者生产数据多了，就把消费者给压垮了**
 
@@ -238,7 +236,7 @@ Java 8 中采用**函数式接口**作为**Lambda 表达式**的目标类型。*
 
 - [\*消息驱动：\*\*反应式系统依赖](https://www.reactivemanifesto.org/zh-CN/glossary#Elasticity)[异步的](https://www.reactivemanifesto.org/zh-CN/glossary#Asynchronous)[消息传递](https://www.reactivemanifesto.org/zh-CN/glossary#Message-Driven)，从而确保了松耦合、隔离、[位置透明](https://www.reactivemanifesto.org/zh-CN/glossary#Location-Transparency)的组件之间有着明确边界。 这一边界还提供了将[失败](https://www.reactivemanifesto.org/zh-CN/glossary#Failure)作为消息委托出去的手段。 使用显式的消息传递，可以通过在系统中塑造并监视消息流队列， 并在必要时应用[回压](https://www.reactivemanifesto.org/zh-CN/glossary#Back-Pressure)， 从而实现负载管理、 弹性以及流量控制。 使用位置透明的消息传递作为通信的手段， 使得跨集群或者在单个主机中使用相同的结构成分和语义来管理失败成为了可能。 [非阻塞的](https://www.reactivemanifesto.org/zh-CN/glossary#Non-Blocking)通信使得接收者可以只在活动时才消耗[资源](https://www.reactivemanifesto.org/zh-CN/glossary#Resource)， 从而减少系统开销。
 
-![](https://www.reactivemanifesto.org/images/reactive-traits-zh-cn.svg)
+![reactive-traits-zh-cn.svg](https://www.reactivemanifesto.org/images/reactive-traits-zh-cn.svg)
 
 大型系统由多个较小型的系统所构成， 因此整体效用取决于它们的构成部分的反应式属性。 这意味着， 反应式系统应用着一些设计原则，使这些属性能在所有级别的规模上生效，而且可组合。
 
@@ -263,7 +261,7 @@ Java 8 中采用**函数式接口**作为**Lambda 表达式**的目标类型。*
 
 Mono 是响应流 Publisher 具有基础 rx 操作符。可以成功发布元素或者错误。如图所示：
 
-![](https:////upload-images.jianshu.io/upload_images/1483536-03c853fb59816f3a.png)
+![1483536-03c853fb59816f3a.png](https:////upload-images.jianshu.io/upload_images/1483536-03c853fb59816f3a.png)
 
 ### 常用方法
 
@@ -276,13 +274,13 @@ Mono.create(); //：使用 MonoSink 来创建 MonoMono.justOrEmpty(); //：从�
 
 Flux 是响应流 Publisher 具有基础 rx 操作符。可以成功发布 0 到 N 个元素或者错误。Flux 其实是 Mono 的一个补充。如图所示：
 
-![](https:////upload-images.jianshu.io/upload_images/1483536-55fd0aeaaea2d023.png)
+![1483536-55fd0aeaaea2d023.png](https:////upload-images.jianshu.io/upload_images/1483536-55fd0aeaaea2d023.png)
 
 所以要注意：如果知道 Publisher 是 0 或 1 个，则用 Mono。
 
 Flux 最值得一提的是 fromIterable 方法。 fromIterable(Iterable<? extends T> it) 可以发布 Iterable 类型的元素。
 
-![](https://pic1.zhimg.com/80/v2-a72c1db9d5564ae6e47ec22ad3e6b7f0_1440w.jpg)
+![v2-a72c1db9d5564ae6e47ec22ad3e6b7f0_1440w.jpg](https://pic1.zhimg.com/80/v2-a72c1db9d5564ae6e47ec22ad3e6b7f0_1440w.jpg)
 
 当调用 just 方法，查看源码可以得知，返回的是一个 Flux<T>对象，当次数为 0 直接返回空，为 1 的时候单独处理，其余的通过*onAssembly 方法处理返回 fluxarrary 对象。*
 
@@ -293,7 +291,7 @@ Flux 最值得一提的是 fromIterable 方法。 fromIterable(Iterable<? extend
 
 流程
 
-![](https://pic3.zhimg.com/80/v2-feadef87bacc918580803b777a21e042_1440w.jpg)
+![v2-feadef87bacc918580803b777a21e042_1440w.jpg](https://pic3.zhimg.com/80/v2-feadef87bacc918580803b777a21e042_1440w.jpg)
 
 ### 内置的 Processor
 
@@ -398,7 +396,7 @@ WorkQueueProcessor 多数构造器方法与 TopicProcessor 相同，比如 autoC
 
 另外 subscribe 时，还可以指定错误的回调处理，以及数据处理完的完成回调
 
-![](https://pic1.zhimg.com/80/v2-8a63e0f1cde490621e947f31466278ac_1440w.jpg)
+![v2-8a63e0f1cde490621e947f31466278ac_1440w.jpg](https://pic1.zhimg.com/80/v2-8a63e0f1cde490621e947f31466278ac_1440w.jpg)
 
 所以可以这样写
 
@@ -409,17 +407,17 @@ Flux.error(new Exception("error")).subscribe(        System.out::println,       
 
 流程：
 
-![](https://pic3.zhimg.com/80/v2-f7bb37cd9efec5a597c5f432e20d0142_1440w.jpg)
+![v2-f7bb37cd9efec5a597c5f432e20d0142_1440w.jpg](https://pic3.zhimg.com/80/v2-f7bb37cd9efec5a597c5f432e20d0142_1440w.jpg)
 
 ### 流量控制（背压）
 
 上面提到了一个问题，当生产者生产的速度远远大于消费者消费的的速度的时候，会引发任务大量堆积的情况，最终压垮整个管道。
 
-![](https://pic2.zhimg.com/80/v2-ebcf6e57fce02a882ea9f8fe9880aa35_1440w.jpg)
+![v2-ebcf6e57fce02a882ea9f8fe9880aa35_1440w.jpg](https://pic2.zhimg.com/80/v2-ebcf6e57fce02a882ea9f8fe9880aa35_1440w.jpg)
 
 那么响应式是怎么解决这个问题的，通过背压（back pressure）的机制，如下图
 
-![](https://pic4.zhimg.com/80/v2-24e321527e474779b4090ffc46d2deb3_1440w.jpg)
+![v2-24e321527e474779b4090ffc46d2deb3_1440w.jpg](https://pic4.zhimg.com/80/v2-24e321527e474779b4090ffc46d2deb3_1440w.jpg)
 
 这种下游可以向上游反馈自己消费能力的机制就叫做背压，具体背压的原理和运行机制会在后面的实战中带入，因为很多刚接触这种概念的同学只听理论的话会一时很难理解。
 
@@ -647,13 +645,13 @@ public final class Flow {    private Flow() {} // uninstantiable    //发布者 
 
   > 响应式编程是异步非阻塞的(是一种基于数据流（data stream）和变化传递（propagation of change）的声明式（declarative）的编程范式)
 
-![](https://pic1.zhimg.com/v2-5be72cbcf804dc2953f1198a1365ed9d_r.jpg?source=172ae18b)
+![v2-5be72cbcf804dc2953f1198a1365ed9d_r.jpg](https://pic1.zhimg.com/v2-5be72cbcf804dc2953f1198a1365ed9d_r.jpg?source=172ae18b)
 
 > 以往根据不同的应用场景选择不同的技术，有的场景适合用于同步阻塞的，有的场景适合用于异步非阻塞的。而 Spring5 提供了一整套响应式(非阻塞)的技术栈供我们使用(包括 Web 控制器、权限控制、数据访问层等等)。
 
 响应式一般用 Netty 或者 Servlet 3.1 的容器(因为支持异步非阻塞)，而 Servlet 技术栈用的是 Servlet 容器
 
-![](https://spring.io/images/diagram-reactive-dark-31d740ed8e454af5f1b8d55ae716525d.svg)
+![diagram-reactive-dark-31d740ed8e454af5f1b8d55ae716525d.svg](https://spring.io/images/diagram-reactive-dark-31d740ed8e454af5f1b8d55ae716525d.svg)
 
 Spring 官方为了让我们更加**快速/平滑**到 WebFlux 上，之前 SpringMVC 那套都是支持的。也就是说：**我们可以像使用 SpringMVC 一样使用着 WebFlux**。
 
@@ -690,17 +688,17 @@ WebFlux 还支持**服务器推送**(SSE - >Server Send Event)，我们来看个
 
 2.WebHandler
 
-![](https://img-blog.csdnimg.cn/20190610181144939.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2xpeWFudGlhbm1pbg==,size_16,color_FFFFFF,t_70)
+![20190610181144939.png](https://img-blog.csdnimg.cn/20190610181144939.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2xpeWFudGlhbm1pbg==,size_16,color_FFFFFF,t_70)
 
 webHandler 显得有一些抽象，我们可以通过对比 SpringMVC 的一些组件帮助大家理解一下在 WebFlux 中各个组件的作用：
 
-![](https://img-blog.csdnimg.cn/20190610181202340.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2xpeWFudGlhbm1pbg==,size_16,color_FFFFFF,t_70)
+![20190610181202340.png](https://img-blog.csdnimg.cn/20190610181202340.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2xpeWFudGlhbm1pbg==,size_16,color_FFFFFF,t_70)
 
-![](https://img-blog.csdnimg.cn/20190303103722917.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L21pa2V6em1lcmlj,size_16,color_FFFFFF,t_70)
+![20190303103722917.png](https://img-blog.csdnimg.cn/20190303103722917.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L21pa2V6em1lcmlj,size_16,color_FFFFFF,t_70)
 
 ### 请求处理流程
 
-![](https://img-blog.csdnimg.cn/20190302175319337.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L21pa2V6em1lcmlj,size_16,color_FFFFFF,t_70)
+![20190302175319337.png](https://img-blog.csdnimg.cn/20190302175319337.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L21pa2V6em1lcmlj,size_16,color_FFFFFF,t_70)
 
 > RouterFunctionMapping 中有 private RouterFunction<?> routerFunction;这里面表面看起来只有一个 Bean，其实它里面组合了非常多的 RouterFunction，它是如何根据用户的请求找到对应的 Function 的呢？
 
@@ -716,7 +714,7 @@ webHandler 显得有一些抽象，我们可以通过对比 SpringMVC 的一些�
 
 ```
 
-![](https://img-blog.csdnimg.cn/20190303103821980.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L21pa2V6em1lcmlj,size_16,color_FFFFFF,t_70)
+![20190303103821980.png](https://img-blog.csdnimg.cn/20190303103821980.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L21pa2V6em1lcmlj,size_16,color_FFFFFF,t_70)
 
 ### 总结
 

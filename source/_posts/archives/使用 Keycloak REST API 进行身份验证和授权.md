@@ -1,7 +1,7 @@
 ---
-password: ''
-icon: ''
-date: '2023-04-28T13:13:00.000+08:00'
+password: ""
+icon: ""
+date: "2023-04-28T13:13:00.000+08:00"
 type: Post
 category: 技术分享
 urlname: authentication-and-authorization-using-the-keycloak-rest-api
@@ -13,16 +13,12 @@ tags:
   - Java
   - oauth
   - keycloak
-summary: >-
-  Keycloak REST API
-  可以被用来进行身份验证和授权。使用该API，开发人员可以轻松地在其应用程序中实现安全性验证和授权功能，同时使用Keycloak的内置功能进行管理和配置。Keycloak的REST
-  API还提供了许多不同的终端点来进行用户和角色管理、认证事件和SAML元数据的访问等。 作为一个基于开源的身份和访问管理解决方案，Keycloak的REST
-  API对于任何需要对应用程序进行认证和授权的开发人员都非常有帮助。
-sort: ''
+summary: Keycloak REST API 可以被用来进行身份验证和授权。使用该API，开发人员可以轻松地在其应用程序中实现安全性验证和授权功能，同时使用Keycloak的内置功能进行管理和配置。Keycloak的REST API还提供了许多不同的终端点来进行用户和角色管理、认证事件和SAML元数据的访问等。 作为一个基于开源的身份和访问管理解决方案，Keycloak的REST API对于任何需要对应用程序进行认证和授权的开发人员都非常有帮助。
+sort: ""
 title: 使用 Keycloak REST API 进行身份验证和授权
 status: Published
-updated: '2023-10-08 14:42:00'
-abbrlink: 33923
+cover: "https://www.keycloak.org/docs/latest/authorization_services/images/getting-started/hello-world/create-realm.png"
+updated: "2023-10-08 14:42:00"
 ---
 
 启用身份验证和授权涉及复杂的功能，而不仅仅是简单的登录 API。[在之前的文章（使用 Keycloak 的 API 登录和 JWT 令牌生成）中](https://blog.hehouhui.cn/archives/api-login-and-jwt-token-generation-using-keycloak)，我描述了 Keycloak REST 登录 API 端点，它只处理一些身份验证任务。在本文中，我描述了如何使用开箱即用的 Keycloak REST API 功能启用身份验证和授权的其他方面。
@@ -35,7 +31,7 @@ abbrlink: 33923
 
 为了更好地理解使用 Keycloak 进行身份验证和授权，让我们从一个简单的案例研究开始。假设印度尼西亚教育部计划创建与多所学校的单点登录集成。他们计划使用集中式平台在多个学校维护学生和教师的单一帐户 ID。这让每个用户都具有相同的角色，但在每所学校具有不同的访问权限和特权，如图 1 所示。
 
-![](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2020/08/keycloak-education-00.png?itok=aKKqoLgU)
+![keycloak-education-00.png](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2020/08/keycloak-education-00.png?itok=aKKqoLgU)
 
 图 1：每个用户都可以使用相同的角色，但在每所学校具有不同的访问权限和权限。">
 
@@ -43,31 +39,31 @@ abbrlink: 33923
 
 让我们通过创建一个 Keycloak 领域来开始演示。为该部门使用 Add realm 对话框（如图 2 所示）。为领域命名`education`，将**Enabled**设置为**ON**，然后单击**Create**。
 
-![](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2020/08/keycloak-education-01.png?itok=TFFotz_T)
+![keycloak-education-01.png](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2020/08/keycloak-education-01.png?itok=TFFotz_T)
 
 图 2：为教育部创建名为“教育”的 Keycloak 领域。">
 
 接下来，转到 Roles 页面并确保选择了**Realm Roles**选项卡，如图 3 所示。
 
-![](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2020/08/keycloak-education-06.png?itok=kN1XyC0P)
+![keycloak-education-06.png](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2020/08/keycloak-education-06.png?itok=kN1XyC0P)
 
 图 3：为教育领域创建两个独立的角色：教师和学生。
 
 单击**添加角色**为该领域创建两个单独的角色，称为“教师”和“学生”。然后，这些新角色将出现在**Realm Roles**选项卡中，如图 4 所示。
 
-![](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2020/08/keycloak-education-07.png?itok=KBPu-x5E)
+![keycloak-education-07.png](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2020/08/keycloak-education-07.png?itok=KBPu-x5E)
 
 图 4：添加教师和学生角色。">
 
 然后，使用 Clients 页面，单击**Create**添加客户端，如图 5 所示。
 
-![](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2020/08/keycloak-education-02.png?itok=_XcRiyxZ)
+![keycloak-education-02.png](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2020/08/keycloak-education-02.png?itok=_XcRiyxZ)
 
 图 5：添加客户端。
 
 在 Add Client 页面上，创建一个名为“jakarta-school”的客户端，然后单击**Save**添加该客户端，如图 6 所示。
 
-![](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2020/08/keycloak-education-03.png?itok=ioRUgKYl)
+![keycloak-education-03.png](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2020/08/keycloak-education-03.png?itok=ioRUgKYl)
 
 在 jakarta-school 详细信息页面上，转到**“设置”**选项卡并输入以下客户端配置，如图 7 所示：
 
@@ -103,7 +99,7 @@ abbrlink: 33923
 
   ：ON
 
-![](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2020/08/keycloak-education-04.png?itok=UAhXaIL2)
+![keycloak-education-04.png](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2020/08/keycloak-education-04.png?itok=UAhXaIL2)
 
 图 7：在 jakarta-school 详细信息页面上，输入客户端配置。
 
@@ -117,19 +113,19 @@ abbrlink: 33923
 
   ：直接拨款
 
-![](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2020/08/keycloak-education-05.png?itok=bjT_1W98)
+![keycloak-education-05.png](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2020/08/keycloak-education-05.png?itok=bjT_1W98)
 
 图 8：配置身份验证流程覆盖。">
 
 转到**Roles**选项卡，单击**Add Role**，然后为此客户端创建 create-student-grade、view-student-grade 和 view-student-profile 角色，如图 9 所示。每个角色都应设置为 Composite **False**。
 
-![](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2020/08/keycloak-education-11.png?itok=MySy1CkW)
+![keycloak-education-11.png](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2020/08/keycloak-education-11.png?itok=MySy1CkW)
 
 图 9：为此客户创建角色。
 
 接下来，转到**Client Scopes**选项卡，在**Default Client Scopes**部分中，将“roles”和“profile”添加到**Assigned Default Client Scopes**中，如图 10 所示。
 
-![](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2020/08/keycloak-education-08.png?itok=EQBlb8Yo)
+![keycloak-education-08.png](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2020/08/keycloak-education-08.png?itok=EQBlb8Yo)
 
 图 10：设置客户端范围。
 
@@ -167,7 +163,7 @@ abbrlink: 33923
 
   ：ON
 
-![](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2020/08/keycloak-education-09.png?itok=zZAbM6Sr)
+![keycloak-education-09.png](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2020/08/keycloak-education-09.png?itok=zZAbM6Sr)
 
 图 11：设置映射器以显示客户端角色。
 
@@ -197,13 +193,13 @@ abbrlink: 33923
 
   ：关闭
 
-![](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2020/08/keycloak-education-10.png?itok=rOzI0tsb)
+![keycloak-education-10.png](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2020/08/keycloak-education-10.png?itok=rOzI0tsb)
 
 图 12：创建新用户。
 
 最后，在**Role Mappings**选项卡中，为 jakarta-school 中的每个用户选择**Client Roles**，如图 13 所示。它们应该是 create-student-grade、view-student-grade 和 view-student-profile。
 
-![](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2020/08/keycloak-education-12.png?itok=3QIR03u9)
+![keycloak-education-12.png](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2020/08/keycloak-education-12.png?itok=3QIR03u9)
 
 图 13：为 jakarta-school 中的每个用户选择客户端角色。
 
@@ -301,7 +297,7 @@ logging:
 
 接下来，从图 14 所示的表单中获取 Keycloak 证书 ID。
 
-![](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2020/11/keycloak-education-13.png?itok=KkNUCm4W)
+![keycloak-education-13.png](https://developers.redhat.com/sites/default/files/styles/article_floated/public/blog/2020/11/keycloak-education-13.png?itok=KkNUCm4W)
 
 图 14：找到 Keycloak 证书 ID。
 

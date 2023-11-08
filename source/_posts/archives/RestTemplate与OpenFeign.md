@@ -1,10 +1,10 @@
 ---
-password: ''
-icon: ''
-date: '2021-08-27'
+password: ""
+icon: ""
+date: "2021-08-27"
 type: Post
 category: 技术分享
-urlname: '20'
+urlname: "20"
 catalog:
   - archives
 tags:
@@ -12,13 +12,12 @@ tags:
   - 微服务
   - 分布式
   - Redis
-summary: >-
-  在SpringCloud体系中，我们知道服务之间的调用是通过http协议进行调用的。而注册中心的主要目的就是维护这些服务的服务列表。我们知道，在Spring中，提供了RestTemplate。RestTemplate是Spring提供的用于访问Rest服务的客户端。而在SpringCloud中也是使用此服务进行服务调用的。
-sort: ''
+summary: 在SpringCloud体系中，我们知道服务之间的调用是通过http协议进行调用的。而注册中心的主要目的就是维护这些服务的服务列表。我们知道，在Spring中，提供了RestTemplate。RestTemplate是Spring提供的用于访问Rest服务的客户端。而在SpringCloud中也是使用此服务进行服务调用的。
+sort: ""
 title: RestTemplate与OpenFeign
 status: Published
-updated: '2023-10-08 14:42:00'
-abbrlink: 38993
+cover: "https://www.notion.so/images/page-cover/webb2.jpg"
+updated: "2023-10-08 14:42:00"
 ---
 
 # RestTemplate
@@ -43,7 +42,7 @@ abbrlink: 38993
 
 > 根据用户的 http 请求计算出一个真实的 web 服务器地址，并将该 web 服务器地址写入 http 重定向响应中返回给浏览器，由浏览器重新进行访问
 
-![](http://qiniu.xds123.cn/18-9-20/60217159.jpg)
+![60217159.jpg](http://qiniu.xds123.cn/18-9-20/60217159.jpg)
 
 **优缺点：实现起来很简单，而缺点也显而易见了：请求两次才能完成一次访问；性能差;重定向服务器会成为瓶颈**
 
@@ -51,7 +50,7 @@ abbrlink: 38993
 
 > 在 DNS 服务器上配置多个域名对应 IP 的记录。例如一个域名www.baidu.com对应一组web服务器IP地址，域名解析时经过DNS服务器的算法将一个域名请求分配到合适的真实服务器上。
 
-![](http://qiniu.xds123.cn/18-9-20/60831825.jpg)
+![60831825.jpg](http://qiniu.xds123.cn/18-9-20/60831825.jpg)
 
 **优缺点：加快访问速度,改善性能。同时由于 DNS 解析是多级解析，每一级 DNS 都可能化缓存记录 A，当某一服务器下线后，该服务器对应的 DNS 记录 A 可能仍然存在，导致分配到该服务器的用户访问失败，而且 DNS 负载均衡采用的是简单的轮询算法，不能区分服务器之间的差异，不能反映服务器当前运行状态。**
 
@@ -59,7 +58,7 @@ abbrlink: 38993
 
 > 反向代理处于 web 服务器这边，反向代理服务器提供负载均衡的功能，同时管理一组 web 服务器，它根据负载均衡算法将请求的浏览器访问转发到不同的 web 服务器处理，处理结果经过反向服务器返回给浏览器。
 
-![](http://qiniu.xds123.cn/18-9-20/44882339.jpg)
+![44882339.jpg](http://qiniu.xds123.cn/18-9-20/44882339.jpg)
 
 **优缺点：实现简单，可利用反向代理缓存资源(这是最常用的了)及改善网站性能。同时因为是所有请求和响应的中转站，所以反向代理服务器可能成为瓶颈。**
 
@@ -70,11 +69,11 @@ abbrlink: 38993
 实现负载均衡也又区分客户端和服务端之分，`Ribbon`就是基于客户端的负载均衡。
 客户端负载均衡：
 
-![](http://qiniu.xds123.cn/18-9-20/49529849.jpg)
+![49529849.jpg](http://qiniu.xds123.cn/18-9-20/49529849.jpg)
 
 服务端负载均衡：
 
-![](http://qiniu.xds123.cn/18-9-20/19525388.jpg)
+![19525388.jpg](http://qiniu.xds123.cn/18-9-20/19525388.jpg)
 
 服务端实现负载均衡方式有很多，比如：`硬件F5`、`Nginx`、`HA Proxy`等等，这些应该实施相关人员应该比较熟悉了，本人可能也就对`Nginx`了解下，⊙﹏⊙‖∣
 
@@ -82,7 +81,7 @@ abbrlink: 38993
 
 > RestTemplate 是 Spring 提供的用于访问 Rest 服务的客户端，RestTemplate 提供了多种便捷访问远程 Http 服务的方法，能够大大提高客户端的编写效率。
 
-![](http://qiniu.xds123.cn/18-9-20/9663891.jpg)
+![9663891.jpg](http://qiniu.xds123.cn/18-9-20/9663891.jpg)
 
 简单来说，`RestTemplate`采用了`模版设计`的设计模式，将过程中与特定实现相关的部分委托给接口,而这个接口的不同实现定义了接口的不同行为,所以可以很容易的使用不同的第三方 http 服务，如`okHttp`、`httpclient`等。
 
@@ -92,7 +91,7 @@ abbrlink: 38993
 
 在 URL 上执行特定的 HTTP 方法，返回包含对象的`ResponseEntity`。其他的如`GET`、`POST`等方法底层都是基于此方法的。
 
-![](http://qiniu.xds123.cn/18-9-20/91101426.jpg)
+![91101426.jpg](http://qiniu.xds123.cn/18-9-20/91101426.jpg)
 
 如：
 
@@ -116,7 +115,7 @@ ResponseEntity<User> responseEntity2 = this.restTemplate.exchange(requestEntity,
 
 > get 请求可以分为两类：getForEntity() 和 getForObject().
 
-![](http://qiniu.xds123.cn/18-9-20/50274746.jpg)
+![50274746.jpg](http://qiniu.xds123.cn/18-9-20/50274746.jpg)
 
 ```text
 // 1-getForObject()
@@ -134,7 +133,7 @@ User user2 = responseEntity1.getBody();
 
 ### POST 请求
 
-![](http://qiniu.xds123.cn/18-9-20/94233042.jpg)
+![94233042.jpg](http://qiniu.xds123.cn/18-9-20/94233042.jpg)
 
 简单示例：
 
@@ -153,7 +152,7 @@ ResponseEntity<User> responseEntity1 = this.restTemplate.postForEntity(uri, user
 
 - \*特别说明：系列教程为了方便，github 上分别创建了一个单体的`Eureka`注册中心和高可用的`Eureka`注册中心，无特殊说明，都是使用单体的`Eureka`注册中心进行服务注册与发现的，工程名为：`spring-cloud-eureka-server`，端口号为：1000。服务提供方工程名为：`spring-cloud-eureka-client`,应用名称为：`eureka-client`,端口号为：2000，提供了一个接口：[http://127.0.0.1:2000/hello\*\*](http://127.0.0.1:2000/hello**)
 
-![](http://qiniu.xds123.cn/18-9-20/67366013.jpg)
+![67366013.jpg](http://qiniu.xds123.cn/18-9-20/67366013.jpg)
 
 spring-cloud-eureka-server 示例：[spring-cloud-eureka-server](https://github.com/xie19900123/spring-cloud-learning/tree/master/spring-cloud-eureka-server)
 
@@ -163,7 +162,7 @@ spring-cloud-eureka-client 示例：[spring-cloud-eureka-client](https://github.
 
 此类是实现客户端负载均衡的关键。本身它是个接口类，位于`spring-cloud-commons`包下，此包包含了大量的服务治理相关的抽象接口，比如已经介绍过的`DiscoveryClient`、`ServiceRegistry`以及`LoadBalancerClient实例`等等。
 
-![](http://qiniu.xds123.cn/18-9-20/74317604.jpg)
+![74317604.jpg](http://qiniu.xds123.cn/18-9-20/74317604.jpg)
 
 首先，我们使用最原生的方式去获取调用服务接口。
 
@@ -253,15 +252,15 @@ public class DemoController {
 
 4.启动应用，访问：[http://127.0.0.1:8008/hell0?name=oKong](http://127.0.0.1:8008/hell0?name=oKong) ，可以看见控制台输出了利用`LoadBalancerClient`的`choose`方法，获取到了对应`eureka-client`服务 ID 的服务地址。
 
-![](http://qiniu.xds123.cn/18-9-20/2558852.jpg)
+![2558852.jpg](http://qiniu.xds123.cn/18-9-20/2558852.jpg)
 
 最后通过范围对应的 http 地址进行服务请求：
 
-![](http://qiniu.xds123.cn/18-9-20/15565028.jpg)
+![15565028.jpg](http://qiniu.xds123.cn/18-9-20/15565028.jpg)
 
 最后浏览器上可以看见，进行了正确的访问了：
 
-![](http://qiniu.xds123.cn/18-9-20/65199797.jpg)
+![65199797.jpg](http://qiniu.xds123.cn/18-9-20/65199797.jpg)
 
 此时，切换到服务提供者
 
@@ -271,7 +270,7 @@ spring-cloud-eureka-client
 
 控制台，可以看见日志输出：
 
-![](http://qiniu.xds123.cn/18-9-20/70647514.jpg)
+![70647514.jpg](http://qiniu.xds123.cn/18-9-20/70647514.jpg)
 
 此时我们已经调用成功了，通过`LoadBalancerClient`获取到了服务提供者实际服务地址，最后进行调用。
 
@@ -281,11 +280,11 @@ spring-cloud-eureka-client
 
 > Spring Cloud Ribbon 是一个基于 Http 和 TCP 的客服端负载均衡工具，它是基于 Netflix Ribbon 实现的。与 Eureka 配合使用时，Ribbon 可自动从 Eureka Server (注册中心)获取服务提供者地址列表，并基于负载均衡算法，通过在客户端中配置 ribbonServerList 来设置服务端列表去轮询访问以达到均衡负载的作用。
 
-![](http://qiniu.xds123.cn/18-9-20/86401854.jpg)
+![86401854.jpg](http://qiniu.xds123.cn/18-9-20/86401854.jpg)
 
 上小节，简单的使用`LoadBalancerClient`进行了服务实例获取最后调用，也说了其实`LoadBalancerClient`是个接口类。而`Ribbon`实现了此接口，对应实现类为：`RibbonLoadBalancerClient`.
 
-![](http://qiniu.xds123.cn/18-9-20/40970081.jpg)
+![40970081.jpg](http://qiniu.xds123.cn/18-9-20/40970081.jpg)
 
 ### Ribbon 实例
 
@@ -376,11 +375,11 @@ public class DemoController {
 
 4.启动应用，访问:[http://127.0.0.1:8018/hello?name=oKong](http://127.0.0.1:8018/hello?name=oKong) ,可以看见调用成功：
 
-![](http://qiniu.xds123.cn/18-9-20/20652450.jpg)
+![20652450.jpg](http://qiniu.xds123.cn/18-9-20/20652450.jpg)
 
 控制台输出：
 
-![](http://qiniu.xds123.cn/18-9-20/75877117.jpg)
+![75877117.jpg](http://qiniu.xds123.cn/18-9-20/75877117.jpg)
 
 ### 简单聊聊 LoadBalanced 注解
 
@@ -388,17 +387,17 @@ public class DemoController {
 
 首先，我们看看此注解的代码说明：
 
-![](http://qiniu.xds123.cn/18-9-20/55952682.jpg)
+![55952682.jpg](http://qiniu.xds123.cn/18-9-20/55952682.jpg)
 
 从注释可以看出，该注解用来给 RestTemplate 做标记，以使用负载均衡的客户端`LoadBalancerClient`。
 
 现在来看一眼相同包下的类的情况，可以看到有个`LoadBalancerAutoConfiguration`,字面意思可以知道这是一个自动配置类，此类就是我们要找的关键类了。
 
-![](http://qiniu.xds123.cn/18-9-20/33505933.jpg)
+![33505933.jpg](http://qiniu.xds123.cn/18-9-20/33505933.jpg)
 
 `LoadBalancerAutoConfiguration`,此类不长，一百来行，这里就不贴了。
 
-![](http://qiniu.xds123.cn/18-9-20/6039671.jpg)
+![6039671.jpg](http://qiniu.xds123.cn/18-9-20/6039671.jpg)
 
 简单说明下：
 首先，此类生效的条件是
@@ -425,27 +424,27 @@ public class DemoController {
 
 同时为其每个对象通过调用`RestTemplateCustomizer`添加了一个`LoadBalancerInterceptor`和`RetryLoadBalancerInterceptor`拦截器(有生效条件)，其为`ClientHttpRequestInterceptor`接口的实现类，`ClientHttpRequestInterceptor`是`RestTemplate`的请求拦截器
 
-![](http://qiniu.xds123.cn/18-9-20/75808703.jpg)
+![75808703.jpg](http://qiniu.xds123.cn/18-9-20/75808703.jpg)
 
 **RetryLoadBalancerInterceptor 拦截器**
 
-![](http://qiniu.xds123.cn/18-9-20/63370995.jpg)
+![63370995.jpg](http://qiniu.xds123.cn/18-9-20/63370995.jpg)
 
 **LoadBalancerInterceptor 拦截器**
 
-![](http://qiniu.xds123.cn/18-9-20/84887976.jpg)
+![84887976.jpg](http://qiniu.xds123.cn/18-9-20/84887976.jpg)
 
 我们主要看下`LoadBalancerInterceptor`：
 
-![](http://qiniu.xds123.cn/18-9-21/73056978.jpg)
+![73056978.jpg](http://qiniu.xds123.cn/18-9-21/73056978.jpg)
 
 可以看见，最后是实现了`ClientHttpRequestInterceptor`接口的实现类执行`execute`方法进行.
 
-![](http://qiniu.xds123.cn/18-9-21/82979252.jpg)
+![82979252.jpg](http://qiniu.xds123.cn/18-9-21/82979252.jpg)
 
 从继承关系里，此实现类就是`RibbonLoadBalancerClient`类了。
 
-![](http://qiniu.xds123.cn/18-9-21/59541189.jpg)
+![59541189.jpg](http://qiniu.xds123.cn/18-9-21/59541189.jpg)
 
 ```text
 RibbonLoadBalancerClient
@@ -453,7 +452,7 @@ RibbonLoadBalancerClient
 
 类：
 
-![](http://qiniu.xds123.cn/18-9-21/13645724.jpg)
+![13645724.jpg](http://qiniu.xds123.cn/18-9-21/13645724.jpg)
 
 简单来说：最后还是通过`loadBalancerClient.choose()`获取到服务实例，最通过拼凑 http 地址来进行最后的服务调用。
 
@@ -465,7 +464,7 @@ RibbonLoadBalancerClient
 
 具体原因：`serverid`必须是我们访问的`服务名称` ，当我们直接输入`ip`的时候获取的`server`是`null`，就会抛出异常。
 
-![](http://qiniu.xds123.cn/18-9-21/95656166.jpg)
+![95656166.jpg](http://qiniu.xds123.cn/18-9-21/95656166.jpg)
 
 此时，**若是需要调用非注册中心的服务，可以创建一个不被\*\***`@LoadBalanced`\***\*注解的\*\***`RestTemplate`\***\*,同时指定 bean 的名称，使用时，使用\*\***`@Qualifier`\***\*指定 name 注入此\*\***`RestTemplate`\***\*。**
 
@@ -493,11 +492,11 @@ RibbonLoadBalancerClient
 
 目前还未进行过自定义负载均衡，这里就简单的举例下，上次整理 ppt 时有讲过一些，但未深入了解过 ⊙﹏⊙‖∣，
 
-![](http://qiniu.xds123.cn/18-9-21/6181280.jpg)
+![6181280.jpg](http://qiniu.xds123.cn/18-9-21/6181280.jpg)
 
 可以从继承关系看出，是通过继承`IRule`来实现的。
 
-![](http://qiniu.xds123.cn/18-9-21/39759685.jpg)
+![39759685.jpg](http://qiniu.xds123.cn/18-9-21/39759685.jpg)
 
 **可继承 ClientConfigEnabledRoundRobinRule，来实现自己负载均衡策略。**
 
@@ -610,7 +609,7 @@ public class DemoController {
 
 5.启动应用，访问：[http://127.0.0.1:8028/hello?name=Hehui-feign](http://127.0.0.1:8028/hello?name=Hehui-feign)
 
-![](http://qiniu.xds123.cn/18-9-21/99970618.jpg)
+![99970618.jpg](http://qiniu.xds123.cn/18-9-21/99970618.jpg)
 
 **是不是很简单，和调用本地服务是一样的了！**
 
@@ -734,7 +733,7 @@ public interface HelloApi extends IHelloApi{
 
 3.分别启动各服务，访问：[http://127.0.0.1:8028/hello2?name=oKong-api](http://127.0.0.1:8028/hello2?name=oKong-api)
 
-![](http://qiniu.xds123.cn/18-9-21/10151632.jpg)
+![10151632.jpg](http://qiniu.xds123.cn/18-9-21/10151632.jpg)
 
 使用起来没啥差别的，一样的调用，**但对于调用方而言，可以无需去理会具体细节了，照着接口方法去传参就好了。**
 
@@ -1216,7 +1215,7 @@ public RestTemplate restTemplate() {
 
 一.介绍下测试用到的服务
 
-![](https://img-blog.csdnimg.cn/20191106161350811.png)
+![20191106161350811.png](https://img-blog.csdnimg.cn/20191106161350811.png)
 
 从 Eureka 注册中心中可以可以看出有 EUREKA-CLIENT 和 RIBBON-CLIENT 的服务，其中 EUREKA-CLIENT 有两个节点作为服务提供者，而 RIBBON-CLIENT 则是服务消费者，通过 RestTemplate 来消费 EUREKA-CLIENT 的服务。
 
@@ -1367,12 +1366,12 @@ public class LoadBalancerRetryProperties {
 
 截图看下信息：
 
-![](https://img-blog.csdnimg.cn/20191107162815756.png)
+![20191107162815756.png](https://img-blog.csdnimg.cn/20191107162815756.png)
 
 可以看到该方法取得了 request 里的 url 和 servicName，然后将这些参数交给 loadBalancer.execute 去执行方法。而 loadBalancer 是 LoadBalancerClient 类的实例。
 看下 LoadBalancerClient 的类图，可以看到 LoadBalancerClient 继承了 ServiceInstanceChooser，LoadBalancerClient 的实现类是 RibbonLoadBalancerClient
 
-![](https://img-blog.csdnimg.cn/20191107163802485.png)
+![20191107163802485.png](https://img-blog.csdnimg.cn/20191107163802485.png)
 
 逻辑继续，断点进入了 RibbonLoadBalancerClient 的 execute 方法
 
@@ -1399,20 +1398,20 @@ public <T> T execute(String serviceId, LoadBalancerRequest<T> request, Object hi
 
 经过这个方法，得到 loadBalancer，从截图里可以看到，loadBalancer 里有个 allServerList 集合，里面有两个对象，端口号分别是 8763 和 8762，这就是我们提供的服务节点。
 
-    ![](https://img-blog.csdnimg.cn/20191107172116799.png)
+    ![20191107172116799.png](https://img-blog.csdnimg.cn/20191107172116799.png)
 
 - Server server = getServer(loadBalancer, hint)
 
 从图里可以看出，通过这个 getServer 方法，会返回给我们一个当前可调用的服务节点，而至于怎么返回服务节点，会再写一篇分析，写完后会更新链接到该篇。
 
-    ![](https://img-blog.csdnimg.cn/20191107172537248.png)
+    ![20191107172537248.png](https://img-blog.csdnimg.cn/20191107172537248.png)
 
 - 生成 RibbonServer 作为参数传入 execute 方法
 - 运行 execute 方法
 
 接着跟进 execute 方法
 
-![](https://img-blog.csdnimg.cn/20191108111558612.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zODEwNjMyMg==,size_16,color_FFFFFF,t_70)
+![20191108111558612.png](https://img-blog.csdnimg.cn/20191108111558612.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zODEwNjMyMg==,size_16,color_FFFFFF,t_70)
 
 可以看该方法里的关键执行方法是：
 T returnVal = request.apply(serviceInstance);
@@ -1445,11 +1444,11 @@ public interface LoadBalancerRequest<T> {
 
 跟进 createRequest 方法里：
 
-![](https://img-blog.csdnimg.cn/20191108143112594.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zODEwNjMyMg==,size_16,color_FFFFFF,t_70)
+![20191108143112594.png](https://img-blog.csdnimg.cn/20191108143112594.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zODEwNjMyMg==,size_16,color_FFFFFF,t_70)
 
 可以从图中看到，经过一些操作后，生成的 serviceRequest 对象里的 serviceId 是 eureka-client，也就是我们的服务节点名，而 server 是 localhost:8763，这是具体的服务节点 ip，之后作为参数调用 org.springframework.http.client 包下的 InterceptingClientHttpRequest 类中的 execute 方法断点进入该方法：
 
-![](https://img-blog.csdnimg.cn/20191108145133749.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zODEwNjMyMg==,size_16,color_FFFFFF,t_70)
+![20191108145133749.png](https://img-blog.csdnimg.cn/20191108145133749.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zODEwNjMyMg==,size_16,color_FFFFFF,t_70)
 
 可以看出通过 requestFactory.createRequest(request.getURI(), method)方法生成了 ClientHttpRequest 类的实例 delegate，它的 url 就是我们最后真正要请求的，最后正常调用 delegate.execute()方法取得返回 ClientHttpResponse 就好了。
 
@@ -1489,7 +1488,7 @@ public class ServiceRequestWrapper extends HttpRequestWrapper {
 
 断点打在 getURI 方法里：
 
-![](https://img-blog.csdnimg.cn/201911081504477.png)
+![201911081504477.png](https://img-blog.csdnimg.cn/201911081504477.png)
 
 可以看到该方法返回了我们最后需要的 url。
 

@@ -1,22 +1,20 @@
 ---
-password: ''
-icon: ''
-date: '2022-02-21'
+password: ""
+icon: ""
+date: "2022-02-21"
 type: Post
 category: 技术分享
-urlname: '38'
+urlname: "38"
 catalog:
   - archives
 tags:
   - mysql
-summary: >-
-  Mysql数据库存储引擎MyISAM引擎
-  不支持事务支持表级锁（MySql支持两种表级锁，表共享读锁和表独占写锁），但不支持行级锁存储表的总行数一个MyISAM表有三个文件：索引文件（.MYI
-sort: ''
+summary: Mysql数据库存储引擎MyISAM引擎 不支持事务支持表级锁（MySql支持两种表级锁，表共享读锁和表独占写锁），但不支持行级锁存储表的总行数一个MyISAM表有三个文件：索引文件（.MYI
+sort: ""
 title: Mysql数据结构&锁
 status: Published
-updated: '2023-10-08 14:42:00'
-abbrlink: 43672
+cover: "https://cdn.jsdelivr.net/gh/listener-He/images@default/202305102214388.png"
+updated: "2023-10-08 14:42:00"
 ---
 
 # Mysql 数据库
@@ -123,7 +121,7 @@ B 树是 2-3 树的一种扩展，对于 M 阶(M 就是树的高度，比如下�
 
 （4）其他节点至少有 M/2 个子节点
 
-![](https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy8xNDQ2MDg3LWJjMDIzZTQ3YmM3NGNmYTEuanBn?x-oss-process=image/format,png)
+![image](https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy8xNDQ2MDg3LWJjMDIzZTQ3YmM3NGNmYTEuanBn?x-oss-process=image/format,png)
 
 他的插入过程和红黑树很相似，总结一下就是：
 
@@ -147,7 +145,7 @@ B 树是 2-3 树的一种扩展，对于 M 阶(M 就是树的高度，比如下�
 
     这说明程序大部分时间会阻塞在磁盘 IO 上。那么我们如何提高程序性能？减少磁盘 IO 次数，像 AVL 树，红黑树这类平衡二叉树从设计上无法“迎合”磁盘。
 
-![](https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy8xNDQ2MDg3LTI0Njk5ZTFmZTNmYzlhZGY?x-oss-process=image/format,png)
+![image](https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy8xNDQ2MDg3LTI0Njk5ZTFmZTNmYzlhZGY?x-oss-process=image/format,png)
 
 上图是一颗简单的平衡二叉树，平衡二叉树是通过旋转来保持平衡的，而旋转是对整棵树的操作，若部分加载到内存中则无法完成旋转操作。其次平衡二叉树的高度相对较大为 log n（底数为 2），这样逻辑上很近的节点实际可能非常远，无法很好的利用磁盘预读（局部性原理），所以这类平衡二叉树在数据库和文件系统上的选择就被 pass 了。
 
@@ -164,7 +162,7 @@ B 树是 2-3 树的一种扩展，对于 M 阶(M 就是树的高度，比如下�
 
     磁盘 IO 一次读取若干个 block，我们称为一页，具体大小和操作系统有关，一般为 4 k，8 k或 16 k），计算机内存分配是按页对齐的，这样就实现了一个节点只需要一次 IO。
 
-![](https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy8xNDQ2MDg3LWI2ZDQ3NTQzMDRmYTg5NTU?x-oss-process=image/format,png)
+![image](https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy8xNDQ2MDg3LWI2ZDQ3NTQzMDRmYTg5NTU?x-oss-process=image/format,png)
 
 上图是一棵简化的 B-树，多叉的好处非常明显，有效的降低了 B-树的高度，为底数很大的 log n，底数大小与节点的子节点数目有关，一般一棵 B-树的高度在 3 层左右。
 
@@ -190,16 +188,16 @@ B 树是 2-3 树的一种扩展，对于 M 阶(M 就是树的高度，比如下�
 
 结构如下图所示：
 
-![](https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy8xNDQ2MDg3LTMwYjcwYWFhMjg0MDM4MDMuanBn?x-oss-process=image/format,png)
+![image](https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy8xNDQ2MDg3LTMwYjcwYWFhMjg0MDM4MDMuanBn?x-oss-process=image/format,png)
 
-![](https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy8xNDQ2MDg3LTJhYTFjMTdkMTY4OGI3OTk?x-oss-process=image/format,png)
+![image](https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy8xNDQ2MDg3LTJhYTFjMTdkMTY4OGI3OTk?x-oss-process=image/format,png)
 
 **因为内节点并不存储 data，所以一般 B+树的叶节点和内节点大小不同，而 B-树的每个节点大小一般是相同的，为一页。**
 
 为了增加 **区间访问性**，一般会对 B+树做一些优化。
 如下图带顺序访问的 B+树。
 
-![](https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy8xNDQ2MDg3LTg5MTkwOTQzNzk0M2Q4ODg?x-oss-process=image/format,png)
+![image](https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy8xNDQ2MDg3LTg5MTkwOTQzNzk0M2Q4ODg?x-oss-process=image/format,png)
 
 **相比 B 树的优点：**
 
@@ -221,13 +219,13 @@ B 树是 2-3 树的一种扩展，对于 M 阶(M 就是树的高度，比如下�
 
 B-树：
 
-![](https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy8xNDQ2MDg3LWQ2MmVjNmU4M2VlYmUwNmY?x-oss-process=image/format,png)
+![image](https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy8xNDQ2MDg3LWQ2MmVjNmU4M2VlYmUwNmY?x-oss-process=image/format,png)
 
 > 从上图可以看出，key 为 50 的节点就在第一层，B-树只需要一次磁盘 IO 即可完成查找。所以说 B-树的查询最好时间复杂度是 O(1)。
 
 B+树：
 
-![](https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy8xNDQ2MDg3LWQ2OTBmYWJlOGM5MTkyODE?x-oss-process=image/format,png)
+![image](https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy8xNDQ2MDg3LWQ2OTBmYWJlOGM5MTkyODE?x-oss-process=image/format,png)
 
 **由于 B+树所有的 data 域都在根节点，所以查询 key 为 50 的节点必须从根节点索引到叶节点，时间复杂度固定为 O(log n)。**
 
@@ -252,7 +250,7 @@ B+树：
 
 > 点评：由于 B 树的节点都存了 key 和 data，而 B+树只有叶子节点存 data，非叶子节点都只是索引值，没有实际的数据，这就时 B+树在一次 IO 里面，能读出的索引值更多。从而减少查询时候需要的 IO 次数！
 
-![](https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy8xNDQ2MDg3LTBmNmUxZjdiODkyMWI2ZjM?x-oss-process=image/format,png)
+![image](https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy8xNDQ2MDg3LTBmNmUxZjdiODkyMWI2ZjM?x-oss-process=image/format,png)
 
 > 从上图可以看出相同大小的区域，B-树仅有 2 个 key，而 B+树有 3 个 key。
 
@@ -278,11 +276,11 @@ B+树：
 
 磁盘扇区、文件系统、InnoDB 存储引擎都有各自的最小存储单元。
 
-![](https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy8xNDQ2MDg3LTAyMzJiODIzZTNmMWViM2E?x-oss-process=image/format,png)
+![image](https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy8xNDQ2MDg3LTAyMzJiODIzZTNmMWViM2E?x-oss-process=image/format,png)
 
 在 MySQL 中我们的 InnoDB 页的大小默认是 16k，当然也可以通过参数设置：
 
-![](https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy8xNDQ2MDg3LWVkNzFhNWIzZWVmNDMxZGM?x-oss-process=image/format,png)
+![image](https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy8xNDQ2MDg3LWVkNzFhNWIzZWVmNDMxZGM?x-oss-process=image/format,png)
 
 > 数据表中的数据都是存储在页中的，所以一个页中能存储多少行数据呢？假设一行数据的大小是 1k，那么一个页可以存放 16 行这样的数据。
 
@@ -290,7 +288,7 @@ B+树：
 
 目前计算机使用的主存基本都是随机读写存储器（RAM），现代 RAM 的结构和存取原理比较复杂，这里本文抛却具体差别，抽象出一个十分简单的存取模型来说明 RAM 的工作原理。
 
-![](https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy8xNDQ2MDg3LTBmODlkNzBlYTM0YTI1OTkucG5n?x-oss-process=image/format,png)
+![image](https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy8xNDQ2MDg3LTBmODlkNzBlYTM0YTI1OTkucG5n?x-oss-process=image/format,png)
 
 `从抽象角度看`，主存是一系列的存储单元组成的矩阵，每个存储单元存储固定大小的数据。每个存储单元有唯一的地址，现代主存的编址规则比较复杂
 
@@ -310,13 +308,13 @@ B+树：
 
 图 6 是磁盘的整体结构示意图。
 
-![](https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy8xNDQ2MDg3LTA3Njg5ZDJjNTM5YzY1MGIucG5n?x-oss-process=image/format,png)
+![image](https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy8xNDQ2MDg3LTA3Njg5ZDJjNTM5YzY1MGIucG5n?x-oss-process=image/format,png)
 
 一个磁盘由大小相同且同轴的圆形盘片组成，磁盘可以转动（各个磁盘必须同步转动）。在磁盘的一侧有磁头支架，磁头支架固定了一组磁头，每个磁头负责存取一个磁盘的内容。磁头不能转动，但是可以沿磁盘半径方向运动（实际是斜切向运动），每个磁头同一时刻也必须是同轴的，即从正上方向下看，所有磁头任何时候都是重叠的（不过目前已经有多磁头独立技术，可不受此限制）。
 
 图 7 是磁盘结构的示意图。
 
-![](https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy8xNDQ2MDg3LWZiZDUyMTlkMmVkNWQ3YzUucG5n?x-oss-process=image/format,png)
+![image](https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy8xNDQ2MDg3LWZiZDUyMTlkMmVkNWQ3YzUucG5n?x-oss-process=image/format,png)
 
 盘片被划分成一系列同心环，圆心是盘片中心，每个同心环叫做一个磁道，所有半径相同的磁道组成一个柱面。磁道被沿半径线划分成一个个小的段，**每个段叫做一个扇区，每个扇区是磁盘的最小存储单元**。为了简单起见，我们下面假设磁盘只有一个盘片和一个磁头。
 
@@ -441,7 +439,7 @@ B-tree 索引可以用于使用 =, >, >=, <, <= 或者 BETWEEN 运算符的列�
 
 ### [事务的四大特性(ACID)](https://snailclimb.gitee.io/javaguide/#/docs/database/MySQL?id=%E4%BA%8B%E5%8A%A1%E7%9A%84%E5%9B%9B%E5%A4%A7%E7%89%B9%E6%80%A7acid)
 
-![](https://blog-file.hehouhui.cn/image.png)
+![image.png](https://blog-file.hehouhui.cn/image.png)
 
 > 事务处理可以确保除非事务性单元内的所有操作都成功完成，否则不会永久更新面向数据的资源。通过将一组相关操作组合为一个要么全部成功要么全部失败的单元，可以简化错误恢复并使应用程序更加可靠。一个逻辑工作单元要成为事务，必须满足所谓的 ACID(原子性、一致性、隔离性和持久性)属性：
 
@@ -529,7 +527,7 @@ rollback to xxxSavePoint
 > 并发控制技术保证了事务的隔离性,使数据库的一致性状态不会因为并发执行的操作被破坏。  
 > 日志恢复技术保证了事务的原子性,使一致性状态不会因事务或系统故障被破坏。同时使已提交的对数据库的修改不会因系统崩溃而丢失,保证了事务的持久性。
 
-![](https://blog-file.hehouhui.cn/20220221101406.png)
+![20220221101406.png](https://blog-file.hehouhui.cn/20220221101406.png)
 
 ### 并发异常
 
@@ -539,13 +537,13 @@ rollback to xxxSavePoint
 
 脏写是指事务回滚了其他事务对数据项的已提交修改,比如下面这种情况
 
-![](https://blog-file.hehouhui.cn/20220221101453.png)
+![20220221101453.png](https://blog-file.hehouhui.cn/20220221101453.png)
 
 ### 丢失更新
 
 - 丢失更新是指事务覆盖了其他事务对数据的已提交修改,导致这些修改好像丢失了一样。
 
-  ![](https://blog-file.hehouhui.cn/20220221101626.png)
+  ![20220221101626.png](https://blog-file.hehouhui.cn/20220221101626.png)
 
 事务 1 和事务 2 读取 A 的值都为 10,事务 2 先将 A 加上 10 并提交修改,之后事务 2 将 A 减少 10 并提交修改,A 的值最后为,导致事务 2 对 A 的修改好像丢失了一样
 
@@ -553,7 +551,7 @@ rollback to xxxSavePoint
 
 - 脏读是指一个事务读取了另一个事务未提交的数据
 
-  ![](https://blog-file.hehouhui.cn/20220221101652.png)
+  ![20220221101652.png](https://blog-file.hehouhui.cn/20220221101652.png)
 
 在事务 1 对 A 的处理过程中,事务 2 读取了 A 的值,但之后事务 1 回滚,导致事务 2 读取的 A 是未提交的脏数据。
 
@@ -561,7 +559,7 @@ rollback to xxxSavePoint
 
 - 不可重复读是指一个事务对同一数据的读取结果前后不一致。脏读和不可重复读的区别在于:前者读取的是事务未提交的脏数据,后者读取的是事务已经提交的数据,只不过因为数据被其他事务修改过导致前后两次读取的结果不一样,比如下面这种情况
 
-  ![](https://blog-file.hehouhui.cn/1422237-20181122103147288-996731595.png)
+  ![1422237-20181122103147288-996731595.png](https://blog-file.hehouhui.cn/1422237-20181122103147288-996731595.png)
 
 由于事务 2 对 A 的已提交修改,事务 1 前后两次读取的结果不一致。
 
@@ -569,7 +567,7 @@ rollback to xxxSavePoint
 
 - 幻读是指事务读取某个范围的数据时，因为其他事务的操作导致前后两次读取的结果不一致。幻读和不可重复读的区别在于,不可重复读是针对确定的某一行数据而言,而幻读是针对不确定的多行数据。因而幻读通常出现在带有查询条件的范围查询中,比如下面这种情况:
 
-  ![](https://blog-file.hehouhui.cn/1422237-20181122103158043-533492513.png)
+  ![1422237-20181122103158043-533492513.png](https://blog-file.hehouhui.cn/1422237-20181122103158043-533492513.png)
 
 事务 1 查询 A<5 的数据,由于事务 2 插入了一条 A=4 的数据,导致事务 1 两次查询得到的结果不一样
 
@@ -658,7 +656,7 @@ R-timestamp(Q):成功执行 read(Q)的所有事务的最大时间戳
 
 ### 事务的执行过程以及可能产生的问题
 
-![](https://blog-file.hehouhui.cn/1422237-20181122103254113-1342077140.png)
+![1422237-20181122103254113-1342077140.png](https://blog-file.hehouhui.cn/1422237-20181122103254113-1342077140.png)
 
 事务的执行过程可以简化如下:
 
@@ -718,7 +716,7 @@ R-timestamp(Q):成功执行 read(Q)的所有事务的最大时间戳
    这是一个只读的补偿记录,不需要根据它进行 undo。
 3. 一旦发现了`日志记录,就停止继续扫描,并往日志中写一个` 日志记录。
 
-   ![](https://blog-file.hehouhui.cn/1422237-20181122103326981-1784817664.png)
+   ![1422237-20181122103326981-1784817664.png](https://blog-file.hehouhui.cn/1422237-20181122103326981-1784817664.png)
 
 ### 系统崩溃时的恢复过程(带检查点)
 
@@ -748,7 +746,7 @@ R-timestamp(Q):成功执行 read(Q)的所有事务的最大时间戳
 
 事务是数据库系统进行并发控制的基本单位,是数据库系统进行故障恢复的基本单位,从而也是保持数据库状态一致性的基本单位。ACID 是事务的基本特性,数据库系统是通过并发控制技术和日志恢复技术来对事务的 ACID 进行保证的,从而可以得到如下的关于数据库事务的概念体系结构。
 
-![](https://blog-file.hehouhui.cn/1422237-20181122103402725-726722235.png)
+![1422237-20181122103402725-726722235.png](https://blog-file.hehouhui.cn/1422237-20181122103402725-726722235.png)
 
 ## 故障与故障恢复技术
 
@@ -785,7 +783,7 @@ R-timestamp(Q):成功执行 read(Q)的所有事务的最大时间戳
 
 关于索引的问题就到这，我们用一张直观的图来表示行锁：
 
-![](https://img-blog.csdnimg.cn/img_convert/63ebdaf075f09b127f9ca322af07fcab.png)
+![63ebdaf075f09b127f9ca322af07fcab.png](https://img-blog.csdnimg.cn/img_convert/63ebdaf075f09b127f9ca322af07fcab.png)
 
 接下来以两条 SQL 的执行为例，讲解一下 InnoDB 对于单行数据的加锁原理：
 
@@ -803,7 +801,7 @@ updateusersetage =10whereid>49;
 
 上述 SQL 的执行过程如下图所示。MySQL Server 会根据 WHERE 条件读取第一条满足条件的记录，然后 InnoDB 引擎会将第一条记录返回并加锁，接着 MySQL Server 发起更新改行记录的 UPDATE 请求，更新这条记录。一条记录操作完成，再读取下一条记录，直至没有匹配的记录为止。
 
-![](https://img-blog.csdnimg.cn/img_convert/39bea16e38602978f21fb5f6f50e92d4.png)
+![39bea16e38602978f21fb5f6f50e92d4.png](https://img-blog.csdnimg.cn/img_convert/39bea16e38602978f21fb5f6f50e92d4.png)
 
 **InnoDB 存储引擎的锁的算法有三种：**
 
@@ -827,7 +825,7 @@ updateusersetage =10whereid>49;
 
 除了使用 unlock tables 显示释放锁之外，会话持有其他表锁时执行 lock table 语句会释放会话之前持有的锁；会话持有其他表锁时执行 start transaction 或者 begin 开启事务时，也会释放之前持有的锁。
 
-![](https://img-blog.csdnimg.cn/img_convert/c0db3b3234e3875aaf94d6add3b14269.png)
+![c0db3b3234e3875aaf94d6add3b14269.png](https://img-blog.csdnimg.cn/img_convert/c0db3b3234e3875aaf94d6add3b14269.png)
 
 表锁由 MySQL Server 实现，行锁则是存储引擎实现，不同的引擎实现的不同。在 MySQL 的常用引擎中 InnoDB 支持行锁，而 MyISAM 则只能使用 MySQL Server 提供的表锁。
 
@@ -889,7 +887,7 @@ innodb_mirrored_log_groups 指定了日志镜像文件组的数量，默认 1
 
 之所以说重做日志是在事务开始之后逐步写入重做日志文件，而不一定是事务提交才写入重做日志缓存，原因就是，重做日志有一个缓存区 Innodb_log_buffer，Innodb_log_buffer 的默认大小为 8M(这里设置的 16M),Innodb 存储引擎先将重做日志写入 innodb_log_buffer 中。
 
-![](https://www.2cto.com/uploadfile/Collfiles/20180313/20180313092754205.png)
+![20180313092754205.png](https://www.2cto.com/uploadfile/Collfiles/20180313/20180313092754205.png)
 
 然后会通过以下三种方式将 innodb 日志缓冲区的日志刷新到磁盘
 
@@ -941,7 +939,7 @@ innodb_undo_directory = /data/un[dos](https://www.2cto.com/os/dos/)pace/ –undo
 
 如果 undo 使用的共享表空间，这个共享表空间中又不仅仅是存储了 undo 的信息，共享表空间的默认为与 MySQL 的数据目录下面，其属性由参数 innodb_data_file_path 配置。
 
-![](https://www.2cto.com/uploadfile/Collfiles/20180313/20180313092754206.png)
+![20180313092754206.png](https://www.2cto.com/uploadfile/Collfiles/20180313/20180313092754206.png)
 
 **其他：**
 
@@ -985,7 +983,7 @@ undo 是在事务开始之前保存的被修改数据的一个版本，产生 un
 
 binlog 的默认是保持时间由参数 expire_logs_days 配置，也就是说对于非活动的日志文件，在生成时间超过 expire_logs_days 配置的天数之后，会被自动删除。
 
-![](https://www.2cto.com/uploadfile/Collfiles/20180313/20180313092754207.png)
+![20180313092754207.png](https://www.2cto.com/uploadfile/Collfiles/20180313/20180313092754207.png)
 
 **对应的物理文件：**
 
@@ -993,7 +991,7 @@ binlog 的默认是保持时间由参数 expire_logs_days 配置，也就是说�
 
 对于每个 binlog 日志文件，通过一个统一的 index 文件来组织。
 
-![](https://www.2cto.com/uploadfile/Collfiles/20180313/20180313092754208.png)
+![20180313092754208.png](https://www.2cto.com/uploadfile/Collfiles/20180313/20180313092754208.png)
 
 **其他：**
 
@@ -1018,7 +1016,7 @@ binlog 的默认是保持时间由参数 expire_logs_days 配置，也就是说�
 
 显示错误日志的命令（如下图所示）
 
-![](https://img2018.cnblogs.com/blog/885859/201904/885859-20190418111428261-484993255.png)
+![885859-20190418111428261-484993255.png](https://img2018.cnblogs.com/blog/885859/201904/885859-20190418111428261-484993255.png)
 
 ### **普通查询日志**
 
@@ -1026,7 +1024,7 @@ binlog 的默认是保持时间由参数 expire_logs_days 配置，也就是说�
 
 查看日志的存放方式：show variables like ‘log_output’;
 
-![](https://blog-file.hehouhui.cn/885859-20190418111501042-772781517.png)
+![885859-20190418111501042-772781517.png](https://blog-file.hehouhui.cn/885859-20190418111501042-772781517.png)
 
 如果设置 mysql> set global log_output=’table’ 的话，则日志结果会记录到名为 gengera_log 的表中，这表的默认引擎都是 CSV
 　　如果设置表数据到文件 set global log_output=file;
@@ -1035,11 +1033,11 @@ binlog 的默认是保持时间由参数 expire_logs_days 配置，也就是说�
 　　　　开启 general log： set global general_log=on;
 　　　　关闭 general log： set global general_log=off;
 
-![](https://blog-file.hehouhui.cn/885859-20190418111501042-772781517-1645409187723.png)
+![885859-20190418111501042-772781517-1645409187723.png](https://blog-file.hehouhui.cn/885859-20190418111501042-772781517-1645409187723.png)
 
 然后在用：show global variables like ‘general_log’
 
-![](https://blog-file.hehouhui.cn/885859-20190418111551171-1738333923.png)
+![885859-20190418111551171-1738333923.png](https://blog-file.hehouhui.cn/885859-20190418111551171-1738333923.png)
 
 ### 慢查询日志
 
@@ -1047,25 +1045,25 @@ binlog 的默认是保持时间由参数 expire_logs_days 配置，也就是说�
 　　 1. 查看慢查询时间：
 　　 show variables like “long_query_time”;默认 10s
 
-![](9)
+![image](9)
 
 2. 查看慢查询配置情况：
    　　 show status like “%slow_queries%”;
 
-![](https://blog-file.hehouhui.cn/885859-20190418111656450-521011638.png)
+![885859-20190418111656450-521011638.png](https://blog-file.hehouhui.cn/885859-20190418111656450-521011638.png)
 
 3. 查看慢查询日志路径：
    　　 show variables like “%slow%”;
 
-![](https://blog-file.hehouhui.cn/885859-20190418111712973-766266117.png)
+![885859-20190418111712973-766266117.png](https://blog-file.hehouhui.cn/885859-20190418111712973-766266117.png)
 
 4. 开启慢日志
 
-![](https://blog-file.hehouhui.cn/885859-20190418111737882-1420825238.png)
+![885859-20190418111737882-1420825238.png](https://blog-file.hehouhui.cn/885859-20190418111737882-1420825238.png)
 
 查看已经开启：
 
-![](https://blog-file.hehouhui.cn/885859-20190418111753391-1884429309.png)
+![885859-20190418111753391-1884429309.png](https://blog-file.hehouhui.cn/885859-20190418111753391-1884429309.png)
 
 ## 优化
 
@@ -1089,7 +1087,7 @@ binlog 的默认是保持时间由参数 expire_logs_days 配置，也就是说�
 
 如下图所示，这样来说大家应该就更容易理解了。
 
-![](https://my-blog-to-use.oss-cn-beijing.aliyuncs.com/2019-6/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9E%82%E7%9B%B4%E5%88%86%E5%8C%BA.png)
+![%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9E%82%E7%9B%B4%E5%88%86%E5%8C%BA.png](https://my-blog-to-use.oss-cn-beijing.aliyuncs.com/2019-6/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9E%82%E7%9B%B4%E5%88%86%E5%8C%BA.png)
 
 - **垂直拆分的优点：** 可以使得列数据变小，在查询时减少读取的 Block 数，减少 I/O 次数。此外，垂直分区可以简化表的结构，易于维护。
 - **垂直拆分的缺点：** 主键会出现冗余，需要管理冗余列，并会引起 Join 操作，可以通过在应用层进行 Join 来解决。此外，垂直分区会让事务变得更加复杂；
@@ -1100,7 +1098,7 @@ binlog 的默认是保持时间由参数 expire_logs_days 配置，也就是说�
 
 水平拆分是指数据表行的拆分，表的行数超过 200 万行时，就会变慢，这时可以把一张的表的数据拆成多张表来存放。举个例子：我们可以将用户信息表拆分成多个用户信息表，这样就可以避免单一表数据量过大对性能造成影响。
 
-![](https://blog-file.hehouhui.cn/20220221101205.png)
+![20220221101205.png](https://blog-file.hehouhui.cn/20220221101205.png)
 
 水平拆分可以支持非常大的数据量。需要注意的一点是：分表仅仅是解决了单一表数据过大的问题，但由于表的数据还是在同一台机器上，其实对于提升 MySQL 并发能力没有什么意义，所以 **水平拆分最好分库** 。
 
