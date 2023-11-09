@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="zh"><head>
+<title>软件架构&amp;数据安全说明 - Honesty Wiki</title>
+<meta charset="UTF-8">
+<meta name="keywords" content="Honesty 知识库,Honesty Wiki, Honesty blog,hehouhui 知识库,hehouhui Wiki, hehouhui blog">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+
+<link rel="shortcut icon" href="https://www.make.com/en/favicon.ico" type="image/x-icon" />
+<meta name="description" content="系统软件架构文档 本项目是一个单系统服务，旨在为客户提供一个销售自动核算管理系统，涵盖了用户需求和业务规则，以便他们能够更好地管理和组织销售业务。  该系统的背景是，为了更好地满足用户的需求，销售部门需要一套能够帮助他们管理销售订单和配件信息的系统。本系统的目标是提高销售部门的效率，减少错误率，提高客户满意度。  需求分析：本系统主要包含以下功能：  产品部件管理：用于管理五金配件的信息，包括配件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="软件架构&amp;数据安全说明">
+<meta property="og:url" content="https://docs.hehouhui.cn/archives/20230417.html">
+<meta property="og:site_name" content="Honesty Wiki">
+<meta property="og:description" content="系统软件架构文档 本项目是一个单系统服务，旨在为客户提供一个销售自动核算管理系统，涵盖了用户需求和业务规则，以便他们能够更好地管理和组织销售业务。  该系统的背景是，为了更好地满足用户的需求，销售部门需要一套能够帮助他们管理销售订单和配件信息的系统。本系统的目标是提高销售部门的效率，减少错误率，提高客户满意度。  需求分析：本系统主要包含以下功能：  产品部件管理：用于管理五金配件的信息，包括配件">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-04-18T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-11-02T16:31:00.000Z">
+<meta property="article:author" content="Honesty">
+<meta property="article:tag" content="Honesty 知识库,Honesty Wiki, Honesty blog,hehouhui 知识库,hehouhui Wiki, hehouhui blog">
+<meta name="twitter:card" content="summary">
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1699545727578">
+
+<link rel="stylesheet" href="/css/style.css?v=1699545727578">
+
+
+
+
+    
+        <link rel="stylesheet" href="/custom.css?v=1699545727578">
+    
+
+
+
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+<script src="/lib/lax.min.js" async></script>
+
+
+<script async src="/js/app.js?v=1699545727579"></script>
+
+ 
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-248JM4ZRPJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+
+  gtag("config", "G-248JM4ZRPJ");
+</script>
+
+<meta name="generator" content="Hexo 6.3.0"></head><body class="nexmoe mdui-drawer-body-left"><div id="nexmoe-background"><div class="nexmoe-bg" style="background-image: url(https://blog-file.hehouhui.cn/202305111934350.jpeg)"></div><div class="mdui-appbar mdui-shadow-0"><div class="mdui-toolbar"><a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-drawer="{target: &#039;#drawer&#039;, swipe: true}" title="menu"><i class="mdui-icon nexmoefont icon-menu"></i></a><div class="mdui-toolbar-spacer"></div><a class="mdui-btn mdui-btn-icon" href="/" title="Honesty"><img src="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309111525908.jpeg" alt="Honesty"></a></div></div></div><div id="nexmoe-header"><div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="Honesty">
+            <img src="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309111525908.jpeg" alt="Honesty" alt="Honesty">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>33</div>
+        <div><span>标签</span>33</div>
+        <div><span>分类</span>4</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/history.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/friend.html" title="我的朋友">
+            <i class="mdui-list-item-icon nexmoefont icon-unorderedlist"></i>
+            <div class="mdui-list-item-content">
+                我的朋友
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/donate.html" title="给我赞助">
+            <i class="mdui-list-item-icon nexmoefont icon-coffee"></i>
+            <div class="mdui-list-item-content">
+                给我赞助
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/about.html" title="关于博主">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于博主
+            </div>
+        </a>
+        
+    </div>
+    
+    
+        
+        <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+         
+            <form id="search_form" action_e="https://cn.bing.com/search?q=site:hehouhui.cn" onsubmit="return search();">
+                <label><input id="search_value" name="q" type="search" placeholder="搜索"></label>
+            </form>
+         
+    </div>
+</div>
+
+
+
+
+    
+        
+        <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="https://space.bilibili.com/442038841"
+			target="_blank"
+			mdui-tooltip="{content: '哔哩哔哩'}"
+			style="
+				color: rgb(231, 106, 141);
+				background-color: rgba(231, 106, 141, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-bilibili"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://github.com/listener-He"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://www.zhihu.com/people/wen-xin-92-2-57"
+			target="_blank"
+			mdui-tooltip="{content: '知乎'}"
+			style="
+				color: rgb(30, 136, 229);
+				background-color: rgba(30, 136, 229, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-zhihu"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://twitter.com/Honesty861024"
+			target="_blank"
+			mdui-tooltip="{content: 'Twitter'}"
+			style="
+				color: rgb(59, 151, 239);
+				background-color: rgba(59, 151, 239, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-twitter"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://docs.hehouhui.cn/atom.xml"
+			target="_blank"
+			mdui-tooltip="{content: 'RSS'}"
+			style="
+				color: rgb(247, 132, 34);
+				background-color: rgba(247, 132, 34, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-rss"
+			></i> </a
+		>
+	</div>
+</div>
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/创作分享/">创作分享</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/学习思考/">学习思考</a>
+          <span class="category-list-count">3</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/技术分享/">技术分享</a>
+          <span class="category-list-count">27</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/碎片杂文/">碎片杂文</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/BUG/" style="font-size: 10px;">BUG</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/Jvm/" style="font-size: 10px;">Jvm</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Redis/" style="font-size: 15.71px;">Redis</a> <a href="/tags/SAAS/" style="font-size: 10px;">SAAS</a> <a href="/tags/Spring/" style="font-size: 18.57px;">Spring</a> <a href="/tags/WebFlux/" style="font-size: 10px;">WebFlux</a> <a href="/tags/chatgpt/" style="font-size: 10px;">chatgpt</a> <a href="/tags/hutool/" style="font-size: 10px;">hutool</a> <a href="/tags/keycloak/" style="font-size: 12.86px;">keycloak</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/notion/" style="font-size: 10px;">notion</a> <a href="/tags/oauth/" style="font-size: 12.86px;">oauth</a> <a href="/tags/%E5%81%A5%E5%BA%B7/" style="font-size: 10px;">健康</a> <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" style="font-size: 14.29px;">分布式</a> <a href="/tags/%E5%92%96%E5%95%A1/" style="font-size: 10px;">咖啡</a> <a href="/tags/%E5%93%8D%E5%BA%94%E5%BC%8F/" style="font-size: 10px;">响应式</a> <a href="/tags/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/" style="font-size: 11.43px;">图像处理</a> <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 11.43px;">多线程</a> <a href="/tags/%E5%AD%A6%E4%B9%A0/" style="font-size: 11.43px;">学习</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">工具</a> <a href="/tags/%E5%BB%BA%E7%AB%99/" style="font-size: 12.86px;">建站</a> <a href="/tags/%E5%BC%80%E5%8F%91/" style="font-size: 12.86px;">开发</a> <a href="/tags/%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/" style="font-size: 12.86px;">异步编程</a> <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" style="font-size: 17.14px;">微服务</a> <a href="/tags/%E6%80%9D%E8%80%83/" style="font-size: 12.86px;">思考</a> <a href="/tags/%E6%8A%80%E6%9C%AF%E6%B5%81/" style="font-size: 10px;">技术流</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 10px;">数据结构</a> <a href="/tags/%E6%95%B4%E6%B4%BB/" style="font-size: 10px;">整活</a> <a href="/tags/%E6%96%87%E5%AD%97/" style="font-size: 12.86px;">文字</a> <a href="/tags/%E7%89%A9%E8%81%94%E7%BD%91/" style="font-size: 10px;">物联网</a> <a href="/tags/%E7%BC%93%E5%AD%98/" style="font-size: 11.43px;">缓存</a>
+    </div>
+    
+      <script>
+        var maxTagcloud = parseInt(17);
+        var tags_length = parseInt(33);
+        var tags_arr = [];
+        for(var i = 0; i < tags_length; i++){
+          tags_arr.push(i);
+        }
+        tags_arr.sort(function (l, r) {
+          return Math.random() > 0.5 ? -1 : 1;
+        });
+        tags_arr = tags_arr.slice(0, maxTagcloud < tags_length ? tags_length - maxTagcloud : 0);
+        for(var tag_i = 0; tag_i < tags_arr.length; tag_i++){
+          document.getElementById("randomtagcloud").children[tags_arr[tag_i]].style.display = 'none';
+        }
+      </script>
+    
+  </div>
+
+    
+        
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/history/2023/">2023</a><span class="archive-list-count">16</span></li><li class="archive-list-item"><a class="archive-list-link" href="/history/2022/">2022</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/history/2021/">2021</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/history/2020/">2020</a><span class="archive-list-count">7</span></li></ul>
+    </div>
+  </div>
+
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">最新文章</h3>
+    <div class="nexmoe-widget">
+      <ul>
+        
+          <li>
+            <a href="/archives/java-sync-introduce-1104.html">Java异步编程方式介绍</a>
+          </li>
+        
+          <li>
+            <a href="/archives/spring-boot-tenant-202309.html">Spring Boot 实现多租户架构：支持应用多租户部署和管理</a>
+          </li>
+        
+          <li>
+            <a href="/archives/springcloud-data-202309.html">微服务之间的数据依赖问题，该如何解决？</a>
+          </li>
+        
+          <li>
+            <a href="/archives/redis-key-202309.html">Redis 热key是什么问题，如何导致的？有什么解决方案？</a>
+          </li>
+        
+          <li>
+            <a href="/archives/spring-restclient-2023.html">HttpClient? RestTemplate？WebClient? 不~是 RestClient</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+    
+        
+   
+    <div class="nexmoe-copyright">
+        &copy; 2023 Honesty
+        Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+        & <a href="https://github.com/theme-nexmoe/hexo-theme-nexmoe" target="_blank">Nexmoe</a>
+        <br><a target="_blank" href="https://beian.miit.gov.cn/">湘ICP备20014902号</a>
+<br><a target="_blank" href="https://www.upyun.com/?utm_source=lianmeng&utm_medium=referral">
+
+    </div>
+</div><!-- .nexmoe-drawer --></div><div id="nexmoe-content"><div class="nexmoe-primary"><div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover absolute" style="padding-top: NaN%;"> 
+            <img src="https://source.unsplash.com/random/720x480/?encryption" alt="软件架构&amp;数据安全说明" loading="lazy">
+            <h1>软件架构&amp;数据安全说明</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2023年04月18日</a>
+        
+        
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <h1 id="系统软件架构文档"><a href="#系统软件架构文档" class="headerlink" title="系统软件架构文档"></a>系统软件架构文档</h1><blockquote>
+<p>本项目是一个单系统服务，旨在为客户提供一个销售自动核算管理系统，涵盖了用户需求和业务规则，以便他们能够更好地管理和组织销售业务。</p>
+</blockquote>
+<pre><code>该系统的背景是，为了更好地满足用户的需求，销售部门需要一套能够帮助他们管理销售订单和配件信息的系统。本系统的目标是提高销售部门的效率，减少错误率，提高客户满意度。
+</code></pre>
+<h2 id="需求分析："><a href="#需求分析：" class="headerlink" title="需求分析："></a>需求分析：</h2><p><strong>本系统主要包含以下功能：</strong></p>
+<ol>
+<li>产品部件管理：用于管理五金配件的信息，包括配件的名称、型号、规格、价格等。此模块与核算流程和报价单管理模块有交互关系，因为在发起核算流程和生成报价单时需要引用配件信息。</li>
+<li>项目管理：用于管理销售部门接收到的各个项目的信息，包括客户信息、项目时间、项目状态等。此模块与核算流程和报价单管理模块有交互关系，因为在发起核算流程和生成报价单时需要引用项目信息。</li>
+<li>核算流程：在销售部门接收到客户询价后，根据图纸内容发起一轮核算。此模块与产品部件管理、项目管理和财务确认核算单模块有交互关系，因为在核算过程中需要引用产品和项目信息，并在完成核算后需要提交核算单给财务审核。</li>
+<li>核算单列表：用于显示所有的核算单列表，包括已提交的和未提交的。此模块与核算流程和财务确认核算单模块有交互关系，因为在查看核算单列表时需要显示核算单的状态，并提供提交核算单的操作。</li>
+<li>财务确认核算单：用于对核算单进行审核和确认。此模块与核算流程和报价单管理模块有交互关系，因为在审核通过后需要生成报价单。</li>
+<li>生成报价单：在完成核算并经过财务审核后，根据核算单信息生成报价单。此模块与核算流程、财务确认核算单和报价单管理模块有交互关系，因为在生成报价单时需要引用核算单信息，并将生成的报价单存储到报价单管理模块中。</li>
+<li>报价单管理：用于管理生成的报价单，包括查看报价单、编辑报价单和删除报价单等操作。此模块与生成报价单和台账管理模块有交互关系，因为在编辑报价单后需要更新台账信息。</li>
+<li>台账管理：用于记录销售部门的业务流水账，包括客户信息、销售额、毛利润等。此模块与报价单管理模块有交互关系，因为在编辑报价单后需要更新台账信息。</li>
+</ol>
+<h2 id="技术方案"><a href="#技术方案" class="headerlink" title="技术方案"></a><strong>技术方案</strong></h2><h3 id="技术选型"><a href="#技术选型" class="headerlink" title="技术选型"></a><strong>技术选型</strong></h3><p>本系统的技术选型涉及到以下方面：</p>
+<ul>
+<li>前端框架：React</li>
+<li>后端框架：Spring Boot</li>
+<li>数据库：MySQL</li>
+<li>缓存：Ehcache</li>
+<li>安全框架：Spring Security + Jwt + Ehcache</li>
+<li>日志框架：Logback</li>
+</ul>
+<h3 id="技术架构"><a href="#技术架构" class="headerlink" title="技术架构"></a><strong>技术架构</strong></h3><p>本系统采用三层架构：</p>
+<ul>
+<li>表现层：使用 SpringMVC 实现，处理用户请求。</li>
+<li>业务层：使用 Spring 实现，处理业务逻辑。</li>
+<li>持久层：使用 Spring Data JPA 实现，负责与数据库进行交互。</li>
+</ul>
+<p>整个系统可以分为三个主要部分：前端、后端和数据库。</p>
+<p>前端：采用 HTML、CSS 和 JavaScript 技术，使用 React 框架来实现页面的构建和交互。前端与后端通过 RESTful API 进行通信。</p>
+<p>后端：采用 Java 语言和 Spring Boot 框架实现，主要包括以下模块：</p>
+<ul>
+<li>部件管理模块：用于管理所有的部件信息，包括部件的基本信息、价格、库存等。</li>
+<li>项目管理模块：用于管理所有的项目信息，包括项目的基本信息、部件清单、订单状态等。</li>
+<li>核算模块：用于自动计算部件价格，并生成核算单。</li>
+<li>报价模块：用于将核算单转化为报价单，并提交财务审核。</li>
+<li>台账模块：用于管理所有已生成的报价单，包括已确认的和未确认的。</li>
+</ul>
+<p>数据库：采用 MySQL 关系型数据库管理系统，存储系统中所有的数据。</p>
+<p>所有的模块都通过 Spring Boot 的 MVC 框架实现，将业务逻辑、数据访问和页面展示分离，提高了代码的可维护性和可扩展性。此外，系统采用 JWT 进行身份验证和授权，确保了系统的安全性。同时系统采用了多种措施来保障数据的安全性和完整性，包括数据库访问受到 Spring Security 的保护、敏感数据在存储和传输时进行加密、数据备份和恢复策略、实时监控和警报等</p>
+<h3 id="系统组织架构"><a href="#系统组织架构" class="headerlink" title="系统组织架构"></a>系统组织架构</h3><p>根据系统的功能模块，可以归纳出以下几个角色：</p>
+<ol>
+<li>产品部件管理员：负责产品部件的添加、编辑、删除等操作，属于产品部件管理模块。</li>
+<li>项目管理员：负责项目的添加、编辑、删除等操作，属于项目管理模块。</li>
+<li>核算员：负责发起新的自动核算流程、审核核算单等操作，属于核算单列表和财务确认核算单模块。</li>
+<li>财务人员：负责审核核算单、生成报价单、报价单管理和台账管理等操作，属于财务确认核算单、生成报价单和台账管理模块。</li>
+</ol>
+<p>根据以上角色和模块的划分，他们的具体操作如下：</p>
+<ol>
+<li>产品部件管理员：添加、编辑、删除产品部件信息，查看产品部件列表，属于产品部件管理模块。</li>
+<li>项目管理员：添加、编辑、删除项目信息，查看项目列表，属于项目管理模块。</li>
+<li>核算员：发起新的自动核算流程，查看核算单列表，审核核算单信息，属于核算单列表和财务确认核算单模块。</li>
+<li>财务人员：审核核算单信息，生成报价单，查看报价单列表，进行报价单管理，管理台账信息，属于财务确认核算单、生成报价单和台账管理模块。</li>
+</ol>
+<h3 id="数据权限"><a href="#数据权限" class="headerlink" title="数据权限"></a>数据权限</h3><p>岗位部门的数据权限，可以通过以下几个步骤来实现：</p>
+<ol>
+<li>在系统中定义各个部门和岗位，同时将用户分配到相应的部门和岗位中。</li>
+<li>在系统中定义数据权限规则，将不同的数据权限规则与不同的部门和岗位相关联。</li>
+<li>在系统中实现数据权限控制，根据当前登录用户的部门和岗位信息，判断该用户是否有权限访问某些数据，从而控制用户对数据的访问。</li>
+</ol>
+<p>具体实现上，可以将数据权限规则定义为一组访问规则，每个规则包含以下信息：</p>
+<ol>
+<li>数据对象：需要控制访问权限的数据对象，如产品部件、项目、核算单等。</li>
+<li>访问类型：允许的访问类型，如查看、编辑、删除等。</li>
+<li>部门或岗位：与该规则相关联的部门或岗位。</li>
+<li>数据范围：允许访问的数据范围，如所有数据、所在部门的数据、所在部门及下级部门的数据等。</li>
+</ol>
+<p>在实现数据权限控制时，可以将数据权限规则保存在数据库中，每次用户访问数据时，系统根据当前用户的部门和岗位信息以及数据权限规则，来判断该用户是否有权限访问数据。同时，也可以在系统中实现数据过滤功能，只显示用户有权限访问的数据，从而提高系统的安全性和可用性。</p>
+<blockquote>
+<p>💡 基于所属人和所属部门实现数据权限控制的思路如下：</p>
+<ol>
+<li><p>在数据库中创建用户表和部门表，建立用户和部门的关联关系。</p>
+</li>
+<li><p>创建数据权限规则表，包含数据对象、访问类型、部门、数据范围等字段。</p>
+</li>
+<li><p>将不同的数据权限规则与不同的部门和岗位相关联，建立部门和数据权限规则之间的关联关系。</p>
+</li>
+<li><p>在用户表中添加所属部门和所属人字段，分别表示用户所属的部门和所属的人。</p>
+</li>
+<li><p>在数据表中添加所属部门和所属人字段，分别表示数据所属的部门和所属的人。</p>
+</li>
+<li><p>当用户访问数据时，系统根据当前用户的所属部门和所属人信息以及数据权限规则，来判断该用户是否有权限访问数据。</p>
+</li>
+<li><p>如果该用户有权限访问数据，则系统返回数据；否则，系统返回错误信息。</p>
+</li>
+</ol>
+<p>通过这种方式，可以实现基于所属人和所属部门的数据权限控制，确保只有授权用户才能访问数据。同时，系统还可以实现数据过滤功能，只显示用户有权限访问的数据，从而提高系统的安全性和可用性。</p>
+</blockquote>
+<pre><code>基于所属人和所属部门实现数据权限控制的思路如下：
+
+1. 在数据库中创建用户表和部门表，建立用户和部门的关联关系。
+2. 创建数据权限规则表，包含数据对象、访问类型、部门、数据范围等字段。
+3. 将不同的数据权限规则与不同的部门和岗位相关联，建立部门和数据权限规则之间的关联关系。
+4. 在用户表中添加所属部门和所属人字段，分别表示用户所属的部门和所属的人。
+5. 在数据表中添加所属部门和所属人字段，分别表示数据所属的部门和所属的人。
+6. 当用户访问数据时，系统根据当前用户的所属部门和所属人信息以及数据权限规则，来判断该用户是否有权限访问数据。
+7. 如果该用户有权限访问数据，则系统返回数据；否则，系统返回错误信息。
+
+通过这种方式，可以实现基于所属人和所属部门的数据权限控制，确保只有授权用户才能访问数据。同时，系统还可以实现数据过滤功能，只显示用户有权限访问的数据，从而提高系统的安全性和可用性。
+</code></pre>
+<h3 id="数据安全"><a href="#数据安全" class="headerlink" title="数据安全"></a>数据安全</h3><p>本系统采用了多种措施来保障数据的安全性和完整性。具体而言，我们有以下几个方面的措施：</p>
+<ol>
+<li>数据库访问受到 Spring Security 的保护，只有经过身份验证的用户才能访问数据库。数据库密码采用复杂的加密算法，以确保密码的安全性。此外，我们还对数据库连接进行了加密以提高数据传输的安全性。</li>
+<li>敏感数据在存储和传输时都会进行加密。我们采用了标准的加密算法（如 AES，RSA 等），以确保数据在存储和传输时的安全性。此外，我们还对敏感数据进行了分散存储，以增强数据的安全性。</li>
+<li>数据备份和恢复策略。我们的系统采用了定期备份的方式来保障数据的安全性。备份数据存储在不同的地点，以防止数据丢失。在系统发生故障或灾难事件时，我们可以快速地恢复数据。</li>
+<li>实时监控和警报。我们的系统采用了实时监控的方式来保障数据的安全性。一旦系统出现异常情况，我们会立即发出警报并采取相应的措施，以保障用户数据的安全性。</li>
+</ol>
+<p>综上所述，我们的系统采用了多种措施来保障数据的安全性和完整性。我们将不断地更新和改进安全措施，以确保用户数据的安全性。</p>
+
+    ｜
+  </article>
+
+  
+      
+    <div class="nexmoe-post-copyright">
+        <strong>本文作者：</strong>Honesty<br>
+        <strong>本文链接：</strong><a href="https://docs.hehouhui.cn/archives/20230417.html" title="https:&#x2F;&#x2F;docs.hehouhui.cn&#x2F;archives&#x2F;20230417.html" target="_blank" rel="noopener">https:&#x2F;&#x2F;docs.hehouhui.cn&#x2F;archives&#x2F;20230417.html</a><br>
+        
+            <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
+
+        
+    </div>
+
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1699545727394"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          <script src="https://giscus.app/client.js"
+       data-repo="listener-He/NotionNext"
+       data-repo-id="R_kgDOJI1XUA"
+       data-category="General"
+       data-category-id="R_kgDOJOsY1g"
+       data-mapping="pathname"
+       data-strict="0"
+       data-reactions-enabled="1"
+       data-emit-metadata="0"
+       data-input-position="top"
+       data-theme="preferred_color_scheme"
+       data-lang="zh-CN"
+       data-loading="lazy"
+       crossorigin="anonymous"
+       async>
+ </script>
+
+      </div>
+  
+</div></div><div class="nexmoe-post-right">    <div class="nexmoe-fixed">
+        <div class="nexmoe-tool">
+
+            
+
+            
+            
+            <button class="mdui-fab catalog" style="overflow:unset;">
+                <i class="nexmoefont icon-i-catalog"></i>
+                <div class="nexmoe-toc">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84%E6%96%87%E6%A1%A3"><span class="toc-number">1.</span> <span class="toc-text">系统软件架构文档</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%EF%BC%9A"><span class="toc-number">1.1.</span> <span class="toc-text">需求分析：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%80%E6%9C%AF%E6%96%B9%E6%A1%88"><span class="toc-number">1.2.</span> <span class="toc-text">技术方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B"><span class="toc-number">1.2.1.</span> <span class="toc-text">技术选型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84"><span class="toc-number">1.2.2.</span> <span class="toc-text">技术架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E7%BB%84%E7%BB%87%E6%9E%B6%E6%9E%84"><span class="toc-number">1.2.3.</span> <span class="toc-text">系统组织架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%9D%83%E9%99%90"><span class="toc-number">1.2.4.</span> <span class="toc-text">数据权限</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%AE%89%E5%85%A8"><span class="toc-number">1.2.5.</span> <span class="toc-text">数据安全</span></a></li></ol></li></ol></li></ol>
+                </div>
+            </button>
+            
+
+            
+
+            <a href="#nexmoe-content" class="backtop toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+        </div>
+    </div>
+</div></div><div id="nexmoe-footer"><!--!--></div><div><div id="nexmoe-search-space">
+	<div class="search-container">
+		<div class="search-header">
+			<div class="search-input-container">
+				<input
+					class="search-input"
+					type="text"
+					placeholder="搜索"
+					oninput="sinput();"
+				/>
+			</div>
+			<a class="search-close" onclick="sclose();">×</a>
+		</div>
+		<div class="search-body"></div>
+	</div>
+</div>
+</div><div><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1623991949842711" crossorigin="anonymous"></script>
+</div></body></html>

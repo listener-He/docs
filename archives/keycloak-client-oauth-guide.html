@@ -1,0 +1,736 @@
+<!doctype html>
+<html lang="zh"><head>
+<title>Keycloak 客户端授权服务 - Honesty Wiki</title>
+<meta charset="UTF-8">
+<meta name="keywords" content="Honesty 知识库,Honesty Wiki, Honesty blog,hehouhui 知识库,hehouhui Wiki, hehouhui blog">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+
+<link rel="shortcut icon" href="https://www.make.com/en/favicon.ico" type="image/x-icon" />
+<meta name="description" content="授权服务概述编辑本节报告问题 Keycloak 支持细粒度的授权策略，并能够结合不同的访问控制机制，例如：  基于属性的访问控制 (ABAC) 基于角色的访问控制 (RBAC) 基于用户的访问控制 (UBAC) 基于上下文的访问控制 (CBAC) 基于规则的访问控制 使用 JavaScript   基于时间的访问控制 通过服务提供商接口 (SPI) 支持自定义访问控制机制 (ACM)  Keycl">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Keycloak 客户端授权服务">
+<meta property="og:url" content="https://docs.hehouhui.cn/archives/keycloak-client-oauth-guide.html">
+<meta property="og:site_name" content="Honesty Wiki">
+<meta property="og:description" content="授权服务概述编辑本节报告问题 Keycloak 支持细粒度的授权策略，并能够结合不同的访问控制机制，例如：  基于属性的访问控制 (ABAC) 基于角色的访问控制 (RBAC) 基于用户的访问控制 (UBAC) 基于上下文的访问控制 (CBAC) 基于规则的访问控制 使用 JavaScript   基于时间的访问控制 通过服务提供商接口 (SPI) 支持自定义访问控制机制 (ACM)  Keycl">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.keycloak.org/docs/latest/authorization_services/images/authz-arch-overview.png">
+<meta property="og:image" content="https://www.keycloak.org/docs/latest/authorization_services/images/resource-mgmt-process.png">
+<meta property="og:image" content="https://www.keycloak.org/docs/latest/authorization_services/images/rs-r-scopes.png">
+<meta property="og:image" content="https://www.keycloak.org/docs/latest/authorization_services/images/policy-mgmt-process.png">
+<meta property="og:image" content="https://www.keycloak.org/docs/latest/authorization_services/images/pep-pattern-diagram.png">
+<meta property="og:image" content="https://www.keycloak.org/docs/latest/authorization_services/images/getting-started/hello-world/create-realm.png">
+<meta property="og:image" content="https://www.keycloak.org/docs/latest/authorization_services/images/getting-started/hello-world/create-user.png">
+<meta property="og:image" content="https://www.keycloak.org/docs/latest/authorization_services/images/getting-started/hello-world/reset-user-pwd.png">
+<meta property="og:image" content="https://www.keycloak.org/docs/latest/authorization_services/images/getting-started/hello-world/create-client.png">
+<meta property="og:image" content="https://www.keycloak.org/docs/latest/authorization_services/images/getting-started/hello-world/enable-authz.png">
+<meta property="og:image" content="https://www.keycloak.org/docs/latest/authorization_services/images/getting-started/hello-world/authz-settings.png">
+<meta property="og:image" content="https://www.keycloak.org/docs/latest/authorization_services/images/getting-started/hello-world/enable-authz.png">
+<meta property="og:image" content="https://www.keycloak.org/docs/latest/authorization_services/images/getting-started/hello-world/adapter-config.png">
+<meta property="article:published_time" content="2023-04-28T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-11-02T16:24:00.000Z">
+<meta property="article:author" content="Honesty">
+<meta property="article:tag" content="建站">
+<meta property="article:tag" content="keycloak">
+<meta property="article:tag" content="oauth">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.keycloak.org/docs/latest/authorization_services/images/authz-arch-overview.png">
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1699545727560">
+
+<link rel="stylesheet" href="/css/style.css?v=1699545727560">
+
+
+
+
+    
+        <link rel="stylesheet" href="/custom.css?v=1699545727560">
+    
+
+
+
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+<script src="/lib/lax.min.js" async></script>
+
+
+<script async src="/js/app.js?v=1699545727562"></script>
+
+ 
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-248JM4ZRPJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+
+  gtag("config", "G-248JM4ZRPJ");
+</script>
+
+<meta name="generator" content="Hexo 6.3.0"></head><body class="nexmoe mdui-drawer-body-left"><div id="nexmoe-background"><div class="nexmoe-bg" style="background-image: url(https://blog-file.hehouhui.cn/202305111934350.jpeg)"></div><div class="mdui-appbar mdui-shadow-0"><div class="mdui-toolbar"><a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-drawer="{target: &#039;#drawer&#039;, swipe: true}" title="menu"><i class="mdui-icon nexmoefont icon-menu"></i></a><div class="mdui-toolbar-spacer"></div><a class="mdui-btn mdui-btn-icon" href="/" title="Honesty"><img src="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309111525908.jpeg" alt="Honesty"></a></div></div></div><div id="nexmoe-header"><div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="Honesty">
+            <img src="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309111525908.jpeg" alt="Honesty" alt="Honesty">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>33</div>
+        <div><span>标签</span>33</div>
+        <div><span>分类</span>4</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/history.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/friend.html" title="我的朋友">
+            <i class="mdui-list-item-icon nexmoefont icon-unorderedlist"></i>
+            <div class="mdui-list-item-content">
+                我的朋友
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/donate.html" title="给我赞助">
+            <i class="mdui-list-item-icon nexmoefont icon-coffee"></i>
+            <div class="mdui-list-item-content">
+                给我赞助
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/about.html" title="关于博主">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于博主
+            </div>
+        </a>
+        
+    </div>
+    
+    
+        
+        <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+         
+            <form id="search_form" action_e="https://cn.bing.com/search?q=site:hehouhui.cn" onsubmit="return search();">
+                <label><input id="search_value" name="q" type="search" placeholder="搜索"></label>
+            </form>
+         
+    </div>
+</div>
+
+
+
+
+    
+        
+        <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="https://space.bilibili.com/442038841"
+			target="_blank"
+			mdui-tooltip="{content: '哔哩哔哩'}"
+			style="
+				color: rgb(231, 106, 141);
+				background-color: rgba(231, 106, 141, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-bilibili"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://github.com/listener-He"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://www.zhihu.com/people/wen-xin-92-2-57"
+			target="_blank"
+			mdui-tooltip="{content: '知乎'}"
+			style="
+				color: rgb(30, 136, 229);
+				background-color: rgba(30, 136, 229, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-zhihu"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://twitter.com/Honesty861024"
+			target="_blank"
+			mdui-tooltip="{content: 'Twitter'}"
+			style="
+				color: rgb(59, 151, 239);
+				background-color: rgba(59, 151, 239, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-twitter"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://docs.hehouhui.cn/atom.xml"
+			target="_blank"
+			mdui-tooltip="{content: 'RSS'}"
+			style="
+				color: rgb(247, 132, 34);
+				background-color: rgba(247, 132, 34, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-rss"
+			></i> </a
+		>
+	</div>
+</div>
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/创作分享/">创作分享</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/学习思考/">学习思考</a>
+          <span class="category-list-count">3</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/技术分享/">技术分享</a>
+          <span class="category-list-count">27</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/碎片杂文/">碎片杂文</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/BUG/" style="font-size: 10px;">BUG</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/Jvm/" style="font-size: 10px;">Jvm</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Redis/" style="font-size: 15.71px;">Redis</a> <a href="/tags/SAAS/" style="font-size: 10px;">SAAS</a> <a href="/tags/Spring/" style="font-size: 18.57px;">Spring</a> <a href="/tags/WebFlux/" style="font-size: 10px;">WebFlux</a> <a href="/tags/chatgpt/" style="font-size: 10px;">chatgpt</a> <a href="/tags/hutool/" style="font-size: 10px;">hutool</a> <a href="/tags/keycloak/" style="font-size: 12.86px;">keycloak</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/notion/" style="font-size: 10px;">notion</a> <a href="/tags/oauth/" style="font-size: 12.86px;">oauth</a> <a href="/tags/%E5%81%A5%E5%BA%B7/" style="font-size: 10px;">健康</a> <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" style="font-size: 14.29px;">分布式</a> <a href="/tags/%E5%92%96%E5%95%A1/" style="font-size: 10px;">咖啡</a> <a href="/tags/%E5%93%8D%E5%BA%94%E5%BC%8F/" style="font-size: 10px;">响应式</a> <a href="/tags/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/" style="font-size: 11.43px;">图像处理</a> <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 11.43px;">多线程</a> <a href="/tags/%E5%AD%A6%E4%B9%A0/" style="font-size: 11.43px;">学习</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">工具</a> <a href="/tags/%E5%BB%BA%E7%AB%99/" style="font-size: 12.86px;">建站</a> <a href="/tags/%E5%BC%80%E5%8F%91/" style="font-size: 12.86px;">开发</a> <a href="/tags/%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/" style="font-size: 12.86px;">异步编程</a> <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" style="font-size: 17.14px;">微服务</a> <a href="/tags/%E6%80%9D%E8%80%83/" style="font-size: 12.86px;">思考</a> <a href="/tags/%E6%8A%80%E6%9C%AF%E6%B5%81/" style="font-size: 10px;">技术流</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 10px;">数据结构</a> <a href="/tags/%E6%95%B4%E6%B4%BB/" style="font-size: 10px;">整活</a> <a href="/tags/%E6%96%87%E5%AD%97/" style="font-size: 12.86px;">文字</a> <a href="/tags/%E7%89%A9%E8%81%94%E7%BD%91/" style="font-size: 10px;">物联网</a> <a href="/tags/%E7%BC%93%E5%AD%98/" style="font-size: 11.43px;">缓存</a>
+    </div>
+    
+      <script>
+        var maxTagcloud = parseInt(17);
+        var tags_length = parseInt(33);
+        var tags_arr = [];
+        for(var i = 0; i < tags_length; i++){
+          tags_arr.push(i);
+        }
+        tags_arr.sort(function (l, r) {
+          return Math.random() > 0.5 ? -1 : 1;
+        });
+        tags_arr = tags_arr.slice(0, maxTagcloud < tags_length ? tags_length - maxTagcloud : 0);
+        for(var tag_i = 0; tag_i < tags_arr.length; tag_i++){
+          document.getElementById("randomtagcloud").children[tags_arr[tag_i]].style.display = 'none';
+        }
+      </script>
+    
+  </div>
+
+    
+        
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/history/2023/">2023</a><span class="archive-list-count">16</span></li><li class="archive-list-item"><a class="archive-list-link" href="/history/2022/">2022</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/history/2021/">2021</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/history/2020/">2020</a><span class="archive-list-count">7</span></li></ul>
+    </div>
+  </div>
+
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">最新文章</h3>
+    <div class="nexmoe-widget">
+      <ul>
+        
+          <li>
+            <a href="/archives/java-sync-introduce-1104.html">Java异步编程方式介绍</a>
+          </li>
+        
+          <li>
+            <a href="/archives/spring-boot-tenant-202309.html">Spring Boot 实现多租户架构：支持应用多租户部署和管理</a>
+          </li>
+        
+          <li>
+            <a href="/archives/springcloud-data-202309.html">微服务之间的数据依赖问题，该如何解决？</a>
+          </li>
+        
+          <li>
+            <a href="/archives/redis-key-202309.html">Redis 热key是什么问题，如何导致的？有什么解决方案？</a>
+          </li>
+        
+          <li>
+            <a href="/archives/spring-restclient-2023.html">HttpClient? RestTemplate？WebClient? 不~是 RestClient</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+    
+        
+   
+    <div class="nexmoe-copyright">
+        &copy; 2023 Honesty
+        Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+        & <a href="https://github.com/theme-nexmoe/hexo-theme-nexmoe" target="_blank">Nexmoe</a>
+        <br><a target="_blank" href="https://beian.miit.gov.cn/">湘ICP备20014902号</a>
+<br><a target="_blank" href="https://www.upyun.com/?utm_source=lianmeng&utm_medium=referral">
+
+    </div>
+</div><!-- .nexmoe-drawer --></div><div id="nexmoe-content"><div class="nexmoe-primary"><div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover absolute" style="padding-top: NaN%;"> 
+            <img src="https://cdn.jsdelivr.net/gh/listener-He/images@default/202305102206180.png" alt="Keycloak 客户端授权服务" loading="lazy">
+            <h1>Keycloak 客户端授权服务</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2023年04月28日</a>
+        
+            <a class="nexmoefont icon-appstore-fill -link" href="/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</a>
+        
+        
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <h2 id="授权服务概述"><a href="#授权服务概述" class="headerlink" title="授权服务概述"></a><strong>授权服务概述</strong></h2><p><a target="_blank" rel="noopener" href="https://github.com/keycloak/keycloak/tree/main/docs/documentation/authorization_services/topics/auth-services-overview.adoc">编辑本节</a><a target="_blank" rel="noopener" href="https://issues.redhat.com/secure/CreateIssueDetails!init.jspa?pid=12313920&components=12323375&issuetype=1&priority=3&description=File:%20authorization_services/topics/auth-services-overview.adoc">报告问题</a></p>
+<p>Keycloak 支持细粒度的授权策略，并能够结合不同的访问控制机制，例如：</p>
+<ul>
+<li><strong>基于属性的访问控制 (ABAC)</strong></li>
+<li><strong>基于角色的访问控制 (RBAC)</strong></li>
+<li><strong>基于用户的访问控制 (UBAC)</strong></li>
+<li><strong>基于上下文的访问控制 (CBAC)</strong></li>
+<li><strong>基于规则的访问控制</strong><ul>
+<li>使用 JavaScript</li>
+</ul>
+</li>
+<li><strong>基于时间的访问控制</strong></li>
+<li><strong>通过服务提供商接口 (SPI) 支持自定义访问控制机制 (ACM)</strong></li>
+</ul>
+<p>Keycloak 基于一组管理 UI 和 RESTful API，并提供必要的方法来为您的受保护资源和范围创建权限，将这些权限与授权策略相关联，并在您的应用程序和服务中执行授权决策。</p>
+<p>资源服务器（服务于受保护资源的应用程序或服务）通常依靠某种信息来决定是否应授予对受保护资源的访问权限。对于基于 RESTful 的资源服务器，该信息通常是从安全令牌中获取的，通常在每次向服务器发出请求时作为承载令牌发送。对于依赖会话来验证用户身份的 Web 应用程序，该信息通常存储在用户的会话中，并从那里为每个请求检索。</p>
+<p>通常，资源服务器仅根据基于角色的访问控制 (RBAC) 执行授权决策，其中根据映射到这些相同资源的角色检查授予试图访问受保护资源的用户的角色。虽然角色非常有用并被应用程序使用，但它们也有一些限制：</p>
+<ul>
+<li>资源和角色紧密耦合，角色的更改（例如添加、删除或更改访问上下文）会影响多个资源</li>
+<li>对安全要求的更改可能意味着对应用程序代码进行深入更改以反映这些更改</li>
+<li>根据您的应用程序大小，角色管理可能会变得困难且容易出错</li>
+<li>它不是最灵活的访问控制机制。角色不代表您是谁，并且缺乏上下文信息。如果您被授予了一个角色，那么您至少拥有一些访问权限。</li>
+</ul>
+<p>考虑到今天我们需要考虑用户分布在不同地域、本地策略不同、使用不同设备、信息共享需求高的异构环境，Keycloak 授权服务可以帮助您提升应用和服务的授权能力通过提供：</p>
+<ul>
+<li>使用细粒度授权策略和不同访问控制机制的资源保护</li>
+<li>集中的资源、权限和策略管理</li>
+<li>中央政策决策点</li>
+<li>基于一组基于 REST 的授权服务的 REST 安全性</li>
+<li>授权工作流和用户管理的访问</li>
+<li>有助于避免跨项目（和重新部署）代码复制并快速适应安全需求变化的基础设施。</li>
+</ul>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="https://www.keycloak.org/docs/latest/authorization_services/images/authz-arch-overview.png" alt="authz-arch-overview.png" data-caption="authz-arch-overview.png" loading="lazy"></p>
+<p>从设计的角度来看，授权服务基于一组定义良好的授权模式，提供以下功能：</p>
+<ul>
+<li><p><strong>策略管理点 (PAP)</strong></p>
+<p>提供一组基于 Keycloak 管理控制台的 UI，用于管理资源服务器、资源、范围、权限和策略。其中一部分也通过使用<a target="_blank" rel="noopener" href="https://www.keycloak.org/docs/latest/authorization_services/index.html#_service_protection_api">Protection API</a>远程完成。</p>
+</li>
+<li><p><strong>政策决策点 (PDP)</strong></p>
+<p>提供一个可分发的策略决策点，指向发送授权请求的位置，并根据请求的权限相应地评估策略。有关详细信息，请参阅<a target="_blank" rel="noopener" href="https://www.keycloak.org/docs/latest/authorization_services/index.html#_service_obtaining_permissions">获取权限</a>。</p>
+</li>
+<li><p><strong>策略执行点 (PEP)</strong></p>
+<p>为不同环境提供实现，以在资源服务器端实际执行授权决策。Keycloak 提供了一些内置的<a target="_blank" rel="noopener" href="https://www.keycloak.org/docs/latest/authorization_services/index.html#_enforcer_overview">Policy Enforcer</a>。</p>
+</li>
+<li><p><strong>政策信息点 (PIP)</strong></p>
+<p>基于 Keycloak Authentication Server，您可以在授权策略评估期间从身份和运行环境中获取属性。</p>
+</li>
+</ul>
+<h3 id="授权流程"><a href="#授权流程" class="headerlink" title="授权流程"></a><strong>授权流程</strong></h3><p>三个主要流程定义了必要的步骤，以了解如何使用 Keycloak 为您的应用程序启用细粒度授权：</p>
+<ul>
+<li><strong>资源管理</strong></li>
+<li><strong>权限和策略管理</strong></li>
+<li><strong>政策执行</strong></li>
+</ul>
+<h3 id="资源管理"><a href="#资源管理" class="headerlink" title="资源管理"></a><strong>资源管理</strong></h3><p><strong>资源管理</strong>涉及定义受保护内容的所有必要步骤。</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="https://www.keycloak.org/docs/latest/authorization_services/images/resource-mgmt-process.png" alt="resource-mgmt-process.png" data-caption="resource-mgmt-process.png" loading="lazy"></p>
+<p>首先，您需要指定 Keycloak 您希望保护什么，这通常代表一个 Web 应用程序或一组一个或多个服务。有关资源服务器的更多信息，请参阅<a target="_blank" rel="noopener" href="https://www.keycloak.org/docs/latest/authorization_services/index.html#_overview_terminology">术语</a>。</p>
+<p>资源服务器使用 Keycloak 管理控制台进行管理。您可以在那里启用任何已注册的客户端应用程序作为资源服务器，并开始管理您要保护的资源和范围。</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="https://www.keycloak.org/docs/latest/authorization_services/images/rs-r-scopes.png" alt="rs-r-scopes.png" data-caption="rs-r-scopes.png" loading="lazy"></p>
+<p>资源可以是网页、RESTFul 资源、文件系统中的文件、EJB 等等。它们可以代表一组资源（就像 Java 中的类），也可以代表单个特定资源。</p>
+<p>例如，您可能拥有代表所有银行账户的<em>银行账户</em>资源，并使用它来定义所有银行账户通用的授权策略。但是，您可能希望为<em>Alice 帐户</em>（属于客户的资源实例）定义特定策略，其中仅允许所有者访问某些信息或执行操作。</p>
+<p>可以使用 Keycloak 管理控制台或<a target="_blank" rel="noopener" href="https://www.keycloak.org/docs/latest/authorization_services/index.html#_service_protection_api">Protection API</a>来管理资源。在后一种情况下，资源服务器能够远程管理它们的资源。</p>
+<p>范围通常表示可以对资源执行的操作，但不限于此。您还可以使用范围来表示资源中的一个或多个属性。</p>
+<h3 id="权限和策略管理"><a href="#权限和策略管理" class="headerlink" title="权限和策略管理"></a><strong>权限和策略管理</strong></h3><p>一旦定义了资源服务器和所有要保护的资源，就必须设置权限和策略。</p>
+<p>此过程涉及实际定义管理资源的安全和访问要求的所有必要步骤。</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="https://www.keycloak.org/docs/latest/authorization_services/images/policy-mgmt-process.png" alt="policy-mgmt-process.png" data-caption="policy-mgmt-process.png" loading="lazy"></p>
+<p>策略定义了访问某物（资源或范围）或对其执行操作所必须满足的条件，但它们与所保护的内容无关。它们是通用的，可以重复用于构建权限或什至更复杂的策略。</p>
+<p>例如，要仅允许具有“高级用户”角色的用户访问一组资源，您可以使用 RBAC（基于角色的访问控制）。</p>
+<p>Keycloak 提供了一些内置的策略类型（及其各自的策略提供者），涵盖了最常见的访问控制机制。您甚至可以根据使用 JavaScript 编写的规则创建策略。</p>
+<p>一旦您定义了策略，您就可以开始定义您的权限。权限与它们所保护的资源相结合。您可以在此处指定要保护的内容（资源或范围）以及授予或拒绝权限必须满足的策略。</p>
+<h3 id="政策执行"><a href="#政策执行" class="headerlink" title="政策执行"></a><strong>政策执行</strong></h3><p><strong>策略执行</strong>涉及必要的步骤，以实际执行对资源服务器的授权决策。<strong>这是通过在资源服务器上启用策略执行点</strong>或 PEP 来实现的，该资源服务器能够与授权服务器通信，请求授权数据并根据服务器返回的决策和权限控制对受保护资源的访问。</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="https://www.keycloak.org/docs/latest/authorization_services/images/pep-pattern-diagram.png" alt="pep-pattern-diagram.png" data-caption="pep-pattern-diagram.png" loading="lazy"></p>
+<p>Keycloak 提供了一些内置的<a target="_blank" rel="noopener" href="https://www.keycloak.org/docs/latest/authorization_services/index.html#_enforcer_overview">Policy Enforcer</a>实现，您可以使用它们来保护您的应用程序，具体取决于它们运行的平台。</p>
+<h3 id="授权服务"><a href="#授权服务" class="headerlink" title="授权服务"></a><strong>授权服务</strong></h3><p>授权服务由以下 RESTFul 端点组成：</p>
+<ul>
+<li><strong>令牌端点</strong></li>
+<li><strong>资源管理端点</strong></li>
+<li><strong>权限管理端点</strong></li>
+</ul>
+<p>这些服务中的每一个都提供一个特定的 API，涵盖授权过程中涉及的不同步骤。</p>
+<h3 id="令牌端点"><a href="#令牌端点" class="headerlink" title="令牌端点"></a><strong>令牌端点</strong></h3><p>OAuth2 客户端（例如前端应用程序）可以使用令牌端点从服务器获取访问令牌，并使用这些相同的令牌访问受资源服务器保护的资源（例如后端服务）。同样，Keycloak 授权服务为 OAuth2 提供扩展，以允许根据与所请求的资源或范围关联的所有策略的处理来发布访问令牌。这意味着资源服务器可以根据服务器授予并由访问令牌持有的权限强制访问其受保护的资源。在 Keycloak 授权服务中，具有权限的访问令牌称为请求方令牌或简称 RPT。</p>
+<p>额外资源</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.keycloak.org/docs/latest/authorization_services/index.html#_service_obtaining_permissions">获取权限</a></li>
+</ul>
+<h3 id="保护-API"><a href="#保护-API" class="headerlink" title="保护 API"></a><strong>保护 API</strong></h3><p>Protection <strong>API</strong>是一组<a target="_blank" rel="noopener" href="https://docs.kantarainitiative.org/uma/wg/oauth-uma-federated-authz-2.0-09.html">符合 UMA 的</a>端点，为资源服务器提供操作，以帮助它们管理与它们相关的资源、范围、权限和策略。仅允许资源服务器访问此 API，这也需要一个  <strong>uma_protection</strong>范围。</p>
+<p>Protection API 提供的操作可以分为两大类：</p>
+<ul>
+<li><strong>资源管理</strong><ul>
+<li>创建资源</li>
+<li>删除资源</li>
+<li>按 ID 查找</li>
+<li>询问</li>
+</ul>
+</li>
+<li><strong>权限管理</strong><ul>
+<li>签发许可票</li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>默认情况下，远程资源管理处于启用状态。您可以使用 Keycloak 管理控制台更改它，并且只允许通过控制台进行资源管理。</th>
+</tr>
+</thead>
+</table>
+<p>在使用 UMA 协议时，Protection API 签发 Permission Tickets 是整个授权流程的重要环节。如后续部分所述，它们表示客户端请求的权限，这些权限被发送到服务器以获得最终令牌，其中包含在评估与请求的资源和范围关联的权限和策略期间授予的所有权限。</p>
+<p>额外资源</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.keycloak.org/docs/latest/authorization_services/index.html#_service_protection_api">保护 API</a></li>
+</ul>
+<h3 id="术语"><a href="#术语" class="headerlink" title="术语"></a><strong>术语</strong></h3><p>在继续之前，了解 Keycloak 授权服务引入的这些术语和概念很重要。</p>
+<h3 id="资源服务器"><a href="#资源服务器" class="headerlink" title="资源服务器"></a><strong>资源服务器</strong></h3><p>根据 OAuth2 术语，资源服务器是托管受保护资源并能够接受和响应受保护资源请求的服务器。</p>
+<p>资源服务器通常依靠某种信息来决定是否应该授予对受保护资源的访问权限。对于基于 RESTful 的资源服务器，该信息通常在安全令牌中携带，通常作为不记名令牌与每个请求一起发送到服务器。依赖会话来验证用户身份的 Web 应用程序通常将该信息存储在用户的会话中，并从那里为每个请求检索它。</p>
+<p>在 Keycloak 中，任何<strong>机密的</strong>客户端应用程序都可以充当资源服务器。此客户端的资源及其各自的范围受一组授权策略的保护和管理。</p>
+<h3 id="资源"><a href="#资源" class="headerlink" title="资源"></a><strong>资源</strong></h3><p>资源是应用程序和组织资产的一部分。它可以是一组一个或多个端点，一个经典的网络资源，如 HTML 页面，等等。在授权策略术语中，资源是受保护的<em>对象</em>。</p>
+<p>每个资源都有一个唯一标识符，可以表示单个资源或一组资源。例如，您可以管理一个<em>银行账户资源</em>，它代表并定义了一组适用于所有银行账户的授权策略。但是您也可以拥有一个名为<em>Alice’s Banking Account</em>的不同资源，它代表单个客户拥有的单个资源，它可以有自己的一组授权策略。</p>
+<h3 id="范围"><a href="#范围" class="headerlink" title="范围"></a><strong>范围</strong></h3><p>资源的范围是可以对资源执行的访问的有界范围。在授权策略术语中，范围是逻辑上可应用于资源的潜在许多<em>动词</em>之一。</p>
+<p>它通常指示可以使用给定资源做什么。范围的示例有查看、编辑、删除等。但是，范围也可以与资源提供的特定信息相关。在这种情况下，您可以拥有项目资源和成本范围，其中成本范围用于定义用户访问项目成本的特定策略和权限。</p>
+<h3 id="允许"><a href="#允许" class="headerlink" title="允许"></a><strong>允许</strong></h3><p>考虑这个简单且非常常见的权限：</p>
+<p>权限将受保护的对象与必须评估以确定是否授予访问权限的策略相关联。</p>
+<ul>
+<li><strong>X</strong>可以对资源**Z 做****Y**<ul>
+<li>哪里……<ul>
+<li><strong>X</strong>代表一个或多个用户、角色或组，或它们的组合。您还可以在此处使用声明和上下文。</li>
+<li><strong>Y</strong>表示要执行的操作，例如写入、查看等。</li>
+<li><strong>Z</strong>表示受保护的资源，例如“&#x2F;accounts”。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Keycloak 提供了一个丰富的平台，用于构建从简单到非常复杂的基于规则的动态权限的一系列权限策略。它提供了灵活性并有助于：</p>
+<ul>
+<li>降低代码重构和权限管理成本</li>
+<li>支持更灵活的安全模型，帮助您轻松适应安全需求的变化</li>
+<li>在运行时进行更改；应用程序只关心受保护的资源和范围，而不关心如何保护它们。</li>
+</ul>
+<h3 id="政策"><a href="#政策" class="headerlink" title="政策"></a><strong>政策</strong></h3><p>策略定义了授予对象访问权限所必须满足的条件。与权限不同，您不指定受保护的对象，而是指定访问给定对象（例如，资源、范围或两者）必须满足的条件。策略与可用于保护资源的不同访问控制机制 (ACM) 密切相关。借助策略，您可以实施基于属性的访问控制 (ABAC)、基于角色的访问控制 (RBAC)、基于上下文的访问控制或它们的任意组合的策略。</p>
+<p>Keycloak 通过提供聚合策略的概念来利用策略的概念以及您如何定义它们，您可以在其中构建“策略的策略”并仍然控制评估的行为。Keycloak 授权服务中的策略实现遵循分而治之技术，而不是编写一个包含访问给定资源必须满足的所有条件的大型策略。也就是说，您可以创建单独的策略，然后以不同的权限重复使用它们，并通过组合单独的策略来构建更复杂的策略。</p>
+<h3 id="政策提供者"><a href="#政策提供者" class="headerlink" title="政策提供者"></a><strong>政策提供者</strong></h3><p>策略提供者是特定策略类型的实现。Keycloak 提供内置策略，由相应的策略提供者支持，您可以创建自己的策略类型来支持您的特定要求。</p>
+<p>Keycloak 提供了一个 SPI（服务提供者接口），您可以使用它来插入您自己的策略提供者实现。</p>
+<h3 id="许可票"><a href="#许可票" class="headerlink" title="许可票"></a><strong>许可票</strong></h3><p>权限票证是由用户管理的访问 (UMA) 规范定义的一种特殊类型的令牌，它提供了一种不透明的结构，其形式由授权服务器确定。此结构表示客户端请求的资源和&#x2F;或范围、访问上下文以及必须应用于授权数据请求（请求方令牌 [RPT]）的策略。</p>
+<p>在 UMA 中，许可票证对于支持个人对个人共享以及个人对组织共享至关重要。将权限票证用于授权工作流可以实现从简单到复杂的一系列场景，在这些场景中，资源所有者和资源服务器可以根据管理对这些资源的访问的细粒度策略来完全控制他们的资源。</p>
+<p>在 UMA 工作流中，权限票证由授权服务器颁发给资源服务器，资源服务器将权限票证返回给试图访问受保护资源的客户端。客户端收到票证后，可以通过将票证发送回授权服务器来请求 RPT（持有授权数据的最终令牌）。</p>
+<p>有关权限票证的更多信息，请参阅<a target="_blank" rel="noopener" href="https://www.keycloak.org/docs/latest/authorization_services/index.html#_service_user_managed_access">用户管理的访问</a>和<a target="_blank" rel="noopener" href="https://docs.kantarainitiative.org/uma/wg/oauth-uma-grant-2.0-09.html">UMA</a>规范。</p>
+<h2 id="入门"><a href="#入门" class="headerlink" title="入门"></a><strong>入门</strong></h2><p>在使用本教程之前，您需要完成 Keycloak 的安装并创建初始管理员用户，如<a target="_blank" rel="noopener" href="https://www.keycloak.org/guides#getting-started">入门指南</a>教程中所示。对此有一个警告。您必须在与 Keycloak 服务器相同的机器上运行一个单独的 WildFly 实例。这个单独的实例将运行您的 Java Servlet 应用程序。因此，您必须在不同的端口下运行 Keycloak，以便在同一台机器上运行时不会出现端口冲突。<code>jboss.socket.binding.port-offset</code>在命令行上使用系统属性。此属性的值是一个数字，将添加到 Keycloak 服务器打开的每个端口的基值中。</p>
+<p>启动 Keycloak 服务器：</p>
+<p>Linux&#x2F;Unix</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token punctuation">..</span>./bin/kc.sh start-dev --http-port <span class="token number">8180</span></code></pre>
+
+<p>视窗</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token operator">></span> <span class="token punctuation">..</span>.<span class="token punctuation">\</span>bin<span class="token punctuation">\</span>kc.bat start-dev --http-port <span class="token number">8180</span></code></pre>
+
+<p>安装并启动两台服务器后，您应该能够通过<a target="_blank" rel="noopener" href="http://localhost:8180/auth/admin/">http://localhost:8180/auth/admin/访问 Keycloak 管理控制台，也可以通过</a><a target="_blank" rel="noopener" href="http://localhost:8080/">http://localhost:8080 访问</a>WildFly 实例  。</p>
+<p>额外资源</p>
+<ul>
+<li>有关安装和配置 WildFly 实例的更多详细信息，请参阅<a target="_blank" rel="noopener" href="https://www.keycloak.org/docs/21.1/securing_apps/">保护应用程序和服务指南</a>。</li>
+</ul>
+<h3 id="保护-servlet-应用程序"><a href="#保护-servlet-应用程序" class="headerlink" title="保护 servlet 应用程序"></a><strong>保护 servlet 应用程序</strong></h3><p>本入门指南的目的是让您尽快启动并运行，以便您可以试验和测试 Keycloak 提供的各种授权功能。此快速浏览在很大程度上依赖于默认数据库和服务器配置，并且不涵盖复杂的部署选项。有关功能或配置选项的更多信息，请参阅本文档中的相应部分。</p>
+<p>本指南解释了有关 Keycloak 授权服务的关键概念：</p>
+<ul>
+<li>为客户端应用程序启用细粒度授权</li>
+<li>将客户端应用程序配置为具有受保护资源的资源服务器</li>
+<li>定义权限和授权策略以管理对受保护资源的访问</li>
+<li>在您的应用程序中启用策略实施。</li>
+</ul>
+<h3 id="创建领域和用户"><a href="#创建领域和用户" class="headerlink" title="创建领域和用户"></a><strong>创建领域和用户</strong></h3><p>本教程的第一步是创建一个领域和该领域中的一个用户。然后，在领域内，我们将创建一个单一的客户端应用程序，然后成为您需要为其启用授权服务的<a target="_blank" rel="noopener" href="https://www.keycloak.org/docs/latest/authorization_services/index.html#_overview_terminology">资源服务器。</a></p>
+<p>程序</p>
+<ol>
+<li><p>创建一个名为<strong>hello-world-authz 的</strong>领域。创建完成后，会显示类似下图的页面：</p>
+<p>领域 hello-world-authz</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="https://www.keycloak.org/docs/latest/authorization_services/images/getting-started/hello-world/create-realm.png" alt="create-realm.png" data-caption="create-realm.png" loading="lazy"></p>
+</li>
+<li><p>单击<strong>用户</strong>。</p>
+<p>用户列表页面显示您可以在其中创建用户。</p>
+</li>
+<li><p>单击<strong>创建用户</strong>。</p>
+</li>
+<li><p>完成<strong>用户名</strong>、<strong>电子邮件</strong>、<strong>名字</strong>和<strong>姓氏</strong>字段。</p>
+</li>
+<li><p>将<strong>用户启用</strong>切换为<strong>ON</strong>。</p>
+</li>
+<li><p>单击<strong>创建</strong>。</p>
+<p>添加用户</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="https://www.keycloak.org/docs/latest/authorization_services/images/getting-started/hello-world/create-user.png" alt="create-user.png" data-caption="create-user.png" loading="lazy"></p>
+</li>
+<li><p><strong>通过单击“凭据”</strong>选项卡为用户设置密码。</p>
+<p>设置用户密码</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="https://www.keycloak.org/docs/latest/authorization_services/images/getting-started/hello-world/reset-user-pwd.png" alt="reset-user-pwd.png" data-caption="reset-user-pwd.png" loading="lazy"></p>
+</li>
+<li><p>完成<strong>New Password</strong>和<strong>Password Confirmation</strong>字段并将<strong>Temporary</strong>切换为<strong>OFF</strong>。</p>
+</li>
+<li><p>单击<strong>保存</strong>。</p>
+</li>
+<li><p>单击<strong>保存密码</strong>。</p>
+</li>
+</ol>
+<h3 id="启用授权服务"><a href="#启用授权服务" class="headerlink" title="启用授权服务"></a><strong>启用授权服务</strong></h3><p>您可以在配置为使用 OpenID Connect 协议的现有客户端应用程序中启用授权服务。您还可以使用以下过程创建客户端。</p>
+<p>程序</p>
+<ol>
+<li><p>单击菜单中的<strong>客户端。</strong></p>
+</li>
+<li><p>填写<strong>客户端类型</strong>。</p>
+</li>
+<li><p>单击<strong>下一步</strong>。</p>
+</li>
+<li><p><strong>将客户端身份验证</strong>切换为<strong>ON</strong>。</p>
+</li>
+<li><p><strong>将授权</strong>切换为<strong>ON</strong>。</p>
+</li>
+<li><p>单击<strong>保存</strong>。</p>
+</li>
+<li><p>向下滚动到<strong>功能配置</strong>部分。</p>
+</li>
+<li><p>填写<strong>根 URL</strong>字段。</p>
+</li>
+<li><p>单击<strong>保存</strong>。</p>
+<p>创建客户端应用程序</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="https://www.keycloak.org/docs/latest/authorization_services/images/getting-started/hello-world/create-client.png" alt="create-client.png" data-caption="create-client.png" loading="lazy"></p>
+<p>将为客户端显示一个新的<strong>授权选项卡。</strong></p>
+<p>客户端设置</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="https://www.keycloak.org/docs/latest/authorization_services/images/getting-started/hello-world/enable-authz.png" alt="enable-authz.png" data-caption="enable-authz.png" loading="lazy"></p>
+</li>
+<li><p>单击<strong>授权</strong>选项卡。</p>
+<p>将显示类似于以下内容的授权设置页面：</p>
+<p>授权设置</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="https://www.keycloak.org/docs/latest/authorization_services/images/getting-started/hello-world/authz-settings.png" alt="authz-settings.png" data-caption="authz-settings.png" loading="lazy"></p>
+</li>
+</ol>
+<p>当您为客户端应用程序启用授权服务时，Keycloak 会自动为您的客户端授权配置创建几个默认设置。</p>
+<p>额外资源</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.keycloak.org/docs/latest/authorization_services/index.html#_resource_server_enable_authorization">启用授权服务</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.keycloak.org/docs/latest/authorization_services/index.html#_resource_server_default_config">默认配置</a></li>
+</ul>
+<h3 id="构建、部署和测试您的应用程序"><a href="#构建、部署和测试您的应用程序" class="headerlink" title="构建、部署和测试您的应用程序"></a><strong>构建、部署和测试您的应用程序</strong></h3><p>现在<strong>app-authz-vanilla</strong>资源服务器（或客户端）已正确配置并启用授权服务，可以将其部署到服务器。</p>
+<p>您要部署的应用程序的项目和代码在<a target="_blank" rel="noopener" href="https://github.com/keycloak/keycloak-quickstarts">Keycloak Quickstarts Repository</a>中可用。在继续之前，您需要在计算机上安装以下内容并在您的 PATH 中可用：</p>
+<ul>
+<li>Java JDK 8</li>
+<li>Apache Maven 3.1.1 或更高版本</li>
+<li>Git</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://github.com/keycloak/keycloak-quickstarts">您可以通过在 https://github.com/keycloak/keycloak-quickstarts</a>克隆存储库来获取代码。快速入门旨在与最新的 Keycloak 版本一起使用。</p>
+<p>按照以下步骤下载代码。</p>
+<p>克隆项目</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> clone https://github.com/keycloak/keycloak-quickstarts</code></pre>
+
+<p>我们即将构建和部署的应用程序位于</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">cd</span> keycloak-quickstarts/app-authz-jee-vanilla</code></pre>
+
+<h3 id="获取适配器配置"><a href="#获取适配器配置" class="headerlink" title="获取适配器配置"></a><strong>获取适配器配置</strong></h3><p>在构建和部署应用程序之前，您必须先获取适配器配置。</p>
+<p>程序</p>
+<ol>
+<li><p>登录管理控制台。</p>
+</li>
+<li><p>单击菜单中的<strong>客户端。</strong></p>
+</li>
+<li><p>在客户端列表中，单击<strong>app-authz-vanilla</strong>客户端应用程序。客户端设置页面打开。</p>
+<p>客户端设置</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="https://www.keycloak.org/docs/latest/authorization_services/images/getting-started/hello-world/enable-authz.png" alt="enable-authz.png" data-caption="enable-authz.png" loading="lazy"></p>
+</li>
+<li><p>从<strong>操作</strong>列表中，选择<strong>下载适配器配置</strong>。</p>
+</li>
+<li><p>从格式选项列表中，选择<strong>Keycloak OIDC JSON</strong>。</p>
+<p>适配器配置以 JSON 格式显示。</p>
+</li>
+<li><p>单击<strong>下载</strong>。</p>
+<p>适配器配置</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="https://www.keycloak.org/docs/latest/authorization_services/images/getting-started/hello-world/adapter-config.png" alt="adapter-config.png" data-caption="adapter-config.png" loading="lazy"></p>
+</li>
+<li><p>将文件移动<code>keycloak.json</code>到<code>app-authz-jee-vanilla/config</code>目录。</p>
+</li>
+<li><p>（可选）指定重定向 URL。</p>
+<p><code>403</code>默认情况下，当用户没有访问资源服务器上受保护资源的权限时，策略执行器会使用状态代码进行响应。但是，您也可以为未经授权的用户指定重定向 URL。要指定重定向 URL，请编辑您更新的<strong>keycloak.json</strong>文件并将<code>policy-enforcer</code>配置替换为以下内容：</p>
+<p>&#96;”policy-enforcer”: {<br> “on-deny-redirect-to” : “&#x2F;app-authz-vanilla&#x2F;error.jsp”</p>
+</li>
+</ol>
+<p>}&#96;</p>
+<p>   <code>/app-authz-vanilla/error.jsp</code>如果用户没有访问受保护资源的必要权限，而不是无用的消息，则此更改指定策略执行者将用户重定向到页面<code>403 Unauthorized</code>。</p>
+
+    ｜
+  </article>
+
+  
+      
+    <div class="nexmoe-post-copyright">
+        <strong>本文作者：</strong>Honesty<br>
+        <strong>本文链接：</strong><a href="https://docs.hehouhui.cn/archives/keycloak-client-oauth-guide.html" title="https:&#x2F;&#x2F;docs.hehouhui.cn&#x2F;archives&#x2F;keycloak-client-oauth-guide.html" target="_blank" rel="noopener">https:&#x2F;&#x2F;docs.hehouhui.cn&#x2F;archives&#x2F;keycloak-client-oauth-guide.html</a><br>
+        
+            <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
+
+        
+    </div>
+
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/keycloak/" rel="tag">keycloak</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/oauth/" rel="tag">oauth</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/%E5%BB%BA%E7%AB%99/" rel="tag">建站</a>
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1699545727390"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          <script src="https://giscus.app/client.js"
+       data-repo="listener-He/NotionNext"
+       data-repo-id="R_kgDOJI1XUA"
+       data-category="General"
+       data-category-id="R_kgDOJOsY1g"
+       data-mapping="pathname"
+       data-strict="0"
+       data-reactions-enabled="1"
+       data-emit-metadata="0"
+       data-input-position="top"
+       data-theme="preferred_color_scheme"
+       data-lang="zh-CN"
+       data-loading="lazy"
+       crossorigin="anonymous"
+       async>
+ </script>
+
+      </div>
+  
+</div></div><div class="nexmoe-post-right">    <div class="nexmoe-fixed">
+        <div class="nexmoe-tool">
+
+            
+
+            
+            
+            <button class="mdui-fab catalog" style="overflow:unset;">
+                <i class="nexmoefont icon-i-catalog"></i>
+                <div class="nexmoe-toc">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%88%E6%9D%83%E6%9C%8D%E5%8A%A1%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">授权服务概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%88%E6%9D%83%E6%B5%81%E7%A8%8B"><span class="toc-number">1.1.</span> <span class="toc-text">授权流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86"><span class="toc-number">1.2.</span> <span class="toc-text">资源管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9D%83%E9%99%90%E5%92%8C%E7%AD%96%E7%95%A5%E7%AE%A1%E7%90%86"><span class="toc-number">1.3.</span> <span class="toc-text">权限和策略管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%BF%E7%AD%96%E6%89%A7%E8%A1%8C"><span class="toc-number">1.4.</span> <span class="toc-text">政策执行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%88%E6%9D%83%E6%9C%8D%E5%8A%A1"><span class="toc-number">1.5.</span> <span class="toc-text">授权服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A4%E7%89%8C%E7%AB%AF%E7%82%B9"><span class="toc-number">1.6.</span> <span class="toc-text">令牌端点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%9D%E6%8A%A4-API"><span class="toc-number">1.7.</span> <span class="toc-text">保护 API</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AF%E8%AF%AD"><span class="toc-number">1.8.</span> <span class="toc-text">术语</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B5%84%E6%BA%90%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-number">1.9.</span> <span class="toc-text">资源服务器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B5%84%E6%BA%90"><span class="toc-number">1.10.</span> <span class="toc-text">资源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8C%83%E5%9B%B4"><span class="toc-number">1.11.</span> <span class="toc-text">范围</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%81%E8%AE%B8"><span class="toc-number">1.12.</span> <span class="toc-text">允许</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%BF%E7%AD%96"><span class="toc-number">1.13.</span> <span class="toc-text">政策</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%BF%E7%AD%96%E6%8F%90%E4%BE%9B%E8%80%85"><span class="toc-number">1.14.</span> <span class="toc-text">政策提供者</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%B8%E5%8F%AF%E7%A5%A8"><span class="toc-number">1.15.</span> <span class="toc-text">许可票</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%A5%E9%97%A8"><span class="toc-number">2.</span> <span class="toc-text">入门</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%9D%E6%8A%A4-servlet-%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F"><span class="toc-number">2.1.</span> <span class="toc-text">保护 servlet 应用程序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E9%A2%86%E5%9F%9F%E5%92%8C%E7%94%A8%E6%88%B7"><span class="toc-number">2.2.</span> <span class="toc-text">创建领域和用户</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%AF%E7%94%A8%E6%8E%88%E6%9D%83%E6%9C%8D%E5%8A%A1"><span class="toc-number">2.3.</span> <span class="toc-text">启用授权服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA%E3%80%81%E9%83%A8%E7%BD%B2%E5%92%8C%E6%B5%8B%E8%AF%95%E6%82%A8%E7%9A%84%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F"><span class="toc-number">2.4.</span> <span class="toc-text">构建、部署和测试您的应用程序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E9%80%82%E9%85%8D%E5%99%A8%E9%85%8D%E7%BD%AE"><span class="toc-number">2.5.</span> <span class="toc-text">获取适配器配置</span></a></li></ol></li></ol>
+                </div>
+            </button>
+            
+
+            
+
+            <a href="#nexmoe-content" class="backtop toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+        </div>
+    </div>
+</div></div><div id="nexmoe-footer"><!--!--></div><div><div id="nexmoe-search-space">
+	<div class="search-container">
+		<div class="search-header">
+			<div class="search-input-container">
+				<input
+					class="search-input"
+					type="text"
+					placeholder="搜索"
+					oninput="sinput();"
+				/>
+			</div>
+			<a class="search-close" onclick="sclose();">×</a>
+		</div>
+		<div class="search-body"></div>
+	</div>
+</div>
+</div><div><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1623991949842711" crossorigin="anonymous"></script>
+</div></body></html>

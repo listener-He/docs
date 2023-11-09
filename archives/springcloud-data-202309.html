@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="zh"><head>
+<title>微服务之间的数据依赖问题，该如何解决？ - Honesty Wiki</title>
+<meta charset="UTF-8">
+<meta name="keywords" content="Honesty 知识库,Honesty Wiki, Honesty blog,hehouhui 知识库,hehouhui Wiki, hehouhui blog">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+
+<link rel="shortcut icon" href="https://www.make.com/en/favicon.ico" type="image/x-icon" />
+<meta name="description" content="微服务，顾名思义，就是将我们程序拆分为最小化单元来提供服务。在一体化系统中，各个微服务也是不可能独立存在的，那么微服务之间涉及到的数据依赖问题，应该怎么处理呢？我们从场景入手来分析考虑此类问题。 一、场景在一个供应链系统中，存在商品、销售订单、采购三个微服务，他们的主数据部分数据结构如下： 商品：  订单和子订单：  采购单和子订单：  在设计这个供应链系统时，我们需要满足以下两个需求：  根据商">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微服务之间的数据依赖问题，该如何解决？">
+<meta property="og:url" content="https://docs.hehouhui.cn/archives/springcloud-data-202309.html">
+<meta property="og:site_name" content="Honesty Wiki">
+<meta property="og:description" content="微服务，顾名思义，就是将我们程序拆分为最小化单元来提供服务。在一体化系统中，各个微服务也是不可能独立存在的，那么微服务之间涉及到的数据依赖问题，应该怎么处理呢？我们从场景入手来分析考虑此类问题。 一、场景在一个供应链系统中，存在商品、销售订单、采购三个微服务，他们的主数据部分数据结构如下： 商品：  订单和子订单：  采购单和子订单：  在设计这个供应链系统时，我们需要满足以下两个需求：  根据商">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309151508807.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309151508648.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309151508948.png">
+<meta property="og:image" content="https://mmbiz.qpic.cn/sz_mmbiz_png/knmrNHnmCLEDxC5VyDG939eNmSKG8Ss1JefXwrKlDMa75ZnvAGdkGSGibc4FP547PlYCvtlX8hw3tlomQ6LYKdg/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309151511076.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309151512290.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309151512847.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309151215375.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309151512057.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309151216480.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309151216798.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309151216381.png">
+<meta property="article:published_time" content="2023-09-15T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-10-08T14:42:00.000Z">
+<meta property="article:author" content="Honesty">
+<meta property="article:tag" content="Spring">
+<meta property="article:tag" content="微服务">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309151508807.png">
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1699545727530">
+
+<link rel="stylesheet" href="/css/style.css?v=1699545727530">
+
+
+
+
+    
+        <link rel="stylesheet" href="/custom.css?v=1699545727530">
+    
+
+
+
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+<script src="/lib/lax.min.js" async></script>
+
+
+<script async src="/js/app.js?v=1699545727530"></script>
+
+ 
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-248JM4ZRPJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+
+  gtag("config", "G-248JM4ZRPJ");
+</script>
+
+<meta name="generator" content="Hexo 6.3.0"></head><body class="nexmoe mdui-drawer-body-left"><div id="nexmoe-background"><div class="nexmoe-bg" style="background-image: url(https://blog-file.hehouhui.cn/202305111934350.jpeg)"></div><div class="mdui-appbar mdui-shadow-0"><div class="mdui-toolbar"><a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-drawer="{target: &#039;#drawer&#039;, swipe: true}" title="menu"><i class="mdui-icon nexmoefont icon-menu"></i></a><div class="mdui-toolbar-spacer"></div><a class="mdui-btn mdui-btn-icon" href="/" title="Honesty"><img src="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309111525908.jpeg" alt="Honesty"></a></div></div></div><div id="nexmoe-header"><div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="Honesty">
+            <img src="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309111525908.jpeg" alt="Honesty" alt="Honesty">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>33</div>
+        <div><span>标签</span>33</div>
+        <div><span>分类</span>4</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/history.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/friend.html" title="我的朋友">
+            <i class="mdui-list-item-icon nexmoefont icon-unorderedlist"></i>
+            <div class="mdui-list-item-content">
+                我的朋友
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/donate.html" title="给我赞助">
+            <i class="mdui-list-item-icon nexmoefont icon-coffee"></i>
+            <div class="mdui-list-item-content">
+                给我赞助
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/about.html" title="关于博主">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于博主
+            </div>
+        </a>
+        
+    </div>
+    
+    
+        
+        <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+         
+            <form id="search_form" action_e="https://cn.bing.com/search?q=site:hehouhui.cn" onsubmit="return search();">
+                <label><input id="search_value" name="q" type="search" placeholder="搜索"></label>
+            </form>
+         
+    </div>
+</div>
+
+
+
+
+    
+        
+        <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="https://space.bilibili.com/442038841"
+			target="_blank"
+			mdui-tooltip="{content: '哔哩哔哩'}"
+			style="
+				color: rgb(231, 106, 141);
+				background-color: rgba(231, 106, 141, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-bilibili"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://github.com/listener-He"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://www.zhihu.com/people/wen-xin-92-2-57"
+			target="_blank"
+			mdui-tooltip="{content: '知乎'}"
+			style="
+				color: rgb(30, 136, 229);
+				background-color: rgba(30, 136, 229, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-zhihu"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://twitter.com/Honesty861024"
+			target="_blank"
+			mdui-tooltip="{content: 'Twitter'}"
+			style="
+				color: rgb(59, 151, 239);
+				background-color: rgba(59, 151, 239, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-twitter"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://docs.hehouhui.cn/atom.xml"
+			target="_blank"
+			mdui-tooltip="{content: 'RSS'}"
+			style="
+				color: rgb(247, 132, 34);
+				background-color: rgba(247, 132, 34, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-rss"
+			></i> </a
+		>
+	</div>
+</div>
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/创作分享/">创作分享</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/学习思考/">学习思考</a>
+          <span class="category-list-count">3</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/技术分享/">技术分享</a>
+          <span class="category-list-count">27</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/碎片杂文/">碎片杂文</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/BUG/" style="font-size: 10px;">BUG</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/Jvm/" style="font-size: 10px;">Jvm</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Redis/" style="font-size: 15.71px;">Redis</a> <a href="/tags/SAAS/" style="font-size: 10px;">SAAS</a> <a href="/tags/Spring/" style="font-size: 18.57px;">Spring</a> <a href="/tags/WebFlux/" style="font-size: 10px;">WebFlux</a> <a href="/tags/chatgpt/" style="font-size: 10px;">chatgpt</a> <a href="/tags/hutool/" style="font-size: 10px;">hutool</a> <a href="/tags/keycloak/" style="font-size: 12.86px;">keycloak</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/notion/" style="font-size: 10px;">notion</a> <a href="/tags/oauth/" style="font-size: 12.86px;">oauth</a> <a href="/tags/%E5%81%A5%E5%BA%B7/" style="font-size: 10px;">健康</a> <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" style="font-size: 14.29px;">分布式</a> <a href="/tags/%E5%92%96%E5%95%A1/" style="font-size: 10px;">咖啡</a> <a href="/tags/%E5%93%8D%E5%BA%94%E5%BC%8F/" style="font-size: 10px;">响应式</a> <a href="/tags/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/" style="font-size: 11.43px;">图像处理</a> <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 11.43px;">多线程</a> <a href="/tags/%E5%AD%A6%E4%B9%A0/" style="font-size: 11.43px;">学习</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">工具</a> <a href="/tags/%E5%BB%BA%E7%AB%99/" style="font-size: 12.86px;">建站</a> <a href="/tags/%E5%BC%80%E5%8F%91/" style="font-size: 12.86px;">开发</a> <a href="/tags/%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/" style="font-size: 12.86px;">异步编程</a> <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" style="font-size: 17.14px;">微服务</a> <a href="/tags/%E6%80%9D%E8%80%83/" style="font-size: 12.86px;">思考</a> <a href="/tags/%E6%8A%80%E6%9C%AF%E6%B5%81/" style="font-size: 10px;">技术流</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 10px;">数据结构</a> <a href="/tags/%E6%95%B4%E6%B4%BB/" style="font-size: 10px;">整活</a> <a href="/tags/%E6%96%87%E5%AD%97/" style="font-size: 12.86px;">文字</a> <a href="/tags/%E7%89%A9%E8%81%94%E7%BD%91/" style="font-size: 10px;">物联网</a> <a href="/tags/%E7%BC%93%E5%AD%98/" style="font-size: 11.43px;">缓存</a>
+    </div>
+    
+      <script>
+        var maxTagcloud = parseInt(17);
+        var tags_length = parseInt(33);
+        var tags_arr = [];
+        for(var i = 0; i < tags_length; i++){
+          tags_arr.push(i);
+        }
+        tags_arr.sort(function (l, r) {
+          return Math.random() > 0.5 ? -1 : 1;
+        });
+        tags_arr = tags_arr.slice(0, maxTagcloud < tags_length ? tags_length - maxTagcloud : 0);
+        for(var tag_i = 0; tag_i < tags_arr.length; tag_i++){
+          document.getElementById("randomtagcloud").children[tags_arr[tag_i]].style.display = 'none';
+        }
+      </script>
+    
+  </div>
+
+    
+        
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/history/2023/">2023</a><span class="archive-list-count">16</span></li><li class="archive-list-item"><a class="archive-list-link" href="/history/2022/">2022</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/history/2021/">2021</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/history/2020/">2020</a><span class="archive-list-count">7</span></li></ul>
+    </div>
+  </div>
+
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">最新文章</h3>
+    <div class="nexmoe-widget">
+      <ul>
+        
+          <li>
+            <a href="/archives/java-sync-introduce-1104.html">Java异步编程方式介绍</a>
+          </li>
+        
+          <li>
+            <a href="/archives/spring-boot-tenant-202309.html">Spring Boot 实现多租户架构：支持应用多租户部署和管理</a>
+          </li>
+        
+          <li>
+            <a href="/archives/springcloud-data-202309.html">微服务之间的数据依赖问题，该如何解决？</a>
+          </li>
+        
+          <li>
+            <a href="/archives/redis-key-202309.html">Redis 热key是什么问题，如何导致的？有什么解决方案？</a>
+          </li>
+        
+          <li>
+            <a href="/archives/spring-restclient-2023.html">HttpClient? RestTemplate？WebClient? 不~是 RestClient</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+    
+        
+   
+    <div class="nexmoe-copyright">
+        &copy; 2023 Honesty
+        Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+        & <a href="https://github.com/theme-nexmoe/hexo-theme-nexmoe" target="_blank">Nexmoe</a>
+        <br><a target="_blank" href="https://beian.miit.gov.cn/">湘ICP备20014902号</a>
+<br><a target="_blank" href="https://www.upyun.com/?utm_source=lianmeng&utm_medium=referral">
+
+    </div>
+</div><!-- .nexmoe-drawer --></div><div id="nexmoe-content"><div class="nexmoe-primary"><div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover absolute" style="padding-top: NaN%;"> 
+            <img src="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309151218999.png" alt="微服务之间的数据依赖问题，该如何解决？" loading="lazy">
+            <h1>微服务之间的数据依赖问题，该如何解决？</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2023年09月15日</a>
+        
+            <a class="nexmoefont icon-appstore-fill -link" href="/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</a>
+        
+        
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <p>微服务，顾名思义，就是将我们程序拆分为最小化单元来提供服务。在一体化系统中，各个微服务也是不可能独立存在的，那么微服务之间涉及到的数据依赖问题，应该怎么处理呢？我们从场景入手来分析考虑此类问题。</p>
+<h2 id="一、场景"><a href="#一、场景" class="headerlink" title="一、场景"></a><strong>一、场景</strong></h2><p>在一个供应链系统中，存在商品、销售订单、采购三个微服务，他们的主数据部分数据结构如下：</p>
+<p>商品：</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309151508807.png" alt="202309151508807.png" data-caption="202309151508807.png" loading="lazy"></p>
+<p>订单和子订单：</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309151508648.png" alt="202309151508648.png" data-caption="202309151508648.png" loading="lazy"></p>
+<p>采购单和子订单：</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309151508948.png" alt="202309151508948.png" data-caption="202309151508948.png" loading="lazy"></p>
+<p>在设计这个供应链系统时，我们需要满足以下两个需求：</p>
+<ul>
+<li>根据商品的型号&#x2F;分类&#x2F;生成年份&#x2F;编码等查找订单；</li>
+<li>根据商品的型号&#x2F;分类&#x2F;生成年份&#x2F;编码等查找采购订单。</li>
+</ul>
+<p>初期我们的方案是这样设计的：严格按照的微服务划分原则将商品相关的职责存放在商品系统中。因此，在查询订单与采购单时，如果查询字段包含商品字段，我们需要按照如下顺序进行查询：</p>
+<ul>
+<li>先根据商品字段调用商品的服务，然后返回匹配的商品信息；</li>
+<li>在订单或采购单中，通过 IN 语句匹配商品 ID，再关联查询对应的单据。</li>
+</ul>
+<p>为了方便理解这个过程，订单查询流程图如下图所示：</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="https://mmbiz.qpic.cn/sz_mmbiz_png/knmrNHnmCLEDxC5VyDG939eNmSKG8Ss1JefXwrKlDMa75ZnvAGdkGSGibc4FP547PlYCvtlX8hw3tlomQ6LYKdg/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1" alt="image" data-caption="image" loading="lazy"></p>
+<p>图片</p>
+<p>图片</p>
+<p>初期方案设计完后，很快我们就遇到了一系列问题：</p>
+<ul>
+<li>随着商品数量的增多，匹配的商品越来越多，于是订单服务中包含 IN 语句的查询效率越来越慢；</li>
+<li>商品作为一个核心服务，依赖它的服务越来越多，同时随着商品数据量的增长，商品服务已不堪重负，响应速度也变慢，还存在请求超时的情况；</li>
+<li>由于商品服务超时，相关服务处理请求经常失败。</li>
+</ul>
+<p>结果就是业务方每次查询订单或采购单时，只要带上了商品这个关键字，查询效率就会很慢而且老是失败。于是，我们重新想了一个新方案——数据冗余，下面我们一起来看下。</p>
+<p>欢迎关注 SpringForAll 社区（<a target="_blank" rel="noopener" href="http://spring4all.com),专注分享关于spring的一切,每周还有2-3次的福利赠书活动,一起来学习、分享、交流吧./">http://spring4all.com），专注分享关于Spring的一切，每周还有2-3次的福利赠书活动，一起来学习、分享、交流吧。</a></p>
+<h2 id="二、数据冗余的方案"><a href="#二、数据冗余的方案" class="headerlink" title="二、数据冗余的方案"></a><strong>二、数据冗余的方案</strong></h2><p>数据冗余说白了就是在订单、采购单中保存一些商品字段信息。</p>
+<p>为了方便理解，我们借助上面实际业务场景具体说明下，看看两者的区别。</p>
+<p>商品：</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309151511076.png" alt="202309151511076.png" data-caption="202309151511076.png" loading="lazy"></p>
+<p>订单和子订单：</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309151512290.png" alt="202309151512290.png" data-caption="202309151512290.png" loading="lazy"></p>
+<p>采购单和子订单：</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309151512847.png" alt="202309151512847.png" data-caption="202309151512847.png" loading="lazy"></p>
+<p>调整架构方案后，每次查询时，我们就可以不再依赖商品服务了。</p>
+<p>但是，如果商品进行了更新，我们如何同步冗余的数据呢？在此分享 2 种解决办法。</p>
+<ul>
+<li>每次更新商品时，先调用订单与采购服务，再更新商品的冗余数据。</li>
+<li>每次更新商品时，先发布一条消息，订单与采购服务各自订阅这条消息后，再各自更新商品冗余数据。</li>
+</ul>
+<p>看到这里是不是觉得很眼熟了呢？没错，这就是我们上一篇提到过的数据一致性问题。那么这 2 种方案会出现哪些问题呢？</p>
+<p><strong>如果商品服务每次更新商品都要调用订单与采购服务，然后再更新冗余数据，则会出现以下两种问题。</strong></p>
+<ul>
+<li><strong>数据一致性问题</strong>：如果订单与采购的冗余数据更新失败了，整个操作都需要回滚。这时商品服务的开发人员肯定不乐意，因为冗余数据不是商品服务的核心需求，不能因为边缘流程阻断了自身的核心流程。</li>
+<li><strong>依赖问题</strong>：从职责来说，商品服务应该只关注商品本身，但是现在商品还需要调用订单与采购服务。而且，依赖商品这个核心服务的服务实在是太多了，也就导致后续商品服务每次更新商品时，都需要调用更新订单冗余数据、更新采购冗余数据、更新门店库存冗余数据、更新运营冗余数据等一大堆服务。那么商品到底是下游服务还是上游服务？还能不能安心当底层核心服务？</li>
+</ul>
+<p>因此，第一个解决办法直接被我们否决了，即我们采取的第二个解决办法——通过消息发布订阅的方案，因为它存在如下 2 点优势。</p>
+<ul>
+<li>商品无须调用其他服务，它只需要关注自身逻辑即可，顶多多生成一条消息送到 MQ。</li>
+<li>如果订单、采购等服务的更新冗余数据失败了，我们使用消息重试机制就可以了，最终能保证数据的一致性。</li>
+</ul>
+<p>此时，我们的架构方案如下图所示：</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309151215375.png" alt="202309151215375.png" data-caption="202309151215375.png" loading="lazy"></p>
+<p>这个方案看起来已经挺完美了，而且市面上基本也是这么做的，不过该方案存在如下几个问题。</p>
+<p>1.在这个方案中，仅仅保存冗余数据还远远不够，我们还需要将商品分类与生产批号的清单进行关联查询。也就是说，每个服务不只是订阅商品变更这一种消息，还需要订阅商品分类、商品生产批号变更等消息。下面请注意查看订单表结构的加粗部分内容。</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309151512057.png" alt="202309151512057.png" data-caption="202309151512057.png" loading="lazy"></p>
+<p>以上只是列举了一部分的结构，事实上，商品表中还有很多字段存在冗余，比如保修类型、包换类型等。为了更新这些冗余数据，采购服务与订单服务往往需要订阅近十种消息，因此，我们基本上需要把商品的一小半逻辑复制过来。</p>
+<p>2.每个依赖的服务需要重复实现冗余数据更新同步的逻辑。前面我们讲了采购、订单及其他服务都需要依赖商品数据，因此每个服务需要将冗余数据的订阅、更新逻辑做一遍，最终重复的代码就会很多。</p>
+<p>3.MQ 消息类型太多了：联调时最麻烦的是 MQ 之间的联动，如果是接口联调还好说，因为调用哪个服务器的接口相对可控而且比较好追溯；如果是消息联调就比较麻烦，因为我们常常不知道某条消息被哪台服务节点消费了，为了让特定的服务器消费特定的消息，我们就需要临时改动双方的代码。不过联调完成后，我们经常忘了改回原代码。</p>
+<p>为此，我们不希望针对冗余数据这种非核心需求出现如此多的问题，最终决定使用一个特别的同步冗余数据方案，接下来我们进一步说明。</p>
+<h2 id="三、解耦业务逻辑的数据同步方案"><a href="#三、解耦业务逻辑的数据同步方案" class="headerlink" title="三、解耦业务逻辑的数据同步方案"></a><strong>三、解耦业务逻辑的数据同步方案</strong></h2><p>解耦业务逻辑的数据同步方案的设计思路是这样的：</p>
+<ul>
+<li>将商品及商品相关的一些表（比如分类表、生产批号表、保修类型、包换类型等）实时同步到需要依赖使用它们的服务的数据库，并且保持表结构不变；</li>
+<li>在查询采购、订单等服务时，直接关联同步过来的商品相关表；</li>
+<li>不允许采购、订单等服务修改商品相关表。</li>
+</ul>
+<p>此时，整个方案的架构如下图所示：</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309151216480.png" alt="202309151216480.png" data-caption="202309151216480.png" loading="lazy"></p>
+<p>以上方案就能轻松解决如下两个问题：</p>
+<ul>
+<li>商品无须依赖其他服务，如果其他服务的冗余数据同步失败，它也不需要回滚自身的流程；</li>
+<li>采购、订单等服务无须关注冗余数据的同步。</li>
+</ul>
+<p>不过，该方案的“缺点”是增加了订单、采购等数据库的存储空间（因为增加了商品相关表）。</p>
+<p>仔细计算后，我们发现之前数据冗余的方案中每个订单都需要保存一份商品的冗余数据，假设订单总数是 N，商品总数是 M，而 N 一般远远大于 M。因此，在之前数据冗余的方案中，N 条订单就会产生 N 条商品的冗余数据。相比之下，解耦业务逻辑的数据同步方案更省空间，因为只增加了 M 条商品的数据。</p>
+<p>此时问题又来了，如何实时同步相关表的数据呢？我们直接找一个现成的开源中间件就可以了，不过它需要满足支持实时同步、支持增量同步、不用写业务逻辑、支持 MySQL 之间同步、活跃度高这五点要求。</p>
+<p>根据这五点要求，我们在市面上找了一圈，发现了 Canal、Debezium、DataX、Databus、Flinkx、Bifrost 这几款开源中间件，它们之间的区别如下表所示：</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309151216798.png" alt="202309151216798.png" data-caption="202309151216798.png" loading="lazy"></p>
+<p>从对比表中来看，比较贴近我们需求的开源中间件是 Bifrost，原因如下：</p>
+<ul>
+<li>它的界面管理不错；</li>
+<li>它的架构比较简单，出现问题后，我们可以自行调查，之后就算作者不维护了也可以自我维护，相对比较可控。</li>
+<li>作者更新活跃；</li>
+<li>自带监控报警功能。</li>
+</ul>
+<p>因此，最终我们使用了 Bifrost 开源中间件，此时整个方案的架构如下图所示：</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309151216381.png" alt="202309151216381.png" data-caption="202309151216381.png" loading="lazy"></p>
+<h2 id="四、上线效果"><a href="#四、上线效果" class="headerlink" title="四、上线效果"></a><strong>四、上线效果</strong></h2><p>整个架构方案上线后，商品数据的同步还算比较稳定，此时商品服务的开发人员只需要关注自身逻辑，无须再关注使用数据的人。如果需要关联使用商品数据的订单，采购服务的开发人员也无须关注商品数据的同步问题，只需要在查询时加上关联语句即可，实现了双赢。</p>
+<p>然而，唯一让我们担心的是 Bifrost 不支持集群，没法保障高可用性。不过，到目前为止，它还没有出现宕机的情况，反而是那些部署多台节点负载均衡的后台服务常常会出现宕机。</p>
+<p>最终，我们总算解决了服务之间数据依赖的问题。</p>
+<h2 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a><strong>五、总结</strong></h2><p>这里我们探讨了服务间的数据依赖问题，并给出了目前较为合适的解决方案。其实这里提到的方案不是一个很大众的方案，肯定会存在一些遗漏的问题没考虑，如果你有更好的方案，欢迎留言讨论。</p>
+
+    ｜
+  </article>
+
+  
+      
+    <div class="nexmoe-post-copyright">
+        <strong>本文作者：</strong>Honesty<br>
+        <strong>本文链接：</strong><a href="https://docs.hehouhui.cn/archives/springcloud-data-202309.html" title="https:&#x2F;&#x2F;docs.hehouhui.cn&#x2F;archives&#x2F;springcloud-data-202309.html" target="_blank" rel="noopener">https:&#x2F;&#x2F;docs.hehouhui.cn&#x2F;archives&#x2F;springcloud-data-202309.html</a><br>
+        
+            <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
+
+        
+    </div>
+
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/Spring/" rel="tag">Spring</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" rel="tag">微服务</a>
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1699545727385"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          <script src="https://giscus.app/client.js"
+       data-repo="listener-He/NotionNext"
+       data-repo-id="R_kgDOJI1XUA"
+       data-category="General"
+       data-category-id="R_kgDOJOsY1g"
+       data-mapping="pathname"
+       data-strict="0"
+       data-reactions-enabled="1"
+       data-emit-metadata="0"
+       data-input-position="top"
+       data-theme="preferred_color_scheme"
+       data-lang="zh-CN"
+       data-loading="lazy"
+       crossorigin="anonymous"
+       async>
+ </script>
+
+      </div>
+  
+</div></div><div class="nexmoe-post-right">    <div class="nexmoe-fixed">
+        <div class="nexmoe-tool">
+
+            
+
+            
+            
+            <button class="mdui-fab catalog" style="overflow:unset;">
+                <i class="nexmoefont icon-i-catalog"></i>
+                <div class="nexmoe-toc">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%9C%BA%E6%99%AF"><span class="toc-number">1.</span> <span class="toc-text">一、场景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%95%B0%E6%8D%AE%E5%86%97%E4%BD%99%E7%9A%84%E6%96%B9%E6%A1%88"><span class="toc-number">2.</span> <span class="toc-text">二、数据冗余的方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E8%A7%A3%E8%80%A6%E4%B8%9A%E5%8A%A1%E9%80%BB%E8%BE%91%E7%9A%84%E6%95%B0%E6%8D%AE%E5%90%8C%E6%AD%A5%E6%96%B9%E6%A1%88"><span class="toc-number">3.</span> <span class="toc-text">三、解耦业务逻辑的数据同步方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E4%B8%8A%E7%BA%BF%E6%95%88%E6%9E%9C"><span class="toc-number">4.</span> <span class="toc-text">四、上线效果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E6%80%BB%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text">五、总结</span></a></li></ol>
+                </div>
+            </button>
+            
+
+            
+
+            <a href="#nexmoe-content" class="backtop toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+        </div>
+    </div>
+</div></div><div id="nexmoe-footer"><!--!--></div><div><div id="nexmoe-search-space">
+	<div class="search-container">
+		<div class="search-header">
+			<div class="search-input-container">
+				<input
+					class="search-input"
+					type="text"
+					placeholder="搜索"
+					oninput="sinput();"
+				/>
+			</div>
+			<a class="search-close" onclick="sclose();">×</a>
+		</div>
+		<div class="search-body"></div>
+	</div>
+</div>
+</div><div><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1623991949842711" crossorigin="anonymous"></script>
+</div></body></html>

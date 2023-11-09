@@ -1,0 +1,759 @@
+<!doctype html>
+<html lang="zh"><head>
+<title>Java异步编程方式介绍 - Honesty Wiki</title>
+<meta charset="UTF-8">
+<meta name="keywords" content="Honesty 知识库,Honesty Wiki, Honesty blog,hehouhui 知识库,hehouhui Wiki, hehouhui blog">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+
+<link rel="shortcut icon" href="https://www.make.com/en/favicon.ico" type="image/x-icon" />
+<meta name="description" content="异步执行对于开发者来说并不陌生，在实际的开发过程中，很多场景多会使用到异步，相比同步执行，异步可以大大缩短请求链路耗时时间，比如：发送短信、邮件、异步更新等，这些都是典型的可以通过异步实现的场景。  异步的八种实现方式 线程 Thread Future 异步框架 CompletableFuture Spring 注解@Async Spring ApplicationEvent 事件 消息队列 第">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java异步编程方式介绍">
+<meta property="og:url" content="https://docs.hehouhui.cn/archives/java-sync-introduce-1104.html">
+<meta property="og:site_name" content="Honesty Wiki">
+<meta property="og:description" content="异步执行对于开发者来说并不陌生，在实际的开发过程中，很多场景多会使用到异步，相比同步执行，异步可以大大缩短请求链路耗时时间，比如：发送短信、邮件、异步更新等，这些都是典型的可以通过异步实现的场景。  异步的八种实现方式 线程 Thread Future 异步框架 CompletableFuture Spring 注解@Async Spring ApplicationEvent 事件 消息队列 第">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-11-04T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-11-08T15:58:00.000Z">
+<meta property="article:author" content="Honesty">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="异步编程">
+<meta property="article:tag" content="多线程">
+<meta name="twitter:card" content="summary">
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1699545727486">
+
+<link rel="stylesheet" href="/css/style.css?v=1699545727486">
+
+
+
+
+    
+        <link rel="stylesheet" href="/custom.css?v=1699545727486">
+    
+
+
+
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+<script src="/lib/lax.min.js" async></script>
+
+
+<script async src="/js/app.js?v=1699545727486"></script>
+
+ 
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-248JM4ZRPJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+
+  gtag("config", "G-248JM4ZRPJ");
+</script>
+
+<meta name="generator" content="Hexo 6.3.0"></head><body class="nexmoe mdui-drawer-body-left"><div id="nexmoe-background"><div class="nexmoe-bg" style="background-image: url(https://blog-file.hehouhui.cn/202305111934350.jpeg)"></div><div class="mdui-appbar mdui-shadow-0"><div class="mdui-toolbar"><a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-drawer="{target: &#039;#drawer&#039;, swipe: true}" title="menu"><i class="mdui-icon nexmoefont icon-menu"></i></a><div class="mdui-toolbar-spacer"></div><a class="mdui-btn mdui-btn-icon" href="/" title="Honesty"><img src="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309111525908.jpeg" alt="Honesty"></a></div></div></div><div id="nexmoe-header"><div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="Honesty">
+            <img src="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309111525908.jpeg" alt="Honesty" alt="Honesty">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>33</div>
+        <div><span>标签</span>33</div>
+        <div><span>分类</span>4</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/history.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/friend.html" title="我的朋友">
+            <i class="mdui-list-item-icon nexmoefont icon-unorderedlist"></i>
+            <div class="mdui-list-item-content">
+                我的朋友
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/donate.html" title="给我赞助">
+            <i class="mdui-list-item-icon nexmoefont icon-coffee"></i>
+            <div class="mdui-list-item-content">
+                给我赞助
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/about.html" title="关于博主">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于博主
+            </div>
+        </a>
+        
+    </div>
+    
+    
+        
+        <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+         
+            <form id="search_form" action_e="https://cn.bing.com/search?q=site:hehouhui.cn" onsubmit="return search();">
+                <label><input id="search_value" name="q" type="search" placeholder="搜索"></label>
+            </form>
+         
+    </div>
+</div>
+
+
+
+
+    
+        
+        <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="https://space.bilibili.com/442038841"
+			target="_blank"
+			mdui-tooltip="{content: '哔哩哔哩'}"
+			style="
+				color: rgb(231, 106, 141);
+				background-color: rgba(231, 106, 141, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-bilibili"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://github.com/listener-He"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://www.zhihu.com/people/wen-xin-92-2-57"
+			target="_blank"
+			mdui-tooltip="{content: '知乎'}"
+			style="
+				color: rgb(30, 136, 229);
+				background-color: rgba(30, 136, 229, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-zhihu"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://twitter.com/Honesty861024"
+			target="_blank"
+			mdui-tooltip="{content: 'Twitter'}"
+			style="
+				color: rgb(59, 151, 239);
+				background-color: rgba(59, 151, 239, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-twitter"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://docs.hehouhui.cn/atom.xml"
+			target="_blank"
+			mdui-tooltip="{content: 'RSS'}"
+			style="
+				color: rgb(247, 132, 34);
+				background-color: rgba(247, 132, 34, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-rss"
+			></i> </a
+		>
+	</div>
+</div>
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/创作分享/">创作分享</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/学习思考/">学习思考</a>
+          <span class="category-list-count">3</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/技术分享/">技术分享</a>
+          <span class="category-list-count">27</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/碎片杂文/">碎片杂文</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/BUG/" style="font-size: 10px;">BUG</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/Jvm/" style="font-size: 10px;">Jvm</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Redis/" style="font-size: 15.71px;">Redis</a> <a href="/tags/SAAS/" style="font-size: 10px;">SAAS</a> <a href="/tags/Spring/" style="font-size: 18.57px;">Spring</a> <a href="/tags/WebFlux/" style="font-size: 10px;">WebFlux</a> <a href="/tags/chatgpt/" style="font-size: 10px;">chatgpt</a> <a href="/tags/hutool/" style="font-size: 10px;">hutool</a> <a href="/tags/keycloak/" style="font-size: 12.86px;">keycloak</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/notion/" style="font-size: 10px;">notion</a> <a href="/tags/oauth/" style="font-size: 12.86px;">oauth</a> <a href="/tags/%E5%81%A5%E5%BA%B7/" style="font-size: 10px;">健康</a> <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" style="font-size: 14.29px;">分布式</a> <a href="/tags/%E5%92%96%E5%95%A1/" style="font-size: 10px;">咖啡</a> <a href="/tags/%E5%93%8D%E5%BA%94%E5%BC%8F/" style="font-size: 10px;">响应式</a> <a href="/tags/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/" style="font-size: 11.43px;">图像处理</a> <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 11.43px;">多线程</a> <a href="/tags/%E5%AD%A6%E4%B9%A0/" style="font-size: 11.43px;">学习</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">工具</a> <a href="/tags/%E5%BB%BA%E7%AB%99/" style="font-size: 12.86px;">建站</a> <a href="/tags/%E5%BC%80%E5%8F%91/" style="font-size: 12.86px;">开发</a> <a href="/tags/%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/" style="font-size: 12.86px;">异步编程</a> <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" style="font-size: 17.14px;">微服务</a> <a href="/tags/%E6%80%9D%E8%80%83/" style="font-size: 12.86px;">思考</a> <a href="/tags/%E6%8A%80%E6%9C%AF%E6%B5%81/" style="font-size: 10px;">技术流</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 10px;">数据结构</a> <a href="/tags/%E6%95%B4%E6%B4%BB/" style="font-size: 10px;">整活</a> <a href="/tags/%E6%96%87%E5%AD%97/" style="font-size: 12.86px;">文字</a> <a href="/tags/%E7%89%A9%E8%81%94%E7%BD%91/" style="font-size: 10px;">物联网</a> <a href="/tags/%E7%BC%93%E5%AD%98/" style="font-size: 11.43px;">缓存</a>
+    </div>
+    
+      <script>
+        var maxTagcloud = parseInt(17);
+        var tags_length = parseInt(33);
+        var tags_arr = [];
+        for(var i = 0; i < tags_length; i++){
+          tags_arr.push(i);
+        }
+        tags_arr.sort(function (l, r) {
+          return Math.random() > 0.5 ? -1 : 1;
+        });
+        tags_arr = tags_arr.slice(0, maxTagcloud < tags_length ? tags_length - maxTagcloud : 0);
+        for(var tag_i = 0; tag_i < tags_arr.length; tag_i++){
+          document.getElementById("randomtagcloud").children[tags_arr[tag_i]].style.display = 'none';
+        }
+      </script>
+    
+  </div>
+
+    
+        
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/history/2023/">2023</a><span class="archive-list-count">16</span></li><li class="archive-list-item"><a class="archive-list-link" href="/history/2022/">2022</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/history/2021/">2021</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/history/2020/">2020</a><span class="archive-list-count">7</span></li></ul>
+    </div>
+  </div>
+
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">最新文章</h3>
+    <div class="nexmoe-widget">
+      <ul>
+        
+          <li>
+            <a href="/archives/java-sync-introduce-1104.html">Java异步编程方式介绍</a>
+          </li>
+        
+          <li>
+            <a href="/archives/spring-boot-tenant-202309.html">Spring Boot 实现多租户架构：支持应用多租户部署和管理</a>
+          </li>
+        
+          <li>
+            <a href="/archives/springcloud-data-202309.html">微服务之间的数据依赖问题，该如何解决？</a>
+          </li>
+        
+          <li>
+            <a href="/archives/redis-key-202309.html">Redis 热key是什么问题，如何导致的？有什么解决方案？</a>
+          </li>
+        
+          <li>
+            <a href="/archives/spring-restclient-2023.html">HttpClient? RestTemplate？WebClient? 不~是 RestClient</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+    
+        
+   
+    <div class="nexmoe-copyright">
+        &copy; 2023 Honesty
+        Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+        & <a href="https://github.com/theme-nexmoe/hexo-theme-nexmoe" target="_blank">Nexmoe</a>
+        <br><a target="_blank" href="https://beian.miit.gov.cn/">湘ICP备20014902号</a>
+<br><a target="_blank" href="https://www.upyun.com/?utm_source=lianmeng&utm_medium=referral">
+
+    </div>
+</div><!-- .nexmoe-drawer --></div><div id="nexmoe-content"><div class="nexmoe-primary"><div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover absolute" style="padding-top: NaN%;"> 
+            <img src="https://cdn.jsdelivr.net/gh/listener-He/images@default/202311042246840.png" alt="Java异步编程方式介绍" loading="lazy">
+            <h1>Java异步编程方式介绍</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2023年11月04日</a>
+        
+            <a class="nexmoefont icon-appstore-fill -link" href="/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</a>
+        
+        
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <h2 id=""><a href="#" class="headerlink" title=""></a></h2><blockquote>
+<p>异步执行对于开发者来说并不陌生，在实际的开发过程中，很多场景多会使用到异步，相比同步执行，异步可以大大缩短请求链路耗时时间，比如：发送短信、邮件、异步更新等，这些都是典型的可以通过异步实现的场景。</p>
+</blockquote>
+<h2 id="异步的八种实现方式"><a href="#异步的八种实现方式" class="headerlink" title="异步的八种实现方式"></a>异步的八种实现方式</h2><ol>
+<li>线程 Thread</li>
+<li>Future</li>
+<li>异步框架 CompletableFuture</li>
+<li>Spring 注解@Async</li>
+<li>Spring ApplicationEvent 事件</li>
+<li>消息队列</li>
+<li>第三方异步框架，比如 Hutool 的 ThreadUtil</li>
+<li>Guava 异步</li>
+</ol>
+<h2 id="什么是异步？"><a href="#什么是异步？" class="headerlink" title="什么是异步？"></a>什么是异步？</h2><p>首先我们先看一个常见的用户下单的场景：</p>
+<p>在同步操作中，我们执行到  <strong>发送短信</strong>  的时候，我们必须等待这个方法彻底执行完才能执行  <strong>赠送积分</strong>  这个操作，如果  <strong>赠送积分</strong>  这个动作执行时间较长，发送短信需要等待，这就是典型的同步场景。</p>
+<p>实际上，发送短信和赠送积分没有任何的依赖关系，通过异步，我们可以实现<code>赠送积分</code>和<code>发送短信</code>这两个操作能够同时进行，比如：</p>
+<p>这就是所谓的异步，是不是非常简单，下面就说说异步的几种实现方式吧。</p>
+<h2 id="异步编程"><a href="#异步编程" class="headerlink" title="异步编程"></a>异步编程</h2><h2 id="4-1-线程异步"><a href="#4-1-线程异步" class="headerlink" title="4.1 线程异步"></a>4.1 线程异步</h2><pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">AsyncThread</span> <span class="token keyword">extends</span> <span class="token class-name">Thread</span> <span class="token punctuation">&#123;</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Current thread name:"</span> <span class="token operator">+</span> <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">" Send email success!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">AsyncThread</span> asyncThread <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">AsyncThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        asyncThread<span class="token punctuation">.</span><span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+</code></pre>
+
+<p>当然如果每次都创建一个<code>Thread</code>线程，频繁的创建、销毁，浪费系统资源，我们可以采用线程池：</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">private</span> <span class="token class-name">ExecutorService</span> executorService <span class="token operator">=</span> <span class="token class-name">Executors</span><span class="token punctuation">.</span><span class="token function">newCachedThreadPool</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">fun</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    executorService<span class="token punctuation">.</span><span class="token function">submit</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Runnable</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token annotation punctuation">@Override</span>
+        <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"执行业务逻辑..."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+</code></pre>
+
+<p>可以将业务逻辑封装到<code>Runnable</code>或<code>Callable</code>中，交由线程池来执行。</p>
+<h2 id="4-2-Future-异步"><a href="#4-2-Future-异步" class="headerlink" title="4.2 Future 异步"></a>4.2 Future 异步</h2><pre class="language-java" data-language="java"><code class="language-java">
+
+<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span>concurrent<span class="token punctuation">.</span></span><span class="token operator">*</span></span><span class="token punctuation">;</span>
+
+<span class="token keyword">import</span> <span class="token import"><span class="token namespace">lombok<span class="token punctuation">.</span>extern<span class="token punctuation">.</span>slf4j<span class="token punctuation">.</span></span><span class="token class-name">Slf4j</span></span><span class="token punctuation">;</span>
+
+<span class="token annotation punctuation">@Slf4j</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">FutureManager</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">execute</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">ExecutorService</span> executor <span class="token operator">=</span> <span class="token class-name">Executors</span><span class="token punctuation">.</span><span class="token function">newFixedThreadPool</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">Future</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">></span></span> future <span class="token operator">=</span> executor<span class="token punctuation">.</span><span class="token function">submit</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Callable</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">></span></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token annotation punctuation">@Override</span>
+            <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">call</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">&#123;</span>
+                <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">" --- task start --- "</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">3000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">" --- task finish ---"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">return</span> <span class="token string">"this is future execute final result!!!"</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">String</span> result <span class="token operator">=</span> future<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"Future get result: &#123;&#125;"</span><span class="token punctuation">,</span> result<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> result<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token annotation punctuation">@SneakyThrows</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">FutureManager</span> manager <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FutureManager</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        manager<span class="token punctuation">.</span><span class="token function">execute</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span></code></pre>
+
+<p>输出结果：</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql">Future get result: this <span class="token operator">is</span> future <span class="token keyword">execute</span> final result<span class="token operator">!</span><span class="token operator">!</span><span class="token operator">!</span></code></pre>
+
+<h3 id="4-2-1-Future-的不足之处"><a href="#4-2-1-Future-的不足之处" class="headerlink" title="4.2.1 Future 的不足之处"></a>4.2.1 Future 的不足之处</h3><p>Future 的不足之处的包括以下几点：</p>
+<p>1️⃣ 无法被动接收异步任务的计算结果：虽然我们可以主动将异步任务提交给线程池中的线程来执行，但是待异步任务执行结束之后，主线程无法得到任务完成与否的通知，它需要通过 get 方法主动获取任务执行的结果。</p>
+<p>2️⃣ Future 件彼此孤立：有时某一个耗时很长的异步任务执行结束之后，你想利用它返回的结果再做进一步的运算，该运算也会是一个异步任务，两者之间的关系需要程序开发人员手动进行绑定赋予，Future 并不能将其形成一个任务流（pipeline），每一个 Future 都是彼此之间都是孤立的，所以才有了后面的 CompletableFuture，CompletableFuture 就可以将多个 Future 串联起来形成任务流。</p>
+<p>3️⃣ Futrue 没有很好的错误处理机制：截止目前，如果某个异步任务在执行发的过程中发生了异常，调用者无法被动感知，必须通过捕获 get 方法的异常才知晓异步任务执行是否出现了错误，从而在做进一步的判断处理。</p>
+<h2 id="4-3-CompletableFuture-实现异步"><a href="#4-3-CompletableFuture-实现异步" class="headerlink" title="4.3 CompletableFuture 实现异步"></a>4.3 CompletableFuture 实现异步</h2><pre class="language-java" data-language="java"><code class="language-java">
+
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">CompletableFutureCompose</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">/**
+     * thenAccept子任务和父任务公用同一个线程
+     */</span>
+    <span class="token annotation punctuation">@SneakyThrows</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">thenRunAsync</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">CompletableFuture</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">></span></span> cf1 <span class="token operator">=</span> <span class="token class-name">CompletableFuture</span><span class="token punctuation">.</span><span class="token function">supplyAsync</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-></span> <span class="token punctuation">&#123;</span>
+            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">" cf1 do something...."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">return</span> <span class="token number">1</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">CompletableFuture</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Void</span><span class="token punctuation">></span></span> cf2 <span class="token operator">=</span> cf1<span class="token punctuation">.</span><span class="token function">thenRunAsync</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-></span> <span class="token punctuation">&#123;</span>
+            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">" cf2 do something..."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"cf1结果->"</span> <span class="token operator">+</span> cf1<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"cf2结果->"</span> <span class="token operator">+</span> cf2<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token function">thenRunAsync</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span></code></pre>
+
+<p>我们不需要显式使用 ExecutorService，CompletableFuture 内部使用了<code>ForkJoinPool</code>来处理异步任务，如果在某些业务场景我们想自定义自己的异步线程池也是可以的。</p>
+<h2 id="4-4-Spring-的-Async-异步"><a href="#4-4-Spring-的-Async-异步" class="headerlink" title="4.4 Spring 的@Async 异步"></a>4.4 Spring 的@Async 异步</h2><h3 id="4-4-1-自定义异步线程池"><a href="#4-4-1-自定义异步线程池" class="headerlink" title="4.4.1 自定义异步线程池"></a>4.4.1 自定义异步线程池</h3><pre class="language-java" data-language="java"><code class="language-java"><span class="token comment">/**
+ * 线程池参数配置，多个线程池实现线程池隔离，@Async注解，默认使用系统自定义线程池，可在项目中设置多个线程池，在异步调用的时候，指明需要调用的线程池名称，比如：@Async("taskName")
+ *
+ * @author: jacklin
+ * @since: 2021/5/18 11:44
+ */</span>
+<span class="token annotation punctuation">@EnableAsync</span>
+<span class="token annotation punctuation">@Configuration</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">TaskPoolConfig</span> <span class="token punctuation">&#123;</span>
+
+    <span class="token comment">/**
+     * 自定义线程池
+     *
+     * @author: jacklin
+     * @since: 2021/11/16 17:41
+     */</span>
+    <span class="token annotation punctuation">@Bean</span><span class="token punctuation">(</span><span class="token string">"taskExecutor"</span><span class="token punctuation">)</span>
+    <span class="token keyword">public</span> <span class="token class-name">Executor</span> <span class="token function">taskExecutor</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token class-name">Runtime</span><span class="token punctuation">.</span><span class="token function">getRuntime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">availableProcessors</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"系统最大线程数  ： "</span> <span class="token operator">+</span> i<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">ThreadPoolTaskExecutor</span> executor <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ThreadPoolTaskExecutor</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        executor<span class="token punctuation">.</span><span class="token function">setCorePoolSize</span><span class="token punctuation">(</span><span class="token number">16</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        executor<span class="token punctuation">.</span><span class="token function">setMaxPoolSize</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        executor<span class="token punctuation">.</span><span class="token function">setQueueCapacity</span><span class="token punctuation">(</span><span class="token number">99999</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        executor<span class="token punctuation">.</span><span class="token function">setKeepAliveSeconds</span><span class="token punctuation">(</span><span class="token number">60</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        executor<span class="token punctuation">.</span><span class="token function">setThreadNamePrefix</span><span class="token punctuation">(</span><span class="token string">"asyncServiceExecutor -"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        executor<span class="token punctuation">.</span><span class="token function">setAwaitTerminationSeconds</span><span class="token punctuation">(</span><span class="token number">60</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        executor<span class="token punctuation">.</span><span class="token function">setWaitForTasksToCompleteOnShutdown</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> executor<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span></code></pre>
+
+<h3 id="4-4-2-AsyncService"><a href="#4-4-2-AsyncService" class="headerlink" title="4.4.2 AsyncService"></a>4.4.2 AsyncService</h3><pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">AsyncService</span> <span class="token punctuation">&#123;</span>
+
+    <span class="token class-name">MessageResult</span> <span class="token function">sendSms</span><span class="token punctuation">(</span><span class="token class-name">String</span> callPrefix<span class="token punctuation">,</span> <span class="token class-name">String</span> mobile<span class="token punctuation">,</span> <span class="token class-name">String</span> actionType<span class="token punctuation">,</span> <span class="token class-name">String</span> content<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token class-name">MessageResult</span> <span class="token function">sendEmail</span><span class="token punctuation">(</span><span class="token class-name">String</span> email<span class="token punctuation">,</span> <span class="token class-name">String</span> subject<span class="token punctuation">,</span> <span class="token class-name">String</span> content<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token annotation punctuation">@Slf4j</span>
+<span class="token annotation punctuation">@Service</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">AsyncServiceImpl</span> <span class="token keyword">implements</span> <span class="token class-name">AsyncService</span> <span class="token punctuation">&#123;</span>
+
+    <span class="token annotation punctuation">@Autowired</span>
+    <span class="token keyword">private</span> <span class="token class-name">IMessageHandler</span> mesageHandler<span class="token punctuation">;</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token annotation punctuation">@Async</span><span class="token punctuation">(</span><span class="token string">"taskExecutor"</span><span class="token punctuation">)</span>
+    <span class="token keyword">public</span> <span class="token class-name">MessageResult</span> <span class="token function">sendSms</span><span class="token punctuation">(</span><span class="token class-name">String</span> callPrefix<span class="token punctuation">,</span> <span class="token class-name">String</span> mobile<span class="token punctuation">,</span> <span class="token class-name">String</span> actionType<span class="token punctuation">,</span> <span class="token class-name">String</span> content<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+
+            <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            mesageHandler<span class="token punctuation">.</span><span class="token function">sendSms</span><span class="token punctuation">(</span>callPrefix<span class="token punctuation">,</span> mobile<span class="token punctuation">,</span> actionType<span class="token punctuation">,</span> content<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> e<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            log<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token string">"发送短信异常 -> "</span><span class="token punctuation">,</span> e<span class="token punctuation">)</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token annotation punctuation">@Async</span><span class="token punctuation">(</span><span class="token string">"taskExecutor"</span><span class="token punctuation">)</span>
+    <span class="token keyword">public</span> <span class="token function">sendEmail</span><span class="token punctuation">(</span><span class="token class-name">String</span> email<span class="token punctuation">,</span> <span class="token class-name">String</span> subject<span class="token punctuation">,</span> <span class="token class-name">String</span> content<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+
+            <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            mesageHandler<span class="token punctuation">.</span><span class="token function">sendsendEmail</span><span class="token punctuation">(</span>email<span class="token punctuation">,</span> subject<span class="token punctuation">,</span> content<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> e<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            log<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token string">"发送email异常 -> "</span><span class="token punctuation">,</span> e<span class="token punctuation">)</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+
+</code></pre>
+
+<p>在实际项目中， 使用<code>@Async</code>调用线程池，推荐等方式是是使用自定义线程池的模式，不推荐直接使用@Async 直接实现异步，因为 springboot 默认的线程池中只有一个常驻线程</p>
+<h2 id="4-5-Spring-ApplicationEvent-事件实现异步"><a href="#4-5-Spring-ApplicationEvent-事件实现异步" class="headerlink" title="4.5 Spring ApplicationEvent 事件实现异步"></a>4.5 Spring ApplicationEvent 事件实现异步</h2><h3 id="4-5-1-定义事件"><a href="#4-5-1-定义事件" class="headerlink" title="4.5.1 定义事件"></a>4.5.1 定义事件</h3><pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">private</span> <span class="token class-name">String</span> email<span class="token punctuation">;</span>
+    <span class="token comment">// 主题</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> subject<span class="token punctuation">;</span>
+    <span class="token comment">// 内容</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> content<span class="token punctuation">;</span>
+    <span class="token comment">// 接收者</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> targetUserId<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span></code></pre>
+
+<h3 id="4-5-2-定义事件处理器"><a href="#4-5-2-定义事件处理器" class="headerlink" title="4.5.2 定义事件处理器"></a>4.5.2 定义事件处理器</h3><pre class="language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Slf4j</span>
+<span class="token annotation punctuation">@Component</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">AsyncSendEmailEventHandler</span> <span class="token keyword">implements</span> <span class="token class-name">ApplicationListener</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">AsyncSendEmailEvent</span><span class="token punctuation">></span></span> <span class="token punctuation">&#123;</span>
+
+    <span class="token annotation punctuation">@Autowired</span>
+    <span class="token keyword">private</span> <span class="token class-name">IMessageHandler</span> mesageHandler<span class="token punctuation">;</span>
+
+    <span class="token annotation punctuation">@Async</span><span class="token punctuation">(</span><span class="token string">"taskExecutor"</span><span class="token punctuation">)</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onApplicationEvent</span><span class="token punctuation">(</span><span class="token class-name">AsyncSendEmailEvent</span> event<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>event <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">return</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+
+        <span class="token class-name">String</span> email <span class="token operator">=</span> event<span class="token punctuation">.</span><span class="token function">getEmail</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">String</span> subject <span class="token operator">=</span> event<span class="token punctuation">.</span><span class="token function">getSubject</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">String</span> content <span class="token operator">=</span> event<span class="token punctuation">.</span><span class="token function">getContent</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">String</span> targetUserId <span class="token operator">=</span> event<span class="token punctuation">.</span><span class="token function">getTargetUserId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        mesageHandler<span class="token punctuation">.</span><span class="token function">sendsendEmailSms</span><span class="token punctuation">(</span>email<span class="token punctuation">,</span> subject<span class="token punctuation">,</span> content<span class="token punctuation">,</span> targerUserId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+</code></pre>
+
+<p>另外，可能有些时候采用 ApplicationEvent 实现异步的使用，当程序出现异常错误的时候，需要考虑补偿机制，那么这时候可以结合 Spring Retry 重试来帮助我们避免这种异常造成数据不一致问题。</p>
+<h2 id="4-6-消息队列"><a href="#4-6-消息队列" class="headerlink" title="4.6 消息队列"></a>4.6 消息队列</h2><h3 id="4-6-1-回调事件消息生产者"><a href="#4-6-1-回调事件消息生产者" class="headerlink" title="4.6.1 回调事件消息生产者"></a>4.6.1 回调事件消息生产者</h3><pre class="language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Slf4j</span>
+<span class="token annotation punctuation">@Component</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">CallbackProducer</span> <span class="token punctuation">&#123;</span>
+
+    <span class="token annotation punctuation">@Autowired</span>
+    <span class="token class-name">AmqpTemplate</span> amqpTemplate<span class="token punctuation">;</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">sendCallbackMessage</span><span class="token punctuation">(</span><span class="token class-name">CallbackDTO</span> allbackDTO<span class="token punctuation">,</span> <span class="token keyword">final</span> <span class="token keyword">long</span> delayTimes<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+
+        log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"生产者发送消息，callbackDTO，&#123;&#125;"</span><span class="token punctuation">,</span> callbackDTO<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        amqpTemplate<span class="token punctuation">.</span><span class="token function">convertAndSend</span><span class="token punctuation">(</span><span class="token class-name">CallbackQueueEnum</span><span class="token punctuation">.</span><span class="token constant">QUEUE_GENSEE_CALLBACK</span><span class="token punctuation">.</span><span class="token function">getExchange</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token class-name">CallbackQueueEnum</span><span class="token punctuation">.</span><span class="token constant">QUEUE_GENSEE_CALLBACK</span><span class="token punctuation">.</span><span class="token function">getRoutingKey</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token class-name">JsonMapper</span><span class="token punctuation">.</span><span class="token function">getInstance</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toJson</span><span class="token punctuation">(</span>genseeCallbackDTO<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">MessagePostProcessor</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token annotation punctuation">@Override</span>
+            <span class="token keyword">public</span> <span class="token class-name">Message</span> <span class="token function">postProcessMessage</span><span class="token punctuation">(</span><span class="token class-name">Message</span> message<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">AmqpException</span> <span class="token punctuation">&#123;</span>
+
+                message<span class="token punctuation">.</span><span class="token function">getMessageProperties</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setHeader</span><span class="token punctuation">(</span><span class="token string">"x-delay"</span><span class="token punctuation">,</span> delayTimes<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                message<span class="token punctuation">.</span><span class="token function">getMessageProperties</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setCorrelationId</span><span class="token punctuation">(</span>callbackDTO<span class="token punctuation">.</span><span class="token function">getSdkId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">return</span> message<span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+</code></pre>
+
+<h3 id="4-6-2-回调事件消息消费者"><a href="#4-6-2-回调事件消息消费者" class="headerlink" title="4.6.2 回调事件消息消费者"></a>4.6.2 回调事件消息消费者</h3><pre class="language-less" data-language="less"><code class="language-less">
+<span class="token atrule">@Slf4j
+@Component
+@RabbitListener<span class="token punctuation">(</span>queues = "message.callback", containerFactory = "rabbitListenerContainerFactory"<span class="token punctuation">)</span>
+public class CallbackConsumer</span> <span class="token punctuation">&#123;</span>
+
+    <span class="token variable">@Autowired</span>
+    private IGlobalUserService globalUserService<span class="token punctuation">;</span>
+
+    <span class="token atrule">@RabbitHandler
+    public void handle<span class="token punctuation">(</span>String json, Channel channel, @Headers Map&lt;String, Object> map<span class="token punctuation">)</span> throws Exception</span> <span class="token punctuation">&#123;</span>
+
+        <span class="token selector">if (map.get("error") != null)</span> <span class="token punctuation">&#123;</span>
+
+            channel.<span class="token function">basicNack</span><span class="token punctuation">(</span><span class="token punctuation">(</span>Long<span class="token punctuation">)</span> map.<span class="token function">get</span><span class="token punctuation">(</span>AmqpHeaders.DELIVERY_TAG<span class="token punctuation">)</span><span class="token punctuation">,</span> false<span class="token punctuation">,</span> true<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            return<span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+
+        <span class="token selector">try</span> <span class="token punctuation">&#123;</span>
+
+            CallbackDTO callbackDTO = JsonMapper.<span class="token function">getInstance</span><span class="token punctuation">(</span><span class="token punctuation">)</span>.<span class="token function">fromJson</span><span class="token punctuation">(</span>json<span class="token punctuation">,</span> CallbackDTO.class<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+            globalUserService.<span class="token function">execute</span><span class="token punctuation">(</span>callbackDTO<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+            channel.<span class="token function">basicAck</span><span class="token punctuation">(</span><span class="token punctuation">(</span>Long<span class="token punctuation">)</span> map.<span class="token function">get</span><span class="token punctuation">(</span>AmqpHeaders.DELIVERY_TAG<span class="token punctuation">)</span><span class="token punctuation">,</span> false<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token punctuation">&#125;</span> <span class="token selector">catch (Exception e)</span> <span class="token punctuation">&#123;</span>
+            log.error<span class="token selector">("回调失败 -></span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>"<span class="token punctuation">,</span> e<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+</code></pre>
+
+<h2 id="4-7-ThreadUtil-异步工具类"><a href="#4-7-ThreadUtil-异步工具类" class="headerlink" title="4.7 ThreadUtil 异步工具类"></a>4.7 ThreadUtil 异步工具类</h2><pre class="language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Slf4j</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ThreadUtils</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">10</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token class-name">ThreadUtil</span><span class="token punctuation">.</span><span class="token function">execAsync</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-></span> <span class="token punctuation">&#123;</span>
+                <span class="token class-name">ThreadLocalRandom</span> threadLocalRandom <span class="token operator">=</span> <span class="token class-name">ThreadLocalRandom</span><span class="token punctuation">.</span><span class="token function">current</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">int</span> number <span class="token operator">=</span> threadLocalRandom<span class="token punctuation">.</span><span class="token function">nextInt</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">;</span>
+                <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>number<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"当前第："</span> <span class="token operator">+</span> i <span class="token operator">+</span> <span class="token string">"个线程"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+        log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"task finish!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span></code></pre>
+
+<h2 id="4-8-Guava-异步"><a href="#4-8-Guava-异步" class="headerlink" title="4.8 Guava 异步"></a>4.8 Guava 异步</h2><p><code>Guava</code>的<code>ListenableFuture</code>顾名思义就是可以监听的<code>Future</code>，是对 java 原生 Future 的扩展增强。我们知道 Future 表示一个异步计算任务，当任务完成时可以得到计算结果。如果我们希望一旦计算完成就拿到结果展示给用户或者做另外的计算，就必须使用另一个线程不断的查询计算状态。这样做，代码复杂，而且效率低下。使用<strong>Guava ListenableFuture</strong>可以帮我们检测 Future 是否完成了，不需要再通过 get()方法苦苦等待异步的计算结果，如果完成就自动调用回调函数，这样可以减少并发程序的复杂度。</p>
+<p><code>ListenableFuture</code>是一个接口，它从<code>jdk</code>的<code>Future</code>接口继承，添加了<code>void addListener(Runnable listener, Executor executor)</code>方法。</p>
+<p>我们看下如何使用 ListenableFuture。首先需要定义 ListenableFuture 的实例:</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token class-name">ListeningExecutorService</span> executorService <span class="token operator">=</span> <span class="token class-name">MoreExecutors</span><span class="token punctuation">.</span><span class="token function">listeningDecorator</span><span class="token punctuation">(</span><span class="token class-name">Executors</span><span class="token punctuation">.</span><span class="token function">newCachedThreadPool</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">final</span> <span class="token class-name">ListenableFuture</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">></span></span> listenableFuture <span class="token operator">=</span> executorService<span class="token punctuation">.</span><span class="token function">submit</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Callable</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">></span></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token class-name">Integer</span> <span class="token function">call</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">&#123;</span>
+        log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"callable execute..."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">TimeUnit</span><span class="token punctuation">.</span><span class="token constant">SECONDS</span><span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+
+<p>首先通过<code>MoreExecutors</code>类的静态方法<code>listeningDecorator</code>方法初始化一个<code>ListeningExecutorService</code>的方法，然后使用此实例的<code>submit</code>方法即可初始化<code>ListenableFuture</code>对象。</p>
+<p><code>ListenableFuture</code>要做的工作，在 Callable 接口的实现类中定义，这里只是休眠了 1 秒钟然后返回一个数字 1，有了 ListenableFuture 实例，可以执行此 Future 并执行 Future 完成之后的回调函数。</p>
+<pre class="language-java" data-language="java"><code class="language-java"> <span class="token class-name">Futures</span><span class="token punctuation">.</span><span class="token function">addCallback</span><span class="token punctuation">(</span>listenableFuture<span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">FutureCallback</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">></span></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onSuccess</span><span class="token punctuation">(</span><span class="token class-name">Integer</span> result<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Get listenable future's result with callback "</span> <span class="token operator">+</span> result<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onFailure</span><span class="token punctuation">(</span><span class="token class-name">Throwable</span> t<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+
+        t<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+    ｜
+  </article>
+
+  
+      
+    <div class="nexmoe-post-copyright">
+        <strong>本文作者：</strong>Honesty<br>
+        <strong>本文链接：</strong><a href="https://docs.hehouhui.cn/archives/java-sync-introduce-1104.html" title="https:&#x2F;&#x2F;docs.hehouhui.cn&#x2F;archives&#x2F;java-sync-introduce-1104.html" target="_blank" rel="noopener">https:&#x2F;&#x2F;docs.hehouhui.cn&#x2F;archives&#x2F;java-sync-introduce-1104.html</a><br>
+        
+            <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
+
+        
+    </div>
+
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/Java/" rel="tag">Java</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="tag">多线程</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/" rel="tag">异步编程</a>
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1699545727384"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          <script src="https://giscus.app/client.js"
+       data-repo="listener-He/NotionNext"
+       data-repo-id="R_kgDOJI1XUA"
+       data-category="General"
+       data-category-id="R_kgDOJOsY1g"
+       data-mapping="pathname"
+       data-strict="0"
+       data-reactions-enabled="1"
+       data-emit-metadata="0"
+       data-input-position="top"
+       data-theme="preferred_color_scheme"
+       data-lang="zh-CN"
+       data-loading="lazy"
+       crossorigin="anonymous"
+       async>
+ </script>
+
+      </div>
+  
+</div></div><div class="nexmoe-post-right">    <div class="nexmoe-fixed">
+        <div class="nexmoe-tool">
+
+            
+
+            
+            
+            <button class="mdui-fab catalog" style="overflow:unset;">
+                <i class="nexmoefont icon-i-catalog"></i>
+                <div class="nexmoe-toc">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%82%E6%AD%A5%E7%9A%84%E5%85%AB%E7%A7%8D%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F"><span class="toc-number">2.</span> <span class="toc-text">异步的八种实现方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%BC%82%E6%AD%A5%EF%BC%9F"><span class="toc-number">3.</span> <span class="toc-text">什么是异步？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B"><span class="toc-number">4.</span> <span class="toc-text">异步编程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-%E7%BA%BF%E7%A8%8B%E5%BC%82%E6%AD%A5"><span class="toc-number">5.</span> <span class="toc-text">4.1 线程异步</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-Future-%E5%BC%82%E6%AD%A5"><span class="toc-number">6.</span> <span class="toc-text">4.2 Future 异步</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-1-Future-%E7%9A%84%E4%B8%8D%E8%B6%B3%E4%B9%8B%E5%A4%84"><span class="toc-number">6.1.</span> <span class="toc-text">4.2.1 Future 的不足之处</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-3-CompletableFuture-%E5%AE%9E%E7%8E%B0%E5%BC%82%E6%AD%A5"><span class="toc-number">7.</span> <span class="toc-text">4.3 CompletableFuture 实现异步</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-4-Spring-%E7%9A%84-Async-%E5%BC%82%E6%AD%A5"><span class="toc-number">8.</span> <span class="toc-text">4.4 Spring 的@Async 异步</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-1-%E8%87%AA%E5%AE%9A%E4%B9%89%E5%BC%82%E6%AD%A5%E7%BA%BF%E7%A8%8B%E6%B1%A0"><span class="toc-number">8.1.</span> <span class="toc-text">4.4.1 自定义异步线程池</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-2-AsyncService"><span class="toc-number">8.2.</span> <span class="toc-text">4.4.2 AsyncService</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-5-Spring-ApplicationEvent-%E4%BA%8B%E4%BB%B6%E5%AE%9E%E7%8E%B0%E5%BC%82%E6%AD%A5"><span class="toc-number">9.</span> <span class="toc-text">4.5 Spring ApplicationEvent 事件实现异步</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-5-1-%E5%AE%9A%E4%B9%89%E4%BA%8B%E4%BB%B6"><span class="toc-number">9.1.</span> <span class="toc-text">4.5.1 定义事件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-5-2-%E5%AE%9A%E4%B9%89%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E5%99%A8"><span class="toc-number">9.2.</span> <span class="toc-text">4.5.2 定义事件处理器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-6-%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97"><span class="toc-number">10.</span> <span class="toc-text">4.6 消息队列</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-6-1-%E5%9B%9E%E8%B0%83%E4%BA%8B%E4%BB%B6%E6%B6%88%E6%81%AF%E7%94%9F%E4%BA%A7%E8%80%85"><span class="toc-number">10.1.</span> <span class="toc-text">4.6.1 回调事件消息生产者</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-6-2-%E5%9B%9E%E8%B0%83%E4%BA%8B%E4%BB%B6%E6%B6%88%E6%81%AF%E6%B6%88%E8%B4%B9%E8%80%85"><span class="toc-number">10.2.</span> <span class="toc-text">4.6.2 回调事件消息消费者</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-7-ThreadUtil-%E5%BC%82%E6%AD%A5%E5%B7%A5%E5%85%B7%E7%B1%BB"><span class="toc-number">11.</span> <span class="toc-text">4.7 ThreadUtil 异步工具类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-8-Guava-%E5%BC%82%E6%AD%A5"><span class="toc-number">12.</span> <span class="toc-text">4.8 Guava 异步</span></a></li></ol>
+                </div>
+            </button>
+            
+
+            
+
+            <a href="#nexmoe-content" class="backtop toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+        </div>
+    </div>
+</div></div><div id="nexmoe-footer"><!--!--></div><div><div id="nexmoe-search-space">
+	<div class="search-container">
+		<div class="search-header">
+			<div class="search-input-container">
+				<input
+					class="search-input"
+					type="text"
+					placeholder="搜索"
+					oninput="sinput();"
+				/>
+			</div>
+			<a class="search-close" onclick="sclose();">×</a>
+		</div>
+		<div class="search-body"></div>
+	</div>
+</div>
+</div><div><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1623991949842711" crossorigin="anonymous"></script>
+</div></body></html>
