@@ -1,7 +1,7 @@
 ---
-password: ""
-icon: ""
-date: "2023-11-04"
+password: ''
+icon: ''
+date: '2023-11-04'
 type: Post
 category: 技术分享
 urlname: java-sync-introduce-1104
@@ -11,20 +11,29 @@ tags:
   - 异步编程
   - Java
   - 多线程
-summary: |-
-  异步执行对于开发者来说并不陌生，在实际的开发过程中，很多场景多会使用到异步，相比同步执行，异步可以大大缩短请求链路耗时时间，比如：发送短信、邮件、异步更新等，这些都是典型的可以通过异步实现的场景。1. 线程Thread
+summary: >-
+  异步执行对于开发者来说并不陌生，在实际的开发过程中，很多场景多会使用到异步，相比同步执行，异步可以大大缩短请求链路耗时时间，比如：发送短信、邮件、异步更新等，这些都是典型的可以通过异步实现的场景。1.
+  线程Thread
+
   2. Future
+
   3. 异步框架CompletableFuture
+
   4. Spring注解@Async
+
   5. Spring ApplicationEvent事件
+
   6. 消息队列
+
   7. 第三方异步框架，比如Hutool的ThreadUtil
+
   8. Guava异步
-sort: ""
+sort: ''
 title: Java异步编程方式介绍
 status: Published
-cover: "https://cdn.jsdelivr.net/gh/listener-He/images@default/202311042246840.png"
-updated: "2023-11-08 15:58:00"
+cover: 'https://cdn.jsdelivr.net/gh/listener-He/images@default/202311042246840.png'
+updated: '2023-11-08 15:58:00'
+abbrlink: 9786
 ---
 
 ##

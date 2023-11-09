@@ -1,7 +1,7 @@
 ---
-password: ""
-icon: ""
-date: "2023-09-12"
+password: ''
+icon: ''
+date: '2023-09-12'
 type: Post
 category: 技术分享
 urlname: redis-key-202309
@@ -9,14 +9,17 @@ catalog:
   - archives
 tags:
   - Redis
-summary: |-
+summary: >-
   做一些C端业务，不可避免的要引入一级缓存来代替数据库的压力并且减少业务响应时间，其实每次引入一个中间件来解决问题的同时，必然会带来很多新的问题需要注意，比如缓存一致性问题。
-  那么其实还会有一些其他问题比如使用Redis作为一级缓存时可能带来的热key、大key等问题，本文我们就热key（hot key）问题来讨论，如何合理的解决热key问题。
-sort: ""
+
+  那么其实还会有一些其他问题比如使用Redis作为一级缓存时可能带来的热key、大key等问题，本文我们就热key（hot
+  key）问题来讨论，如何合理的解决热key问题。
+sort: ''
 title: Redis 热key是什么问题，如何导致的？有什么解决方案？
 status: Published
-cover: "https://cdn.jsdelivr.net/gh/listener-He/images@default/202309121610208.png"
-updated: "2023-10-08 14:42:00"
+cover: 'https://cdn.jsdelivr.net/gh/listener-He/images@default/202309121610208.png'
+updated: '2023-10-08 14:42:00'
+abbrlink: 60175
 ---
 
 做一些 C 端业务，不可避免的要引入一级缓存来代替数据库的压力并且减少业务响应时间，其实每次引入一个中间件来解决问题的同时，必然会带来很多新的问题需要注意，比如缓存一致性问题。

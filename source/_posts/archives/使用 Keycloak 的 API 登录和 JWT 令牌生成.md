@@ -1,7 +1,7 @@
 ---
-password: ""
-icon: ""
-date: "2023-04-28"
+password: ''
+icon: ''
+date: '2023-04-28'
 type: Post
 category: 技术分享
 urlname: api-login-and-jwt-token-generation-using-keycloak
@@ -13,12 +13,16 @@ tags:
   - Java
   - keycloak
   - oauth
-summary: Red Hat SSO (或Keycloak)是领先的Web SSO产品之一，支持SAML 2.0、OpenID Connect和OAuth 2.0等标准，强大之处在于可通过多种方式直接访问Keycloak，包括API调用生成和验证JWT令牌。操作仅限API调用，无需暴露Keycloak的UI给公众。
-sort: ""
+summary: >-
+  Red Hat SSO (或Keycloak)是领先的Web SSO产品之一，支持SAML 2.0、OpenID Connect和OAuth
+  2.0等标准，强大之处在于可通过多种方式直接访问Keycloak，包括API调用生成和验证JWT令牌。操作仅限API调用，无需暴露Keycloak的UI给公众。
+sort: ''
 title: 使用 Keycloak 的 API 登录和 JWT 令牌生成
 status: Published
-cover: "https://developers.redhat.com/sites/default/files/styles/article_feature/public/blog/2019/12/keycloak10.png?itok=-ExiELH9"
-updated: "2023-10-08 14:42:00"
+cover: >-
+  https://developers.redhat.com/sites/default/files/styles/article_feature/public/blog/2019/12/keycloak10.png?itok=-ExiELH9
+updated: '2023-10-08 14:42:00'
+abbrlink: 10290
 ---
 
 [Red Hat 单点登录](https://www.redhat.com/en/products/middleware)(SSO) — 或其开源版本 Keycloak — 是 Web SSO 功能的领先产品之一，它基于流行的标准，例如安全断言标记语言 (SAML) 2.0、OpenID Connect 和 OAuth 2.0。Red Hat SSO 最强大的功能之一是我们可以通过多种方式直接访问 Keycloak，无论是通过简单的 HTML 登录表单，还是通过 API 调用。在以下场景中，我们将生成一个 JWT 令牌，然后对其进行验证。一切都将使用 API 调用来完成，因此 Keycloak 的 UI 不会直接暴露给公众。

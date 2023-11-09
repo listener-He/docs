@@ -1,7 +1,7 @@
 ---
-password: ""
-icon: ""
-date: "2023-05-23"
+password: ''
+icon: ''
+date: '2023-05-23'
 type: Post
 category: 技术分享
 urlname: hutool-beanutil-error
@@ -11,12 +11,15 @@ tags:
   - BUG
   - Java
   - hutool
-summary: Hutool是一个小而全的Java工具类库，通过静态方法封装，降低相关API的学习成本，提高工作效率，使Java拥有函数式语言般的优雅，让Java语言也可以“甜甜的”。 JavaBean是一个拥有对属性进行set和get方法的类。它可以被简单地定义为包含setXXX和getXXX方法的对象。在Hutool中，判定Bean的方法为：是否存在只有一个参数的setXXX方法。Bean工具类主要操作setXXX和getXXX方法，如将Bean对象转为Map等。
-sort: ""
+summary: >-
+  Hutool是一个小而全的Java工具类库，通过静态方法封装，降低相关API的学习成本，提高工作效率，使Java拥有函数式语言般的优雅，让Java语言也可以“甜甜的”。
+  JavaBean是一个拥有对属性进行set和get方法的类。它可以被简单地定义为包含setXXX和getXXX方法的对象。在Hutool中，判定Bean的方法为：是否存在只有一个参数的setXXX方法。Bean工具类主要操作setXXX和getXXX方法，如将Bean对象转为Map等。
+sort: ''
 title: Hutool 5.8.8  BeanUtil.copyProperties 致命异常
 status: Published
-cover: "https://plus.hutool.cn/images/logo.jpg"
-updated: "2023-10-08 14:42:00"
+cover: 'https://plus.hutool.cn/images/logo.jpg'
+updated: '2023-10-08 14:42:00'
+abbrlink: 33194
 ---
 
 ## 前言

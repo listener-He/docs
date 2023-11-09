@@ -1,24 +1,28 @@
 ---
-password: ""
-icon: ""
-date: "2020-03-08"
+password: ''
+icon: ''
+date: '2020-03-08'
 type: Post
 category: 技术分享
-urlname: "44"
+urlname: '44'
 catalog:
   - archives
 tags:
   - Java
   - 数据结构
-summary: |-
+summary: >-
   这篇文章讲解了Java集合中的ArrayList，它是一种动态数组，可以快速随机访问。相比于Vector，ArrayList不是线程安全的，但是LinkedList则不支持高效的随机元素访问。此外，ArrayList实现了多个接口，包括List、RandomAccess、Cloneable和Serializable。因此，ArrayList在实际应用中非常常见。
+
   除了ArrayList，文章还介绍了Java中的其他集合类型，如LinkedList和HashMap。LinkedList是一种双向链表，可以在任意位置进行插入和删除操作，但是不支持随机访问。而HashMap是一种基于哈希表实现的Map，可以用于存储键值对。HashMap使用数组和链表结合的方式，来解决哈希冲突的问题，JDK1.8之后还引入了红黑树来优化性能。
+
   文章还介绍了一些Java集合中的底层实现细节，例如HashMap中的扰动函数、loadFactor加载因子、threshold临界值等。这些细节对于理解集合的工作原理非常重要，也可以帮助我们更好地使用Java集合。
+
   总之，Java集合是Java编程中非常常用的一部分，掌握好集合的使用方法和底层实现细节，可以帮助我们编写更高效、更易维护的Java代码。
-sort: ""
+sort: ''
 title: Java基础-集合
 status: Published
-updated: "2023-10-08 14:42:00"
+updated: '2023-10-08 14:42:00'
+abbrlink: 10024
 ---
 
 ## List

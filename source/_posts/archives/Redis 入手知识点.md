@@ -1,7 +1,7 @@
 ---
-password: ""
-icon: ""
-date: "2023-04-15"
+password: ''
+icon: ''
+date: '2023-04-15'
 type: Post
 category: 技术分享
 urlname: redis-01
@@ -20,11 +20,12 @@ summary: |-
   3. 持久化：Redis支持将数据持久化到磁盘上，以保证数据的可靠性。
   4. 高并发性：Redis采用单线程模型，减少了多线程之间的竞争，从而使得Redis具有更高的并发性。
   5. 分布式：Redis提供了集群模式，可以将数据分布到不同的节点上，从而实现水平扩展。
-sort: ""
+sort: ''
 title: Redis 入手知识点
 status: Published
-cover: "https://cdn.jsdelivr.net/gh/listener-He/images@default/202305102210908.png"
-updated: "2023-10-08 14:42:00"
+cover: 'https://cdn.jsdelivr.net/gh/listener-He/images@default/202305102210908.png'
+updated: '2023-10-08 14:42:00'
+abbrlink: 33195
 ---
 
 # Redis 面试宝典 🤪

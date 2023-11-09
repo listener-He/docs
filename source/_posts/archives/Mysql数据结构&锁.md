@@ -1,20 +1,23 @@
 ---
-password: ""
-icon: ""
-date: "2022-02-21"
+password: ''
+icon: ''
+date: '2022-02-21'
 type: Post
 category: 技术分享
-urlname: "38"
+urlname: '38'
 catalog:
   - archives
 tags:
   - mysql
-summary: Mysql数据库存储引擎MyISAM引擎 不支持事务支持表级锁（MySql支持两种表级锁，表共享读锁和表独占写锁），但不支持行级锁存储表的总行数一个MyISAM表有三个文件：索引文件（.MYI
-sort: ""
+summary: >-
+  Mysql数据库存储引擎MyISAM引擎
+  不支持事务支持表级锁（MySql支持两种表级锁，表共享读锁和表独占写锁），但不支持行级锁存储表的总行数一个MyISAM表有三个文件：索引文件（.MYI
+sort: ''
 title: Mysql数据结构&锁
 status: Published
-cover: "https://cdn.jsdelivr.net/gh/listener-He/images@default/202305102214388.png"
-updated: "2023-10-08 14:42:00"
+cover: 'https://cdn.jsdelivr.net/gh/listener-He/images@default/202305102214388.png'
+updated: '2023-10-08 14:42:00'
+abbrlink: 43672
 ---
 
 # Mysql 数据库

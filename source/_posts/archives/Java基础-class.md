@@ -1,20 +1,23 @@
 ---
-password: ""
-icon: ""
-date: "2020-01-26"
+password: ''
+icon: ''
+date: '2020-01-26'
 type: Post
 category: 技术分享
-urlname: "43"
+urlname: '43'
 catalog:
   - archives
 tags:
   - Java
-summary: "对象，类类加载一个类的完整生命周期如下：Class 文件需要加载到虚拟机中之后才能运行和使用，那么虚拟机是如何加载这些 Class 文件呢？系统加载 Class 类型的文件主要三步:加载->连接"
-sort: ""
+summary: >-
+  对象，类类加载一个类的完整生命周期如下：Class 文件需要加载到虚拟机中之后才能运行和使用，那么虚拟机是如何加载这些 Class 文件呢？系统加载
+  Class 类型的文件主要三步:加载->连接
+sort: ''
 title: Java基础-class
 status: Published
-cover: "https://www.notion.so/images/page-cover/woodcuts_11.jpg"
-updated: "2023-10-08 14:42:00"
+cover: 'https://www.notion.so/images/page-cover/woodcuts_11.jpg'
+updated: '2023-10-08 14:42:00'
+abbrlink: 40393
 ---
 
 ## 对象，类

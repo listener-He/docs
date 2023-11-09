@@ -1,10 +1,10 @@
 ---
-password: ""
-icon: ""
-date: "2021-08-27"
+password: ''
+icon: ''
+date: '2021-08-27'
 type: Post
 category: 技术分享
-urlname: "20"
+urlname: '20'
 catalog:
   - archives
 tags:
@@ -12,12 +12,14 @@ tags:
   - 微服务
   - 分布式
   - Redis
-summary: 在SpringCloud体系中，我们知道服务之间的调用是通过http协议进行调用的。而注册中心的主要目的就是维护这些服务的服务列表。我们知道，在Spring中，提供了RestTemplate。RestTemplate是Spring提供的用于访问Rest服务的客户端。而在SpringCloud中也是使用此服务进行服务调用的。
-sort: ""
+summary: >-
+  在SpringCloud体系中，我们知道服务之间的调用是通过http协议进行调用的。而注册中心的主要目的就是维护这些服务的服务列表。我们知道，在Spring中，提供了RestTemplate。RestTemplate是Spring提供的用于访问Rest服务的客户端。而在SpringCloud中也是使用此服务进行服务调用的。
+sort: ''
 title: RestTemplate与OpenFeign
 status: Published
-cover: "https://www.notion.so/images/page-cover/webb2.jpg"
-updated: "2023-10-08 14:42:00"
+cover: 'https://www.notion.so/images/page-cover/webb2.jpg'
+updated: '2023-10-08 14:42:00'
+abbrlink: 38993
 ---
 
 # RestTemplate

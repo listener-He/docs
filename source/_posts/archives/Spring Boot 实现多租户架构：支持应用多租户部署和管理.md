@@ -1,7 +1,7 @@
 ---
-password: ""
-icon: ""
-date: "2023-09-15"
+password: ''
+icon: ''
+date: '2023-09-15'
 type: Post
 category: 技术分享
 urlname: spring-boot-tenant-202309
@@ -25,11 +25,12 @@ summary: |-
   • 保证系统的可扩展性和可伸缩性，支持水平扩展。
   • 保证系统的高可用性和容错性，避免单点故障。
   • 对租户数据进行备份和恢复，保证数据的可靠性和完整性
-sort: ""
+sort: ''
 title: Spring Boot 实现多租户架构：支持应用多租户部署和管理
 status: Published
-cover: "https://cdn.jsdelivr.net/gh/listener-He/images@default/202309151532992.png"
-updated: "2023-11-02 16:23:00"
+cover: 'https://cdn.jsdelivr.net/gh/listener-He/images@default/202309151532992.png'
+updated: '2023-11-02 16:23:00'
+abbrlink: 26640
 ---
 
 ### 1 什么是多租户架构？

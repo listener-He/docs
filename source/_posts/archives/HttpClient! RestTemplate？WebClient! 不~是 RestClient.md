@@ -1,7 +1,7 @@
 ---
-password: ""
-icon: ""
-date: "2023-09-06"
+password: ''
+icon: ''
+date: '2023-09-06'
 type: Post
 category: 技术分享
 urlname: spring-restclient-2023
@@ -10,17 +10,24 @@ catalog:
 tags:
   - Spring
   - Java
-summary: |-
+summary: >-
   Spring 框架一直提供了两种不同的客户端来执行 http 请求:
+
   • RestTemplate: 它在 Spring 3 中被引入，提供同步的阻塞式通信。
+
   • WebClient: 它在 Spring 5 的 Spring WebFlux 库中作为一部分被发布。它提供了流式 API,遵循响应式模型。
-  RestTemplate 的方法暴露了太多的 HTTP 特性,导致了大量重载的方法，使用成本较高。WebClient 是 RestTemplate 的替代品,支持同步和异步调用。它是 Spring Web Reactive 项目的一部分。
-  现在 Spring 6.1 M1 版本引入了 RestClient。一个新的同步 http 客户端,其工作方式与 WebClient 类似,使用与 RestTemplate 相同的基础设施。
-sort: ""
+
+  RestTemplate 的方法暴露了太多的 HTTP 特性,导致了大量重载的方法，使用成本较高。WebClient 是 RestTemplate
+  的替代品,支持同步和异步调用。它是 Spring Web Reactive 项目的一部分。
+
+  现在 Spring 6.1 M1 版本引入了 RestClient。一个新的同步 http 客户端,其工作方式与 WebClient 类似,使用与
+  RestTemplate 相同的基础设施。
+sort: ''
 title: HttpClient? RestTemplate？WebClient? 不~是 RestClient
 status: Published
-cover: "https://source.unsplash.com/random/720x480/?encryption"
-updated: "2023-10-08 14:42:00"
+cover: 'https://source.unsplash.com/random/720x480/?encryption'
+updated: '2023-10-08 14:42:00'
+abbrlink: 56341
 ---
 
 ## 介绍

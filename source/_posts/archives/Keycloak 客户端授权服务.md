@@ -1,7 +1,7 @@
 ---
-password: ""
-icon: ""
-date: "2023-04-28"
+password: ''
+icon: ''
+date: '2023-04-28'
 type: Post
 category: 技术分享
 urlname: keycloak-client-oauth-guide
@@ -11,12 +11,13 @@ tags:
   - 建站
   - keycloak
   - oauth
-summary: ""
-sort: ""
+summary: ''
+sort: ''
 title: Keycloak 客户端授权服务
 status: Published
-cover: "https://cdn.jsdelivr.net/gh/listener-He/images@default/202305102206180.png"
-updated: "2023-11-02 16:24:00"
+cover: 'https://cdn.jsdelivr.net/gh/listener-He/images@default/202305102206180.png'
+updated: '2023-11-02 16:24:00'
+abbrlink: 22470
 ---
 
 ## **授权服务概述**

@@ -1,22 +1,25 @@
 ---
-password: ""
-icon: ""
-date: "2021-12-18"
+password: ''
+icon: ''
+date: '2021-12-18'
 type: Post
 category: 技术分享
-urlname: "23"
+urlname: '23'
 catalog:
   - archives
 tags:
   - 微服务
   - 分布式
   - Redis
-summary: 一致性hash在Redis 集群模式Cluster中，Redis采用的是分片Sharding的方式，也就是将数据采用一定的分区策略，分发到相应的集群节点中。但是我们使用上述HASH算法进行缓存时，会出
-sort: ""
+summary: >-
+  一致性hash在Redis
+  集群模式Cluster中，Redis采用的是分片Sharding的方式，也就是将数据采用一定的分区策略，分发到相应的集群节点中。但是我们使用上述HASH算法进行缓存时，会出
+sort: ''
 title: Redis集群与特性
 status: Published
-cover: "https://cdn.jsdelivr.net/gh/listener-He/images@default/202305102218848.png"
-updated: "2023-10-08 14:42:00"
+cover: 'https://cdn.jsdelivr.net/gh/listener-He/images@default/202305102218848.png'
+updated: '2023-10-08 14:42:00'
+abbrlink: 20869
 ---
 
 ## 一致性 hash

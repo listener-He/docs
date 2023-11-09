@@ -1,21 +1,22 @@
 ---
-password: ""
-icon: ""
-date: "2022-03-17"
+password: ''
+icon: ''
+date: '2022-03-17'
 type: Post
 category: 技术分享
-urlname: "41"
+urlname: '41'
 catalog:
   - archives
 tags:
   - Python
   - 健康
 summary: "之前一直使用ffmpeg来进行格式转换，但是将微信的amr转为mp3后语音质量不理想（也可能是我参数没有调正确\U0001F92A）。\n于是就继续想解决办法，后来在github瞎逛时看到可以使用silk-v3-decoder来做这件事情。虽然本质上还是使用的ffmpeg来转的，只是封装了一下。"
-sort: ""
+sort: ''
 title: silk-v3-decoder 一款微信音频转码的工具
 status: Published
-cover: "https://cdn.jsdelivr.net/gh/listener-He/images@default/202305102212132.png"
-updated: "2023-10-08 14:42:00"
+cover: 'https://cdn.jsdelivr.net/gh/listener-He/images@default/202305102212132.png'
+updated: '2023-10-08 14:42:00'
+abbrlink: 31007
 ---
 
 #

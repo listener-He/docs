@@ -1,22 +1,24 @@
 ---
-password: ""
-icon: ""
-date: "2020-02-25"
+password: ''
+icon: ''
+date: '2020-02-25'
 type: Post
 category: 技术分享
-urlname: "22"
+urlname: '22'
 catalog:
   - archives
 tags:
   - Java
   - 异步编程
   - 多线程
-summary: 线程与进程相似，但线程是一个比进程更小的执行单位。一个进程在其执行的过程中可以产生多个线程。与进程不同的是同类的多个线程共享同一块内存空间和一组系统资源，所以系统在产生一个线程，或是在各个线程之间作切换工作时，负担要比进程小得多，也正因为如此，线程也被称为轻量级进程。
-sort: ""
+summary: >-
+  线程与进程相似，但线程是一个比进程更小的执行单位。一个进程在其执行的过程中可以产生多个线程。与进程不同的是同类的多个线程共享同一块内存空间和一组系统资源，所以系统在产生一个线程，或是在各个线程之间作切换工作时，负担要比进程小得多，也正因为如此，线程也被称为轻量级进程。
+sort: ''
 title: Java基础-线程&并发
 status: Published
-cover: "https://www.notion.so/images/page-cover/webb1.jpg"
-updated: "2023-10-08 14:42:00"
+cover: 'https://www.notion.so/images/page-cover/webb1.jpg'
+updated: '2023-10-08 14:42:00'
+abbrlink: 43673
 ---
 
 ## 线程

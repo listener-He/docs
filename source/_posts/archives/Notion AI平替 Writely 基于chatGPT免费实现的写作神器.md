@@ -1,7 +1,7 @@
 ---
-password: ""
-icon: ""
-date: "2023-04-24T00:00:00.000+08:00"
+password: ''
+icon: ''
+date: '2023-04-24T00:00:00.000+08:00'
 type: Post
 category: 创作分享
 urlname: notion-ai-writely
@@ -12,12 +12,15 @@ tags:
   - 工具
   - chatgpt
   - notion
-summary: 作为NiotionAi的重度依赖者，最近观察到一个比NotionAI更强大而且还免费的插件。一款基于chatGPT技术的写作神器Writely。借助自然语言处理技术，Writely可以自动生成、推荐内容，并进行语法纠错优化。同时提供多种模板和主题，让写作更加高效实用。该工具适合初学者和专业写作者使用
-sort: ""
+summary: >-
+  作为NiotionAi的重度依赖者，最近观察到一个比NotionAI更强大而且还免费的插件。一款基于chatGPT技术的写作神器Writely。借助自然语言处理技术，Writely可以自动生成、推荐内容，并进行语法纠错优化。同时提供多种模板和主题，让写作更加高效实用。该工具适合初学者和专业写作者使用
+sort: ''
 title: Notion AI平替 Writely 基于chatGPT免费实现的写作神器
 status: Published
-cover: "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/bd13b709-62b4-45ef-bdf2-cb1a84350da2/WX20230424-180802.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20231108%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20231108T075909Z&X-Amz-Expires=3600&X-Amz-Signature=4f8953f5b9ac94928951911af84d79aa0e1b8b6ca1f9d533a6ec516721fc9f74&X-Amz-SignedHeaders=host&x-id=GetObject"
-updated: "2023-10-08 14:42:00"
+cover: >-
+  https://s3.us-west-2.amazonaws.com/secure.notion-static.com/bd13b709-62b4-45ef-bdf2-cb1a84350da2/WX20230424-180802.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20231108%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20231108T075909Z&X-Amz-Expires=3600&X-Amz-Signature=4f8953f5b9ac94928951911af84d79aa0e1b8b6ca1f9d533a6ec516721fc9f74&X-Amz-SignedHeaders=host&x-id=GetObject
+updated: '2023-10-08 14:42:00'
+abbrlink: 64940
 ---
 
 AI 技术的迅速发展和普及，为人类的生活带来了很多便利。在写作领域，也出现了不少基于人工智能技术的写作工具。其中最近推出的一款基于 chatGPT 技术的写作神器 Writely，引起了广泛关注。
