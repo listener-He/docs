@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [16.x]
         
     steps:
       - name: 開始運行
@@ -25,14 +25,7 @@ jobs:
         run: |
           export TZ='Asia/Shanghai'
           npm install hexo-cli -g
-
-      - name: 緩存
-        uses: actions/cache@v1
-        id: cache-dependencies
-        with:
-          path: node_modules
-          key: ${{runner.OS}}-${{hashFiles('**/package-lock.json')}}             
-
+            
       - name: 安裝插件
         if: steps.cache-dependencies.outputs.cache-hit != 'true'
         run: |
